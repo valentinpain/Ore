@@ -4,9 +4,324 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Ore.Views"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
-        Title="ShellView" Height="450" Width="800">
-    <Grid>
-        
+        Title="Ore" Height="600" Width="1080" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" Foreground="White">
+
+    <Window.Resources>
+        <Storyboard x:Key="MenuOpen">
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)" Storyboard.TargetName="GridMenu" >
+                <EasingDoubleKeyFrame KeyTime="0" Value="60" />
+                <EasingDoubleKeyFrame KeyTime="0:0:0.12" Value="180" />
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>
+        <Storyboard x:Key="MenuClose">
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)" Storyboard.TargetName="GridMenu" >
+                <EasingDoubleKeyFrame KeyTime="0" Value="180" />
+                <EasingDoubleKeyFrame KeyTime="0:0:0.12" Value="60" />
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>
+
+        <BitmapImage x:Key="plusLogo" UriSource="/plus.png" />
+
+    </Window.Resources>
+
+    <Window.Triggers>
+        <EventTrigger RoutedEvent="ButtonBase.Click" SourceName="ButtonOpenMenu">
+            <BeginStoryboard Storyboard="{StaticResource MenuOpen}" />
+        </EventTrigger>
+        <EventTrigger RoutedEvent="ButtonBase.Click" SourceName="ButtonCloseMenu">
+            <BeginStoryboard Storyboard="{StaticResource MenuClose}" />
+        </EventTrigger>
+    </Window.Triggers>
+
+
+
+
+
+    <!--<ScrollViewer>
+         <StackPanel>
+            <Border BorderBrush="Gray" BorderThickness="1" Margin="5 5 5 15">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="200" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="450" />
+                    </Grid.ColumnDefinitions>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="70" />
+                    </Grid.RowDefinitions>
+
+                    <Border Grid.Column="0" BorderBrush="Gray" BorderThickness="1" Padding="0 0 0 5">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Text="Nous sommes le" FontSize="18" FontFamily="Global Sans Serif" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="0"/>
+                            <TextBlock Text="3 Avril 2020" FontSize="18" FontFamily="Global Sans Serif" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="1"/>
+
+                        </Grid>
+                    </Border>
+
+                    <Border Grid.Column="1" BorderBrush="Gray" BorderThickness="1" Padding="0 0 0 5">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Text="Vue actuelle" FontSize="18" FontFamily="Global Sans Serif" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="0"/>
+                            <TextBlock Text="Mois d'Avril 2020" FontSize="18" FontFamily="Global Sans Serif" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="1"/>
+
+                        </Grid>
+                    </Border>
+
+                    <Border Grid.Column="2" BorderBrush="Gray" BorderThickness="1" Padding="0 0 0 5">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="35"   />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Text="Mode d'affichage" FontSize="18" FontFamily="Global Sans Serif" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.ColumnSpan="4" Grid.Row="0" />
+
+                            <Button Content="Jour" FontSize="15" FontFamily="Global Sans Serif" Height="26" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="0" Grid.Row="1" Width="100" Background="White">
+                                <Button.Resources>
+                                    <Style TargetType="Border">
+                                        <Setter Property="CornerRadius" Value="5" />
+                                    </Style>
+                                </Button.Resources>
+                            </Button>
+                            <Button Content="Semaine" FontSize="15" FontFamily="Global Sans Serif" Height="26" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="1" Grid.Row="1" Width="100" Background="White">
+                                <Button.Resources>
+                                    <Style TargetType="Border">
+                                        <Setter Property="CornerRadius" Value="5"/>
+                                    </Style>
+                                </Button.Resources>
+                            </Button>
+                            <Button x:Name="LoadMonthlyCalendar"  Content="Mois" FontSize="15" FontFamily="Global Sans Serif" Height="26" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="2" Grid.Row="1" Width="100" Background="White" Click="Button_Click">
+                                <Button.Resources>
+                                    <Style TargetType="Border">
+                                        <Setter Property="CornerRadius" Value="5" />
+                                    </Style>
+                                </Button.Resources>
+                            </Button>
+                            <Button Content="Année" FontSize="15" FontFamily="Global Sans Serif" Height="26" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="3" Grid.Row="1" Width="100" Background="White">
+                                <Button.Resources>
+                                    <Style TargetType="Border">
+                                        <Setter Property="CornerRadius" Value="5"/>
+                                    </Style>
+                                </Button.Resources>
+                            </Button>
+                        </Grid>
+                    </Border>
+                </Grid>
+            </Border>
+
+           <ContentControl x:Name="ActiveItem" Grid.Column="0"  Grid.Row="0"/>
+
+        </StackPanel> 
+
+    </ScrollViewer> -->
+
+    <Grid Background="White">
+        <Grid Height="70" VerticalAlignment="Top" Background="White">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <TextBlock Text="Utilisateur non enregistré" VerticalAlignment="Center" FontSize="16" Foreground="Black" TextWrapping="Wrap" Width="75" TextAlignment="Center"/>
+                <materialDesign:PopupBox PlacementMode="BottomAndAlignRightEdges" StaysOpen="False" Margin="10" Foreground="Black">
+                    <StackPanel Width="150">
+                        <Button Content="Settings"/>
+                        <Button Content="Account"/>
+                        <Button Content="Help"/>
+                        <Separator/>
+                        <Button Content="Logout"/>
+                    </StackPanel>
+                </materialDesign:PopupBox>
+            </StackPanel>
+            <Grid Width="700">
+                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="18" Foreground="Black" Margin="0 0 0 50" FontFamily="Global Sans Serif" FontWeight="UltraBold">AVRIL 2020</TextBlock>
+                <StackPanel Orientation="Horizontal" Width="280" Margin="0 30 0 0">
+
+                    <Button VerticalAlignment="Center" Foreground="Black" Background="Transparent" BorderBrush="Transparent" Width="30" Height="30" FontSize="11" Padding="-20 -20 -20 -20">
+                        <TextBlock TextAlignment="Center" TextWrapping="Wrap" Width="30" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Global Sans Serif">LUN 19</TextBlock>
+                    </Button>
+                    <Button VerticalAlignment="Center" Foreground="Black" Background="Transparent" BorderBrush="Transparent" Width="30" Height="30" FontSize="11" Padding="-20 -20 -20 -20" Margin="10 0 0 0">
+                        <TextBlock TextAlignment="Center" TextWrapping="Wrap" Width="30" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Global Sans Serif">MAR 20</TextBlock>
+                    </Button>
+                    <Button VerticalAlignment="Center" Foreground="Black" Background="Transparent" BorderBrush="Transparent" Width="30" Height="30" FontSize="11" Padding="-20 -20 -20 -20" Margin="10 0 0 0">
+                        <TextBlock TextAlignment="Center" TextWrapping="Wrap" Width="30" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Global Sans Serif">MER 21</TextBlock>
+                    </Button>
+                    <Button VerticalAlignment="Center" Foreground="Black" Background="Transparent" BorderBrush="Transparent" Width="30" Height="30" FontSize="11" Padding="-20 -20 -20 -20" Margin="10 0 0 0">
+                        <TextBlock TextAlignment="Center" TextWrapping="Wrap" Width="30" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Global Sans Serif">JEU 22</TextBlock>
+                    </Button>
+                    <Button VerticalAlignment="Center" Foreground="Black" Background="Transparent" BorderBrush="Transparent" Width="30" Height="30" FontSize="11" Padding="-20 -20 -20 -20" Margin="10 0 0 0">
+                        <TextBlock TextAlignment="Center" TextWrapping="Wrap" Width="30" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Global Sans Serif">VEN 23</TextBlock>
+                    </Button>
+                    <Button VerticalAlignment="Center" Foreground="Black" Background="Transparent" BorderBrush="Transparent" Width="30" Height="30" FontSize="11" Padding="-20 -20 -20 -20" Margin="10 0 0 0">
+                        <TextBlock TextAlignment="Center" TextWrapping="Wrap" Width="30" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Global Sans Serif">SAM 24</TextBlock>
+                    </Button>
+                    <Button VerticalAlignment="Center" Foreground="Black" Background="Transparent" BorderBrush="Transparent" Width="30" Height="30" FontSize="11" Padding="-20 -20 -20 -20" Margin="10 0 0 0">
+                        <TextBlock TextAlignment="Center" TextWrapping="Wrap" Width="30" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Global Sans Serif">DIM 25</TextBlock>
+                    </Button>
+
+                </StackPanel>
+            </Grid>
+        </Grid>
+        <Grid x:Name="GridMenu" Width="60" HorizontalAlignment="Left" Background="White">
+            <StackPanel>
+                <Grid Height="70" Background="White">
+                    <Button x:Name="ButtonCloseMenu" Width="60" Height="60" Background="{x:Null}" BorderBrush="{x:Null}" VerticalAlignment="Top" HorizontalAlignment="Right" Visibility="Collapsed" Click="ButtonCloseMenu_Click" >
+                        <materialDesign:PackIcon Foreground="#FFCBC9C9" Kind="ArrowLeft" Width="25" Height="25" />
+                    </Button>
+                    <Button x:Name="ButtonOpenMenu" Width="60" Height="60" Background="{x:Null}" BorderBrush="{x:Null}" VerticalAlignment="Top" HorizontalAlignment="Right" Click="ButtonOpenMenu_Click" >
+                        <materialDesign:PackIcon Foreground="#FFCBC9C9" Kind="Menu" Width="25" Height="25" />
+                    </Button>
+                </Grid>
+                <ListView x:Name="ListOfViews" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                    <ListViewItem Height="60">
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon x:Name="ButtonDefaultView" Kind="Calendar" Width="25" Height="25" Margin="10" VerticalAlignment="Center" Foreground="White" />
+                            <TextBlock Text="Home" VerticalAlignment="Center" Margin="20 10" />
+                        </StackPanel>
+                    </ListViewItem>
+                    <ListViewItem Height="60">
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon x:Name="ButtonDailyView" Kind="Pencil" Width="25" Height="25" Margin="10" VerticalAlignment="Center" Foreground="White" />
+                            <TextBlock Text="Create" VerticalAlignment="Center" Margin="20 10" />
+                        </StackPanel>
+                    </ListViewItem>
+                    <ListViewItem Height="60">
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon x:Name="ButtonMonthlyView" Kind="Ticket" Width="25" Height="25" Margin="10" VerticalAlignment="Center" Foreground="White" />
+                            <TextBlock Text="Tickets" VerticalAlignment="Center" Margin="20 10" />
+                        </StackPanel>
+                    </ListViewItem>
+                </ListView>
+            </StackPanel>
+        </Grid>
+        <Grid x:Name="GridMain" HorizontalAlignment="Right" VerticalAlignment="Bottom" Height="500" Width="875">
+            <StackPanel>
+                <TextBox x:Name="TestBinding" Foreground="Black"></TextBox>
+                <TextBlock Text="{Binding Path=TestBinding, Mode=OneWay}" Foreground="Black" />
+                <StackPanel Orientation="Horizontal" Height="30" Width="875" Margin="0 40 0 0">
+                    <StackPanel.Background>
+                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                            <GradientStop Color="#FFF3F3F3" Offset="0"/>
+                            <GradientStop Color="Gainsboro" Offset="1"/>
+                        </LinearGradientBrush>
+                    </StackPanel.Background>
+
+                    <TextBlock Foreground="Black" FontFamily="Global Sans Serif" Width="800" FontSize="14" Padding="10 5 0 0" VerticalAlignment="Center">LUNDI 19 AVRIL</TextBlock>
+                    <Button Name="button1" Background="Transparent" BorderBrush="Transparent" Click="button1_Click">
+                        <Image Source="{StaticResource ResourceKey=plusLogo}" />
+                    </Button>
+
+                </StackPanel>
+                <ListBox x:Name="listBox1"></ListBox>
+
+                <StackPanel Orientation="Horizontal" Height="30" Width="875" Margin="0 40 0 0">
+                    <StackPanel.Background>
+                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                            <GradientStop Color="#FFF3F3F3" Offset="0"/>
+                            <GradientStop Color="Gainsboro" Offset="1"/>
+                        </LinearGradientBrush>
+                    </StackPanel.Background>
+                    <TextBlock Foreground="Black" FontFamily="Global Sans Serif" Width="800" FontSize="14" Padding="10 5 0 0" VerticalAlignment="Center">LUNDI 19 AVRIL</TextBlock>
+                    <Button Name="button2" Background="Transparent" BorderBrush="Transparent" Click="button1_Click">
+                        <Image Source="{StaticResource ResourceKey=plusLogo}" />
+                    </Button>
+                </StackPanel>
+                <ListBox x:Name="listBox2">
+                    
+                </ListBox>
+
+                <StackPanel Orientation="Horizontal" Height="30" Width="875" Margin="0 40 0 0">
+                    <StackPanel.Background>
+                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                            <GradientStop Color="#FFF3F3F3" Offset="0"/>
+                            <GradientStop Color="Gainsboro" Offset="1"/>
+                        </LinearGradientBrush>
+                    </StackPanel.Background>
+                    <TextBlock Foreground="Black" FontFamily="Global Sans Serif" Width="800" FontSize="14" Padding="10 5 0 0" VerticalAlignment="Center">LUNDI 19 AVRIL</TextBlock>
+                    <Button Name="button3" Background="Transparent" BorderBrush="Transparent" Click="button1_Click">
+                        <Image Source="{StaticResource ResourceKey=plusLogo}" />
+                    </Button>
+                </StackPanel>
+                <ListBox x:Name="listBox3"></ListBox>
+
+                <StackPanel Orientation="Horizontal" Height="30" Width="875" Margin="0 40 0 0">
+                    <StackPanel.Background>
+                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                            <GradientStop Color="#FFF3F3F3" Offset="0"/>
+                            <GradientStop Color="Gainsboro" Offset="1"/>
+                        </LinearGradientBrush>
+                    </StackPanel.Background>
+                    <TextBlock Foreground="Black" FontFamily="Global Sans Serif" Width="800" FontSize="14" Padding="10 5 0 0" VerticalAlignment="Center">LUNDI 19 AVRIL</TextBlock>
+                    <Button Name="button4" Background="Transparent" BorderBrush="Transparent" Click="button1_Click">
+                        <Image Source="{StaticResource ResourceKey=plusLogo}" />
+                    </Button>
+                </StackPanel>
+                <ListBox x:Name="listBox4"></ListBox>
+
+                <StackPanel Orientation="Horizontal" Height="30" Width="875" Margin="0 40 0 0">
+                    <StackPanel.Background>
+                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                            <GradientStop Color="#FFF3F3F3" Offset="0"/>
+                            <GradientStop Color="Gainsboro" Offset="1"/>
+                        </LinearGradientBrush>
+                    </StackPanel.Background>
+                    <TextBlock Foreground="Black" FontFamily="Global Sans Serif" Width="800" FontSize="14" Padding="10 5 0 0" VerticalAlignment="Center">LUNDI 19 AVRIL</TextBlock>
+                    <Button Name="button5" Background="Transparent" BorderBrush="Transparent" Click="button1_Click">
+                        <Image Source="{StaticResource ResourceKey=plusLogo}" />
+                    </Button>
+                </StackPanel>
+                <ListBox x:Name="listBox5"></ListBox>
+
+                <StackPanel Orientation="Horizontal" Height="30" Width="875" Margin="0 40 0 0">
+                    <StackPanel.Background>
+                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                            <GradientStop Color="#FFF3F3F3" Offset="0"/>
+                            <GradientStop Color="Gainsboro" Offset="1"/>
+                        </LinearGradientBrush>
+                    </StackPanel.Background>
+                    <TextBlock Foreground="Black" FontFamily="Global Sans Serif" Width="800" FontSize="14" Padding="10 5 0 0" VerticalAlignment="Center">LUNDI 19 AVRIL</TextBlock>
+                    <Button Name="button6" Background="Transparent" BorderBrush="Transparent" Click="button1_Click">
+                        <Image Source="{StaticResource ResourceKey=plusLogo}" />
+                    </Button>
+                </StackPanel>
+                <ListBox x:Name="listBox6"></ListBox>
+
+                <StackPanel Orientation="Horizontal" Height="30" Width="875" Margin="0 40 0 0">
+                    <StackPanel.Background>
+                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                            <GradientStop Color="#FFF3F3F3" Offset="0"/>
+                            <GradientStop Color="Gainsboro" Offset="1"/>
+                        </LinearGradientBrush>
+                    </StackPanel.Background>
+                    <TextBlock Foreground="Black" FontFamily="Global Sans Serif" Width="800" FontSize="14" Padding="10 5 0 0" VerticalAlignment="Center">LUNDI 19 AVRIL</TextBlock>
+                    <Button Name="button7" Background="Transparent" BorderBrush="Transparent" Click="button1_Click">
+                        <Image Source="{StaticResource ResourceKey=plusLogo}" />
+                    </Button>
+                </StackPanel>
+                <ListBox x:Name="listBox7"></ListBox>
+
+                <Button Height="23" Width="76" Margin="0 0 0 0" Name="DeleteButton" VerticalAlignment="Top" Click="DeleteButton_Click">
+                </Button>
+
+            </StackPanel>
+
+
+        </Grid>
     </Grid>
+
 </Window>
