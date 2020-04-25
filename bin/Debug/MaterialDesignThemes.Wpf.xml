@@ -441,6 +441,11 @@
             Client code cannot set this directly, this is internally managed.  To end the dialog session use <see cref="M:MaterialDesignThemes.Wpf.DialogSession.Close"/>.
             </remarks>
         </member>
+        <member name="P:MaterialDesignThemes.Wpf.DialogSession.CloseParameter">
+            <summary>
+            The parameter passed to the <see cref="F:MaterialDesignThemes.Wpf.DialogHost.CloseDialogCommand" /> and return by <see cref="M:MaterialDesignThemes.Wpf.DialogHost.Show(System.Object)"/>
+            </summary>
+        </member>
         <member name="P:MaterialDesignThemes.Wpf.DialogSession.Content">
             <summary>
             Gets the <see cref="P:MaterialDesignThemes.Wpf.DialogHost.DialogContent"/> which is currently displayed, so this could be a view model or a UI element.
@@ -695,8 +700,8 @@
             List of available icons for use with <see cref="T:MaterialDesignThemes.Wpf.PackIcon" />.
             </summary>
             <remarks>
-            All icons sourced from Material Design Icons Font - <see cref="!:https://materialdesignicons.com/"/> - in accordance of 
-            <see cref="!:https://github.com/Templarian/MaterialDesign/blob/master/license.txt"/>.
+            All icons sourced from Material Design Icons Font - https://materialdesignicons.com/ - in accordance of 
+            https://github.com/MaterialDesignInXAML/MaterialDesignInXamlToolkit/blob/master/LICENSE.
             </remarks>
         </member>
         <member name="T:MaterialDesignThemes.Wpf.Palette">
