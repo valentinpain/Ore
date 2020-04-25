@@ -1,2 +1,2 @@
 # Ore
-A refined text editor
+A light task planner
