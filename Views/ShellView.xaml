@@ -4,10 +4,15 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Ore.Views"
-        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        xmlns:ViewModels="clr-namespace:Ore.ViewModels"
+        xmlns:Models="clr-namespace:Ore.Models"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" 
+        xmlns:convt="clr-namespace:Ore.Converter"
         mc:Ignorable="d"
         Title="Ore" Height="600" Width="1080" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" Foreground="White">
 
+    <!-- Ressources -->
     <Window.Resources>
         <Storyboard x:Key="MenuOpen">
             <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)" Storyboard.TargetName="GridMenu" >
@@ -22,10 +27,20 @@
             </DoubleAnimationUsingKeyFrames>
         </Storyboard>
 
-        <BitmapImage x:Key="plusLogo" UriSource="/plus.png" />
+        <ViewModels:ShellViewModel x:Key="ViewModel" />
+        <Models:ShellModel x:Key="Model" />
+        <convt:DateConverter x:Key="DateConverter" />
+        <convt:ActualDayColorConverter x:Key="colorConverter" />
 
+        <BitmapImage x:Key="plusLogo" UriSource="/plus.png" />
     </Window.Resources>
 
+    <!-- Contexts -->
+    <Window.DataContext>
+        <ViewModels:ShellViewModel/>
+    </Window.DataContext>
+
+    <!-- Triggers -->
     <Window.Triggers>
         <EventTrigger RoutedEvent="ButtonBase.Click" SourceName="ButtonOpenMenu">
             <BeginStoryboard Storyboard="{StaticResource MenuOpen}" />
@@ -35,149 +50,56 @@
         </EventTrigger>
     </Window.Triggers>
 
+    <!-- The GUI -->
+    <Grid Background="Transparent">
 
-
-
-
-    <!--<ScrollViewer>
-         <StackPanel>
-            <Border BorderBrush="Gray" BorderThickness="1" Margin="5 5 5 15">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="200" />
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="450" />
-                    </Grid.ColumnDefinitions>
-
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="70" />
-                    </Grid.RowDefinitions>
-
-                    <Border Grid.Column="0" BorderBrush="Gray" BorderThickness="1" Padding="0 0 0 5">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="*" />
-                                <RowDefinition Height="*" />
-                            </Grid.RowDefinitions>
-
-                            <TextBlock Text="Nous sommes le" FontSize="18" FontFamily="Global Sans Serif" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="0"/>
-                            <TextBlock Text="3 Avril 2020" FontSize="18" FontFamily="Global Sans Serif" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="1"/>
-
-                        </Grid>
-                    </Border>
-
-                    <Border Grid.Column="1" BorderBrush="Gray" BorderThickness="1" Padding="0 0 0 5">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="*" />
-                                <RowDefinition Height="*" />
-                            </Grid.RowDefinitions>
-
-                            <TextBlock Text="Vue actuelle" FontSize="18" FontFamily="Global Sans Serif" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="0"/>
-                            <TextBlock Text="Mois d'Avril 2020" FontSize="18" FontFamily="Global Sans Serif" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="1"/>
-
-                        </Grid>
-                    </Border>
-
-                    <Border Grid.Column="2" BorderBrush="Gray" BorderThickness="1" Padding="0 0 0 5">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="35"   />
-                                <RowDefinition Height="*" />
-                            </Grid.RowDefinitions>
-
-                            <TextBlock Text="Mode d'affichage" FontSize="18" FontFamily="Global Sans Serif" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.ColumnSpan="4" Grid.Row="0" />
-
-                            <Button Content="Jour" FontSize="15" FontFamily="Global Sans Serif" Height="26" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="0" Grid.Row="1" Width="100" Background="White">
-                                <Button.Resources>
-                                    <Style TargetType="Border">
-                                        <Setter Property="CornerRadius" Value="5" />
-                                    </Style>
-                                </Button.Resources>
-                            </Button>
-                            <Button Content="Semaine" FontSize="15" FontFamily="Global Sans Serif" Height="26" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="1" Grid.Row="1" Width="100" Background="White">
-                                <Button.Resources>
-                                    <Style TargetType="Border">
-                                        <Setter Property="CornerRadius" Value="5"/>
-                                    </Style>
-                                </Button.Resources>
-                            </Button>
-                            <Button x:Name="LoadMonthlyCalendar"  Content="Mois" FontSize="15" FontFamily="Global Sans Serif" Height="26" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="2" Grid.Row="1" Width="100" Background="White" Click="Button_Click">
-                                <Button.Resources>
-                                    <Style TargetType="Border">
-                                        <Setter Property="CornerRadius" Value="5" />
-                                    </Style>
-                                </Button.Resources>
-                            </Button>
-                            <Button Content="Année" FontSize="15" FontFamily="Global Sans Serif" Height="26" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="3" Grid.Row="1" Width="100" Background="White">
-                                <Button.Resources>
-                                    <Style TargetType="Border">
-                                        <Setter Property="CornerRadius" Value="5"/>
-                                    </Style>
-                                </Button.Resources>
-                            </Button>
-                        </Grid>
-                    </Border>
-                </Grid>
-            </Border>
-
-           <ContentControl x:Name="ActiveItem" Grid.Column="0"  Grid.Row="0"/>
-
-        </StackPanel> 
-
-    </ScrollViewer> -->
-
-    <Grid Background="White">
-        <Grid Height="70" VerticalAlignment="Top" Background="White">
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                <TextBlock Text="Utilisateur non enregistré" VerticalAlignment="Center" FontSize="16" Foreground="Black" TextWrapping="Wrap" Width="75" TextAlignment="Center"/>
-                <materialDesign:PopupBox PlacementMode="BottomAndAlignRightEdges" StaysOpen="False" Margin="10" Foreground="Black">
-                    <StackPanel Width="150">
-                        <Button Content="Settings"/>
-                        <Button Content="Account"/>
-                        <Button Content="Help"/>
-                        <Separator/>
-                        <Button Content="Logout"/>
-                    </StackPanel>
-                </materialDesign:PopupBox>
-            </StackPanel>
-            <Grid Width="700">
-                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="18" Foreground="Black" Margin="0 0 0 50" FontFamily="Global Sans Serif" FontWeight="UltraBold">AVRIL 2020</TextBlock>
-                <StackPanel Orientation="Horizontal" Width="280" Margin="0 30 0 0">
-
-                    <Button VerticalAlignment="Center" Foreground="Black" Background="Transparent" BorderBrush="Transparent" Width="30" Height="30" FontSize="11" Padding="-20 -20 -20 -20">
-                        <TextBlock TextAlignment="Center" TextWrapping="Wrap" Width="30" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Global Sans Serif">LUN 19</TextBlock>
-                    </Button>
-                    <Button VerticalAlignment="Center" Foreground="Black" Background="Transparent" BorderBrush="Transparent" Width="30" Height="30" FontSize="11" Padding="-20 -20 -20 -20" Margin="10 0 0 0">
-                        <TextBlock TextAlignment="Center" TextWrapping="Wrap" Width="30" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Global Sans Serif">MAR 20</TextBlock>
-                    </Button>
-                    <Button VerticalAlignment="Center" Foreground="Black" Background="Transparent" BorderBrush="Transparent" Width="30" Height="30" FontSize="11" Padding="-20 -20 -20 -20" Margin="10 0 0 0">
-                        <TextBlock TextAlignment="Center" TextWrapping="Wrap" Width="30" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Global Sans Serif">MER 21</TextBlock>
-                    </Button>
-                    <Button VerticalAlignment="Center" Foreground="Black" Background="Transparent" BorderBrush="Transparent" Width="30" Height="30" FontSize="11" Padding="-20 -20 -20 -20" Margin="10 0 0 0">
-                        <TextBlock TextAlignment="Center" TextWrapping="Wrap" Width="30" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Global Sans Serif">JEU 22</TextBlock>
-                    </Button>
-                    <Button VerticalAlignment="Center" Foreground="Black" Background="Transparent" BorderBrush="Transparent" Width="30" Height="30" FontSize="11" Padding="-20 -20 -20 -20" Margin="10 0 0 0">
-                        <TextBlock TextAlignment="Center" TextWrapping="Wrap" Width="30" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Global Sans Serif">VEN 23</TextBlock>
-                    </Button>
-                    <Button VerticalAlignment="Center" Foreground="Black" Background="Transparent" BorderBrush="Transparent" Width="30" Height="30" FontSize="11" Padding="-20 -20 -20 -20" Margin="10 0 0 0">
-                        <TextBlock TextAlignment="Center" TextWrapping="Wrap" Width="30" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Global Sans Serif">SAM 24</TextBlock>
-                    </Button>
-                    <Button VerticalAlignment="Center" Foreground="Black" Background="Transparent" BorderBrush="Transparent" Width="30" Height="30" FontSize="11" Padding="-20 -20 -20 -20" Margin="10 0 0 0">
-                        <TextBlock TextAlignment="Center" TextWrapping="Wrap" Width="30" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Global Sans Serif">DIM 25</TextBlock>
-                    </Button>
-
+        <!-- The Header -->
+        <Border CornerRadius="5">
+            <Grid Height="70" VerticalAlignment="Top" Background="#7F673AB7">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <TextBlock Text="Utilisateur non enregistré" VerticalAlignment="Center" FontSize="16" Foreground="Black" TextWrapping="Wrap" Width="75" TextAlignment="Center"/>
+                    <materialDesign:PopupBox PlacementMode="BottomAndAlignRightEdges" StaysOpen="False" Margin="10" Foreground="Black">
+                        <StackPanel Width="150">
+                            <Button Content="Settings"/>
+                            <Button Content="Account"/>
+                            <Button Content="Help"/>
+                            <Separator/>
+                            <Button Content="Logout"/>
+                        </StackPanel>
+                    </materialDesign:PopupBox>
                 </StackPanel>
+                <Grid Width="700">
+                    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="18" Foreground="Black" Margin="0 0 0 40" FontFamily="Global Sans Serif" FontWeight="UltraBold" Text="{Binding actualMonthYear}" />
+                    <StackPanel Orientation="Horizontal" Width="280" Margin="0 30 0 0">
+                        <Button VerticalAlignment="Center" Foreground="{Binding actualTuesday, Converter={StaticResource colorConverter}}" Background="Transparent" BorderBrush="Transparent" Width="30" Height="30" FontSize="11" Padding="-20 -20 -20 -20">
+                            <TextBlock TextAlignment="Center" TextWrapping="Wrap" Width="30" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Global Sans Serif" Text="{Binding actualMonday}" />
+                        </Button>
+                        <Button VerticalAlignment="Center" Foreground="{Binding actualTuesday, Converter={StaticResource colorConverter}}" Background="Transparent" BorderBrush="Transparent" Width="30" Height="30" FontSize="11" Padding="-20 -20 -20 -20" Margin="10 0 0 0">
+                            <TextBlock TextAlignment="Center" TextWrapping="Wrap" Width="30" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Global Sans Serif" Text="{Binding actualTuesday}" />
+                        </Button>
+                        <Button VerticalAlignment="Center" Foreground="{Binding actualWednesday, Converter={StaticResource colorConverter}}" Background="Transparent" BorderBrush="Transparent" Width="30" Height="30" FontSize="11" Padding="-20 -20 -20 -20" Margin="10 0 0 0">
+                            <TextBlock TextAlignment="Center" TextWrapping="Wrap" Width="30" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Global Sans Serif" Text="{Binding actualWednesday}" />
+                        </Button>
+                        <Button VerticalAlignment="Center" Foreground="{Binding actualThursday, Converter={StaticResource colorConverter}}" Background="Transparent" BorderBrush="Transparent" Width="30" Height="30" FontSize="11" Padding="-20 -20 -20 -20" Margin="10 0 0 0">
+                            <TextBlock TextAlignment="Center" TextWrapping="Wrap" Width="30" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Global Sans Serif" Text="{Binding actualThursday}" />
+                        </Button>
+                        <Button VerticalAlignment="Center" Foreground="{Binding actualFriday, Converter={StaticResource colorConverter}}" Background="Transparent" BorderBrush="Transparent" Width="30" Height="30" FontSize="11" Padding="-20 -20 -20 -20" Margin="10 0 0 0">
+                            <TextBlock TextAlignment="Center" TextWrapping="Wrap" Width="30" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Global Sans Serif" Text="{Binding actualFriday}" />
+                        </Button>
+                        <Button VerticalAlignment="Center" Foreground="{Binding actualSaturday, Converter={StaticResource colorConverter}}" Background="Transparent" BorderBrush="Transparent" Width="30" Height="30" FontSize="11" Padding="-20 -20 -20 -20" Margin="10 0 0 0">
+                            <TextBlock TextAlignment="Center" TextWrapping="Wrap" Width="30" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Global Sans Serif" Text="{Binding actualSaturday}" />
+                        </Button>
+                        <Button VerticalAlignment="Center" Foreground="{Binding actualSunday, Converter={StaticResource colorConverter}}" Background="Transparent" BorderBrush="Transparent" Width="30" Height="30" FontSize="11" Padding="-20 -20 -20 -20" Margin="10 0 0 0">
+                            <TextBlock TextAlignment="Center" TextWrapping="Wrap" Width="30" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Global Sans Serif" Text="{Binding actualSunday}" />
+                        </Button>
+
+                    </StackPanel>
+                </Grid>
             </Grid>
-        </Grid>
-        <Grid x:Name="GridMenu" Width="60" HorizontalAlignment="Left" Background="White">
+        </Border>
+
+        <!-- The Menu aside -->
+        <Grid x:Name="GridMenu" Width="60" HorizontalAlignment="Left" Background="Transparent">
             <StackPanel>
                 <Grid Height="70" Background="White">
                     <Button x:Name="ButtonCloseMenu" Width="60" Height="60" Background="{x:Null}" BorderBrush="{x:Null}" VerticalAlignment="Top" HorizontalAlignment="Right" Visibility="Collapsed" Click="ButtonCloseMenu_Click" >
@@ -209,40 +131,223 @@
                 </ListView>
             </StackPanel>
         </Grid>
-        <Grid x:Name="GridMain" HorizontalAlignment="Right" VerticalAlignment="Bottom" Height="500" Width="875">
-            <StackPanel>
-                <TextBox x:Name="TestBinding" Foreground="Black"></TextBox>
-                <TextBlock Text="{Binding Path=TestBinding, Mode=OneWay}" Foreground="Black" />
-                <StackPanel Orientation="Horizontal" Height="30" Width="875" Margin="0 40 0 0">
-                    <StackPanel.Background>
-                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                            <GradientStop Color="#FFF3F3F3" Offset="0"/>
-                            <GradientStop Color="Gainsboro" Offset="1"/>
-                        </LinearGradientBrush>
-                    </StackPanel.Background>
 
-                    <TextBlock Foreground="Black" FontFamily="Global Sans Serif" Width="800" FontSize="14" Padding="10 5 0 0" VerticalAlignment="Center">LUNDI 19 AVRIL</TextBlock>
-                    <Button Name="button1" Background="Transparent" BorderBrush="Transparent" Click="button1_Click">
-                        <Image Source="{StaticResource ResourceKey=plusLogo}" />
-                    </Button>
 
+        <Grid x:Name="GridMain" HorizontalAlignment="Right" VerticalAlignment="Bottom" Height="500" Width="875" Margin="0 0 10 0">
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="200" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <!-- The menu to add a task -->
+            <Border Grid.Row="0" Margin="0 30 0 0" Padding="10 10 10 10" BorderBrush="Black" BorderThickness="2" CornerRadius="5" Height="162">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="80" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Text="{Binding Date, Mode=OneWay}" ></TextBlock>
+
+
+                    <StackPanel Grid.Column="0" Grid.Row="0">
+                        <TextBlock Foreground="Black" FontFamily="Global Sans Serif" Text="Entrez une description : " FontWeight="Bold" TextWrapping="Wrap" VerticalAlignment="Center" HorizontalAlignment="Center" TextAlignment="Center"/>
+                        <TextBox FontFamily="Global Sans Serif" Text="{Binding TaskName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Background="#FFF7F7F7" Foreground="Black" Margin="0 5 0 0" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Visible" Height="40" />
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="1" Grid.Row="0" Margin="5 0 5 0">
+                        <TextBlock FontFamily="Global Sans Serif" Foreground="Black" Text="Entrez un jour de réalisation pour ce mois : " FontWeight="Bold" TextWrapping="Wrap" VerticalAlignment="Center" HorizontalAlignment="Center" TextAlignment="Center"/>
+                        <TextBox FontFamily="Global Sans Serif" Foreground="Black" Grid.Column="1" Text="{Binding TaskDay, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="0 4 0 0" TextAlignment="Center" />
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="2" Grid.Row="0" Margin="5 0 5 0">
+                        <TextBlock FontFamily="Global Sans Serif" Foreground="Black" Text="Entrez une heure de réalisation pour cette tâche : " FontWeight="Bold" TextWrapping="Wrap" VerticalAlignment="Center" HorizontalAlignment="Center" TextAlignment="Center"/>
+                        <materialDesign:TimePicker FontFamily="Global Sans Serif" Foreground="Black" Margin="0 4 0 0" SelectedTime="{Binding TaskTime, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="1" Grid.Row="1" Margin="5 0 5 0">
+                        <TextBlock FontFamily="Global Sans Serif" Foreground="Black" Text="Choisissez une couleur pour votre tâche : " FontWeight="Bold" TextWrapping="Wrap" VerticalAlignment="Center" HorizontalAlignment="Center" TextAlignment="Center"/>
+                        <xctk:ColorPicker FontFamily="Global Sans Serif" SelectedColor="{Binding TaskColor, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></xctk:ColorPicker>
+                    </StackPanel>
+
+                    <TextBlock FontFamily="Global Sans Serif" Grid.Row="1" Grid.Column="0" Foreground="Black" Text="{Binding taskColor}"></TextBlock>
+
+                    <Button FontFamily="Global Sans Serif" Grid.Column="3" Grid.RowSpan="2" Content="Ajouter une tâche !" Command="{Binding TaskCommand}" CommandParameter="{Binding}" Width="150" Margin="35 0 0 0"/>
+                </Grid>
+            </Border>
+
+            <ScrollViewer Grid.Row="1">
+                <StackPanel>
+
+                    <!-- First Day -->
+                    <StackPanel Orientation="Horizontal" Height="30" Width="875" Margin="0 40 0 0">
+                        <StackPanel.Background>
+                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                <GradientStop Color="#FFF3F3F3" Offset="0"/>
+                                <GradientStop Color="Gainsboro" Offset="1"/>
+                            </LinearGradientBrush>
+                        </StackPanel.Background>
+
+                        <Border BorderBrush="Black" BorderThickness="1">
+                            <TextBlock Foreground="Black" FontFamily="Global Sans Serif" Width="856" FontSize="14" Padding="10 5 0 0" VerticalAlignment="Center" Text="{Binding NameOfDay}" />
+                        </Border>
+
+                    </StackPanel>
+                    <ItemsControl Grid.Row="1" ItemsSource="{Binding Tasks}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <VirtualizingStackPanel Orientation="Vertical" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Visibility="{Binding _day, Converter={StaticResource DateConverter}, ConverterParameter=1}" Background="{Binding _color}" Margin="10 4 0 0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock Foreground="White" FontSize="15" FontWeight="Bold" Text="{Binding _name}" Grid.Column="0" TextWrapping="Wrap" Padding="3 0 0 0"/>
+                                    <TextBlock Foreground="White" FontSize="15" FontWeight="Bold" Text="{Binding _time}" Grid.Column="1" TextWrapping="Wrap"/>
+                                    <CheckBox IsChecked="{Binding _complete}" Background="White" Grid.Column="2" />
+
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+
+                    <!-- Second Day -->
+                    <StackPanel Orientation="Horizontal" Height="30" Width="875" Margin="0 40 0 0">
+                        <StackPanel.Background>
+                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                <GradientStop Color="#FFF3F3F3" Offset="0"/>
+                                <GradientStop Color="Gainsboro" Offset="1"/>
+                            </LinearGradientBrush>
+                        </StackPanel.Background>
+
+                        <Border BorderBrush="Black" BorderThickness="1">
+                            <TextBlock Foreground="Black" FontFamily="Global Sans Serif" Width="856" FontSize="14" Padding="10 5 0 0" VerticalAlignment="Center" Text="{Binding NameOfDay, Mode=OneWay}" />
+                        </Border>
+
+                    </StackPanel>
+                    <ItemsControl Grid.Row="1" ItemsSource="{Binding Tasks}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <VirtualizingStackPanel Orientation="Vertical" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Visibility="{Binding _day, Converter={StaticResource DateConverter}, ConverterParameter=2}" Background="{Binding _color}" Margin="10 4 0 0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock Foreground="White" FontSize="15" FontWeight="Bold" Text="{Binding _name}" Grid.Column="0" TextWrapping="Wrap" Padding="3 0 0 0"/>
+                                    <TextBlock Foreground="White" FontSize="15" FontWeight="Bold" Text="{Binding _time}" Grid.Column="1" TextWrapping="Wrap"/>
+                                    <CheckBox IsChecked="{Binding _complete}" Background="White" Grid.Column="2" />
+
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+
+
+                    <!-- Third Day -->
+                    <StackPanel Orientation="Horizontal" Height="30" Width="875" Margin="0 40 0 0">
+                        <StackPanel.Background>
+                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                <GradientStop Color="#FFF3F3F3" Offset="0"/>
+                                <GradientStop Color="Gainsboro" Offset="1"/>
+                            </LinearGradientBrush>
+                        </StackPanel.Background>
+
+                        <Border BorderBrush="Black" BorderThickness="1">
+                            <TextBlock Foreground="Black" FontFamily="Global Sans Serif" Width="856" FontSize="14" Padding="10 5 0 0" VerticalAlignment="Center" Text="{Binding NameOfDay, Mode=OneWay}" />
+                        </Border>
+
+                    </StackPanel>
+                    <ItemsControl Grid.Row="1" ItemsSource="{Binding Tasks}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <VirtualizingStackPanel Orientation="Vertical" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Visibility="{Binding _day, Converter={StaticResource DateConverter}, ConverterParameter=3}" Background="{Binding _color}" Margin="10 4 0 0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock Foreground="White" FontSize="15" FontWeight="Bold" Text="{Binding _name}" Grid.Column="0" TextWrapping="Wrap" Padding="3 0 0 0"/>
+                                    <TextBlock Foreground="White" FontSize="15" FontWeight="Bold" Text="{Binding _time}" Grid.Column="1" TextWrapping="Wrap"/>
+                                    <CheckBox IsChecked="{Binding _complete}" Background="White" Grid.Column="2" />
+
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
                 </StackPanel>
-                <ListBox x:Name="listBox1"></ListBox>
+
+            </ScrollViewer>
+        </Grid>
+
+
+        <ItemsControl ItemsSource="{Binding Tasks}">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Text="{Binding _name}" Grid.Column="0" />
+                        <TextBlock Text="{Binding _time}" Grid.Column="1" />
+                        <CheckBox IsChecked="{Binding _complete}" Grid.Column="2" />
+
+                    </Grid>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+
+
+
+        <!--
+    </StackPanel>
 
                 <StackPanel Orientation="Horizontal" Height="30" Width="875" Margin="0 40 0 0">
                     <StackPanel.Background>
                         <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                             <GradientStop Color="#FFF3F3F3" Offset="0"/>
-                            <GradientStop Color="Gainsboro" Offset="1"/>
+                            <GradientStop Color="Gainsboro" Offset="1."/>
                         </LinearGradientBrush>
                     </StackPanel.Background>
                     <TextBlock Foreground="Black" FontFamily="Global Sans Serif" Width="800" FontSize="14" Padding="10 5 0 0" VerticalAlignment="Center">LUNDI 19 AVRIL</TextBlock>
-                    <Button Name="button2" Background="Transparent" BorderBrush="Transparent" Click="button1_Click">
+                    <Button Name="button2" Background="Transparent" BorderBrush="Transparent">
                         <Image Source="{StaticResource ResourceKey=plusLogo}" />
                     </Button>
                 </StackPanel>
                 <ListBox x:Name="listBox2">
-                    
+
                 </ListBox>
 
                 <StackPanel Orientation="Horizontal" Height="30" Width="875" Margin="0 40 0 0">
@@ -253,7 +358,7 @@
                         </LinearGradientBrush>
                     </StackPanel.Background>
                     <TextBlock Foreground="Black" FontFamily="Global Sans Serif" Width="800" FontSize="14" Padding="10 5 0 0" VerticalAlignment="Center">LUNDI 19 AVRIL</TextBlock>
-                    <Button Name="button3" Background="Transparent" BorderBrush="Transparent" Click="button1_Click">
+                    <Button Name="button3" Background="Transparent" BorderBrush="Transparent">
                         <Image Source="{StaticResource ResourceKey=plusLogo}" />
                     </Button>
                 </StackPanel>
@@ -267,7 +372,7 @@
                         </LinearGradientBrush>
                     </StackPanel.Background>
                     <TextBlock Foreground="Black" FontFamily="Global Sans Serif" Width="800" FontSize="14" Padding="10 5 0 0" VerticalAlignment="Center">LUNDI 19 AVRIL</TextBlock>
-                    <Button Name="button4" Background="Transparent" BorderBrush="Transparent" Click="button1_Click">
+                    <Button Name="button4" Background="Transparent" BorderBrush="Transparent">
                         <Image Source="{StaticResource ResourceKey=plusLogo}" />
                     </Button>
                 </StackPanel>
@@ -281,7 +386,7 @@
                         </LinearGradientBrush>
                     </StackPanel.Background>
                     <TextBlock Foreground="Black" FontFamily="Global Sans Serif" Width="800" FontSize="14" Padding="10 5 0 0" VerticalAlignment="Center">LUNDI 19 AVRIL</TextBlock>
-                    <Button Name="button5" Background="Transparent" BorderBrush="Transparent" Click="button1_Click">
+                    <Button Name="button5" Background="Transparent" BorderBrush="Transparent">
                         <Image Source="{StaticResource ResourceKey=plusLogo}" />
                     </Button>
                 </StackPanel>
@@ -295,7 +400,7 @@
                         </LinearGradientBrush>
                     </StackPanel.Background>
                     <TextBlock Foreground="Black" FontFamily="Global Sans Serif" Width="800" FontSize="14" Padding="10 5 0 0" VerticalAlignment="Center">LUNDI 19 AVRIL</TextBlock>
-                    <Button Name="button6" Background="Transparent" BorderBrush="Transparent" Click="button1_Click">
+                    <Button Name="button6" Background="Transparent" BorderBrush="Transparent">
                         <Image Source="{StaticResource ResourceKey=plusLogo}" />
                     </Button>
                 </StackPanel>
@@ -309,19 +414,24 @@
                         </LinearGradientBrush>
                     </StackPanel.Background>
                     <TextBlock Foreground="Black" FontFamily="Global Sans Serif" Width="800" FontSize="14" Padding="10 5 0 0" VerticalAlignment="Center">LUNDI 19 AVRIL</TextBlock>
-                    <Button Name="button7" Background="Transparent" BorderBrush="Transparent" Click="button1_Click">
+                    <Button Name="button7" Background="Transparent" BorderBrush="Transparent">
                         <Image Source="{StaticResource ResourceKey=plusLogo}" />
                     </Button>
                 </StackPanel>
                 <ListBox x:Name="listBox7"></ListBox>
 
-                <Button Height="23" Width="76" Margin="0 0 0 0" Name="DeleteButton" VerticalAlignment="Top" Click="DeleteButton_Click">
+                <Button Height="23" Width="76" Margin="0 0 0 0" Name="DeleteButton" VerticalAlignment="Top">
                 </Button>
 
             </StackPanel>
 
 
         </Grid>
+    </Grid> -->
     </Grid>
-
+    
 </Window>
+
+    
+    
+    

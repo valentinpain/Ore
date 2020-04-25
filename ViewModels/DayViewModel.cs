@@ -1,0 +1,18 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Ore.ViewModels
+{
+    public class DayViewModel
+    {
+        public string number { get; set; }
+
+        public DayViewModel(string number)
+        {
+            this.number = number;
+        }
+    }
+}

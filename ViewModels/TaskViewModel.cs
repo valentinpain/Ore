@@ -8,13 +8,14 @@ namespace Ore.ViewModels
 {
     public class TaskViewModel
     {
-		private string stringTest = "ça fonctionne !";
+        public string _name { get; set; }
 
-		public string StringTest
-		{
-			get { return stringTest = "ça fonctionne !"; }
-			set { stringTest = value; }
-		}
+        public bool _complete { get; set; }
 
-	}
+        public string _time { get; set; }
+
+        public string _color { get; set; }
+
+        public int _day { get; set; }
+    }
 }
