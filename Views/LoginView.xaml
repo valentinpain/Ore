@@ -1,0 +1,38 @@
+﻿<Window x:Class="Ore.Views.LoginView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:viewmodels="clr-namespace:Ore.ViewModels"
+        xmlns:commands="clr-namespace:Ore.ViewModels.Commands"
+        xmlns:local="clr-namespace:Ore.Views"
+        mc:Ignorable="d"
+        Title="Se connecter" Height="319" Width="400" WindowStartupLocation="CenterScreen" FontSize="14" Background="#F18B5FD8">
+
+    <Window.DataContext>
+        <viewmodels:LoginViewModel x:Name="LoginViewModel" />
+    </Window.DataContext>
+
+    <Border Background="#2E3137" CornerRadius="20" Margin="20">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="185" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <StackPanel Grid.Row="0" Margin="20">
+                <TextBlock Text="Se connecter" Foreground="White" FontSize="25" HorizontalAlignment="Center" />
+                <Separator />
+                <TextBlock Text="Nom d'utilisateur" Foreground="White" Margin="0 15 0 0" />
+                <TextBox Background="#545D6A" Foreground="White" FontSize="13" Height="25" Margin="0 2 0 0" Text="{Binding User.Username, Mode=TwoWay}"/>
+                <TextBlock Text="Mot de passe" Foreground="White" />
+                <PasswordBox x:Name="txtPassword" Background="#545D6A" Foreground="White" FontSize="13" Height="25" Margin="0 2 0 0" />
+            </StackPanel>
+
+            <StackPanel Grid.Row="1">
+                <Button Content="Submit" Margin="60 0" Background="#545D6A" BorderBrush="#545D6A" Command="{Binding LoginAccessCommand}" CommandParameter="{Binding ElementName=txtPassword}"/>
+            </StackPanel>
+        </Grid>
+    </Border>
+
+</Window>

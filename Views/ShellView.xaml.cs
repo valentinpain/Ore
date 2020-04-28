@@ -23,8 +23,8 @@ namespace Ore.Views
         public ShellView()
         {
             InitializeComponent();
-            var tasks = new ShellViewModel();
-            this.DataContext = tasks;
+           var shellView = new ShellViewModel();
+           this.DataContext = shellView;
         }
 
         private void ButtonPopUpLogout_Click(object sender, RoutedEventArgs e)
@@ -52,6 +52,60 @@ namespace Ore.Views
             ButtonDefaultView.Foreground = Brushes.White;
             ButtonDailyView.Foreground = Brushes.White;
             ButtonMonthlyView.Foreground = Brushes.White;
+        }
+
+        public void Windowloading(object sender, RoutedEventArgs e)
+        {
+            DateTime date = DateTime.Now;
+            int index = (date.ToString()).IndexOf('/');
+            string month = date.ToString().Substring(index + 1, 2);
+
+            string actualMonth;
+
+            switch (month)
+            {
+                case "01":
+                    actualMonth = "JANVIER";
+                    break;
+                case "02":
+                    actualMonth = "FÉVRIER";
+                    break;
+                case "03":
+                    actualMonth = "MARS";
+                    break;
+                case "04":
+                    actualMonth = "AVRIL";
+                    break;
+                case "05":
+                    actualMonth = "MAI";
+                    break;
+                case "06":
+                    actualMonth = "JUIN";
+                    break;
+                case "07":
+                    actualMonth = "JUILLET";
+                    break;
+                case "08":
+                    actualMonth = "AOÛT";
+                    break;
+                case "09":
+                    actualMonth = "SEPTEMBRE";
+                    break;
+                case "10":
+                    actualMonth = "OCTOBRE";
+                    break;
+                case "11":
+                    actualMonth = "NOVEMBRE";
+                    break;
+                case "12":
+                    actualMonth = "DECEMBRE";
+                    break;
+                default:
+                    actualMonth = "error";
+                    break;
+            }
+
+            ShellViewModel.retrieveDataFromModel(actualMonth);
         }
     }
 }

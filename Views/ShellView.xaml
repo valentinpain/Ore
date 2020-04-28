@@ -8,10 +8,15 @@
         xmlns:ViewModels="clr-namespace:Ore.ViewModels"
         xmlns:Models="clr-namespace:Ore.Models"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" 
-        xmlns:convt="clr-namespace:Ore.Converter"
+        xmlns:convt="clr-namespace:Ore.ViewModels.Converter"
+        xmlns:comd="clr-namespace:Ore.ViewModels.Commands"
         mc:Ignorable="d"
-        Title="Ore" Height="600" Width="1080" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" Foreground="White">
+        Title="Ore" Height="600" Width="1080" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" Foreground="White" Loaded="Windowloading">
 
+    <Window.DataContext>
+        <ViewModels:ShellViewModel x:Name="ShellViewModel" />
+    </Window.DataContext>
+    
     <!-- Ressources -->
     <Window.Resources>
         <Storyboard x:Key="MenuOpen">
@@ -29,16 +34,14 @@
 
         <ViewModels:ShellViewModel x:Key="ViewModel" />
         <Models:ShellModel x:Key="Model" />
+
+        <convt:ActualDayColorConverter x:Key="ActualDayColorConverter" />
         <convt:DateConverter x:Key="DateConverter" />
-        <convt:ActualDayColorConverter x:Key="colorConverter" />
+        <convt:TaskDoneConverter x:Key="TaskDoneConverter" />
+        <convt:OpacityTaskDoneConverter x:Key="OpacityTaskDoneConverter" />
+        <convt:ColorTaskConverter x:Key="ColorTaskConverter" />
 
-        <BitmapImage x:Key="plusLogo" UriSource="/plus.png" />
     </Window.Resources>
-
-    <!-- Contexts -->
-    <Window.DataContext>
-        <ViewModels:ShellViewModel/>
-    </Window.DataContext>
 
     <!-- Triggers -->
     <Window.Triggers>
@@ -55,9 +58,11 @@
 
         <!-- The Header -->
         <Border CornerRadius="5">
-            <Grid Height="70" VerticalAlignment="Top" Background="#7F673AB7">
+            <Grid DataContext="{Binding Source={StaticResource ViewModel}}" Height="70" VerticalAlignment="Top" Background="#7F673AB7">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                     <TextBlock Text="Utilisateur non enregistré" VerticalAlignment="Center" FontSize="16" Foreground="Black" TextWrapping="Wrap" Width="75" TextAlignment="Center"/>
+                    
+                    <!-- Changer ce bout de code ! -->
                     <materialDesign:PopupBox PlacementMode="BottomAndAlignRightEdges" StaysOpen="False" Margin="10" Foreground="Black">
                         <StackPanel Width="150">
                             <Button Content="Settings"/>
@@ -69,27 +74,44 @@
                     </materialDesign:PopupBox>
                 </StackPanel>
                 <Grid Width="700">
-                    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="18" Foreground="Black" Margin="0 0 0 40" FontFamily="Global Sans Serif" FontWeight="UltraBold" Text="{Binding actualMonthYear}" />
-                    <StackPanel Orientation="Horizontal" Width="280" Margin="0 30 0 0">
-                        <Button VerticalAlignment="Center" Foreground="{Binding actualTuesday, Converter={StaticResource colorConverter}}" Background="Transparent" BorderBrush="Transparent" Width="30" Height="30" FontSize="11" Padding="-20 -20 -20 -20">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="300" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <Button Grid.Column="0" Grid.RowSpan="2" Command="{Binding LeftArrowMonthCommand, Source={StaticResource ViewModel}}" Background="Transparent" BorderBrush="Transparent" HorizontalAlignment="Right" Margin="0 0 10 0">
+                        <Image Source="/Images/leftArrow.png" />
+                    </Button>
+                    <TextBlock Grid.Column="1" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="18" Foreground="Black" FontFamily="Global Sans Serif" FontWeight="UltraBold" Text="{Binding ActualMonthYear}" />
+                    <Button Grid.Column="2" Grid.RowSpan="2" Command="{Binding RightArrowMonthCommand, Source={StaticResource ViewModel}}" Background="Transparent" BorderBrush="Transparent" HorizontalAlignment="Left" >
+                        <Image Source="/Images/rightArrow.png" />
+                    </Button>
+                    <StackPanel Grid.Column="1" Grid.Row="1" Orientation="Horizontal" Width="280">
+                        <Button VerticalAlignment="Center" Foreground="{Binding actualTuesday, Converter={StaticResource ActualDayColorConverter}}" Background="Transparent" BorderBrush="Transparent" Width="30" Height="30" FontSize="11" Padding="-20 -20 -20 -20">
                             <TextBlock TextAlignment="Center" TextWrapping="Wrap" Width="30" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Global Sans Serif" Text="{Binding actualMonday}" />
                         </Button>
-                        <Button VerticalAlignment="Center" Foreground="{Binding actualTuesday, Converter={StaticResource colorConverter}}" Background="Transparent" BorderBrush="Transparent" Width="30" Height="30" FontSize="11" Padding="-20 -20 -20 -20" Margin="10 0 0 0">
+                        <Button VerticalAlignment="Center" Foreground="{Binding actualTuesday, Converter={StaticResource ActualDayColorConverter}}" Background="Transparent" BorderBrush="Transparent" Width="30" Height="30" FontSize="11" Padding="-20 -20 -20 -20" Margin="10 0 0 0">
                             <TextBlock TextAlignment="Center" TextWrapping="Wrap" Width="30" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Global Sans Serif" Text="{Binding actualTuesday}" />
                         </Button>
-                        <Button VerticalAlignment="Center" Foreground="{Binding actualWednesday, Converter={StaticResource colorConverter}}" Background="Transparent" BorderBrush="Transparent" Width="30" Height="30" FontSize="11" Padding="-20 -20 -20 -20" Margin="10 0 0 0">
+                        <Button VerticalAlignment="Center" Foreground="{Binding actualWednesday, Converter={StaticResource ActualDayColorConverter}}" Background="Transparent" BorderBrush="Transparent" Width="30" Height="30" FontSize="11" Padding="-20 -20 -20 -20" Margin="10 0 0 0">
                             <TextBlock TextAlignment="Center" TextWrapping="Wrap" Width="30" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Global Sans Serif" Text="{Binding actualWednesday}" />
                         </Button>
-                        <Button VerticalAlignment="Center" Foreground="{Binding actualThursday, Converter={StaticResource colorConverter}}" Background="Transparent" BorderBrush="Transparent" Width="30" Height="30" FontSize="11" Padding="-20 -20 -20 -20" Margin="10 0 0 0">
+                        <Button VerticalAlignment="Center" Foreground="{Binding actualThursday, Converter={StaticResource ActualDayColorConverter}}" Background="Transparent" BorderBrush="Transparent" Width="30" Height="30" FontSize="11" Padding="-20 -20 -20 -20" Margin="10 0 0 0">
                             <TextBlock TextAlignment="Center" TextWrapping="Wrap" Width="30" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Global Sans Serif" Text="{Binding actualThursday}" />
                         </Button>
-                        <Button VerticalAlignment="Center" Foreground="{Binding actualFriday, Converter={StaticResource colorConverter}}" Background="Transparent" BorderBrush="Transparent" Width="30" Height="30" FontSize="11" Padding="-20 -20 -20 -20" Margin="10 0 0 0">
+                        <Button VerticalAlignment="Center" Foreground="{Binding actualFriday, Converter={StaticResource ActualDayColorConverter}}" Background="Transparent" BorderBrush="Transparent" Width="30" Height="30" FontSize="11" Padding="-20 -20 -20 -20" Margin="10 0 0 0">
                             <TextBlock TextAlignment="Center" TextWrapping="Wrap" Width="30" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Global Sans Serif" Text="{Binding actualFriday}" />
                         </Button>
-                        <Button VerticalAlignment="Center" Foreground="{Binding actualSaturday, Converter={StaticResource colorConverter}}" Background="Transparent" BorderBrush="Transparent" Width="30" Height="30" FontSize="11" Padding="-20 -20 -20 -20" Margin="10 0 0 0">
+                        <Button VerticalAlignment="Center" Foreground="{Binding actualSaturday, Converter={StaticResource ActualDayColorConverter}}" Background="Transparent" BorderBrush="Transparent" Width="30" Height="30" FontSize="11" Padding="-20 -20 -20 -20" Margin="10 0 0 0">
                             <TextBlock TextAlignment="Center" TextWrapping="Wrap" Width="30" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Global Sans Serif" Text="{Binding actualSaturday}" />
                         </Button>
-                        <Button VerticalAlignment="Center" Foreground="{Binding actualSunday, Converter={StaticResource colorConverter}}" Background="Transparent" BorderBrush="Transparent" Width="30" Height="30" FontSize="11" Padding="-20 -20 -20 -20" Margin="10 0 0 0">
+                        <Button VerticalAlignment="Center" Foreground="{Binding actualSunday, Converter={StaticResource ActualDayColorConverter}}" Background="Transparent" BorderBrush="Transparent" Width="30" Height="30" FontSize="11" Padding="-20 -20 -20 -20" Margin="10 0 0 0">
                             <TextBlock TextAlignment="Center" TextWrapping="Wrap" Width="30" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Global Sans Serif" Text="{Binding actualSunday}" />
                         </Button>
 
@@ -142,7 +164,7 @@
 
             <!-- The menu to add a task -->
             <Border Grid.Row="0" Margin="0 30 0 0" Padding="10 10 10 10" BorderBrush="Black" BorderThickness="2" CornerRadius="5" Height="162">
-                <Grid>
+                <Grid DataContext="{Binding Source={StaticResource ViewModel}}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
@@ -155,17 +177,17 @@
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
 
-                    <TextBlock Text="{Binding Date, Mode=OneWay}" ></TextBlock>
+                    <!--<TextBlock Text="{Binding Date, Mode=OneWay}" ></TextBlock>-->
 
 
                     <StackPanel Grid.Column="0" Grid.Row="0">
                         <TextBlock Foreground="Black" FontFamily="Global Sans Serif" Text="Entrez une description : " FontWeight="Bold" TextWrapping="Wrap" VerticalAlignment="Center" HorizontalAlignment="Center" TextAlignment="Center"/>
-                        <TextBox FontFamily="Global Sans Serif" Text="{Binding TaskName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Background="#FFF7F7F7" Foreground="Black" Margin="0 5 0 0" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Visible" Height="40" />
+                        <TextBox FontFamily="Global Sans Serif" Text="{Binding TaskName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Background="#FFF7F7F7" Foreground="Black" Margin="0 5 0 0" AcceptsReturn="True" VerticalScrollBarVisibility="Visible" Height="40" />
                     </StackPanel>
 
                     <StackPanel Grid.Column="1" Grid.Row="0" Margin="5 0 5 0">
                         <TextBlock FontFamily="Global Sans Serif" Foreground="Black" Text="Entrez un jour de réalisation pour ce mois : " FontWeight="Bold" TextWrapping="Wrap" VerticalAlignment="Center" HorizontalAlignment="Center" TextAlignment="Center"/>
-                        <TextBox FontFamily="Global Sans Serif" Foreground="Black" Grid.Column="1" Text="{Binding TaskDay, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="0 4 0 0" TextAlignment="Center" />
+                        <ComboBox ItemsSource="{Binding Days, Mode=TwoWay}" DisplayMemberPath="Number" FontFamily="Global Sans Serif" Foreground="Black" Margin="0 4 0 0" HorizontalAlignment="Center" Width="150" />
                     </StackPanel>
 
                     <StackPanel Grid.Column="2" Grid.Row="0" Margin="5 0 5 0">
@@ -178,7 +200,9 @@
                         <xctk:ColorPicker FontFamily="Global Sans Serif" SelectedColor="{Binding TaskColor, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></xctk:ColorPicker>
                     </StackPanel>
 
-                    <TextBlock FontFamily="Global Sans Serif" Grid.Row="1" Grid.Column="0" Foreground="Black" Text="{Binding taskColor}"></TextBlock>
+                    <!--<TextBlock FontFamily="Global Sans Serif" Grid.Row="1" Grid.Column="0" Foreground="Black" Text="{Binding taskColor}"></TextBlock>-->
+
+                    <TextBlock Grid.Column="2" Grid.Row="1" FontFamily="Global Sans Serif" Text="{Binding TaskMonth, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Background="White" Foreground="White" />
 
                     <Button FontFamily="Global Sans Serif" Grid.Column="3" Grid.RowSpan="2" Content="Ajouter une tâche !" Command="{Binding TaskCommand}" CommandParameter="{Binding}" Width="150" Margin="35 0 0 0"/>
                 </Grid>
@@ -188,7 +212,7 @@
                 <StackPanel>
 
                     <!-- First Day -->
-                    <StackPanel Orientation="Horizontal" Height="30" Width="875" Margin="0 40 0 0">
+                    <StackPanel DataContext="{Binding Source={StaticResource ViewModel}}" Orientation="Horizontal" Height="30" Width="875" Margin="0 40 0 0">
                         <StackPanel.Background>
                             <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                                 <GradientStop Color="#FFF3F3F3" Offset="0"/>
@@ -196,8 +220,8 @@
                             </LinearGradientBrush>
                         </StackPanel.Background>
 
-                        <Border BorderBrush="Black" BorderThickness="1">
-                            <TextBlock Foreground="Black" FontFamily="Global Sans Serif" Width="856" FontSize="14" Padding="10 5 0 0" VerticalAlignment="Center" Text="{Binding NameOfDay}" />
+                        <Border BorderBrush="Black" BorderThickness="1" CornerRadius="3">
+                            <TextBlock Foreground="Black" FontFamily="Global Sans Serif" Width="856" FontSize="14" Padding="10 5 0 0" VerticalAlignment="Center" Text="{Binding DaysInMonth[1]}" />
                         </Border>
 
                     </StackPanel>
@@ -210,18 +234,33 @@
 
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <Grid Visibility="{Binding _day, Converter={StaticResource DateConverter}, ConverterParameter=1}" Background="{Binding _color}" Margin="10 4 0 0">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="*" />
-                                    </Grid.ColumnDefinitions>
+                                <Border Padding="5 0 0 0" CornerRadius="20" BorderBrush="Black" BorderThickness="1" Visibility="{Binding _day, Converter={StaticResource DateConverter}, ConverterParameter=1}" Opacity="{Binding _complete, Converter={StaticResource OpacityTaskDoneConverter}}" Background="{Binding _color}" Margin="10 4 0 0" Height="40">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
 
-                                    <TextBlock Foreground="White" FontSize="15" FontWeight="Bold" Text="{Binding _name}" Grid.Column="0" TextWrapping="Wrap" Padding="3 0 0 0"/>
-                                    <TextBlock Foreground="White" FontSize="15" FontWeight="Bold" Text="{Binding _time}" Grid.Column="1" TextWrapping="Wrap"/>
-                                    <CheckBox IsChecked="{Binding _complete}" Background="White" Grid.Column="2" />
+                                        <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                            <TextBlock Foreground="{Binding _color, Converter={StaticResource ColorTaskConverter}}" TextDecorations="{Binding _complete, Converter={StaticResource TaskDoneConverter}}" FontSize="15" FontWeight="Bold" Text="{Binding _name}" Grid.Column="0" TextWrapping="Wrap" Padding="5 0 0 0" VerticalAlignment="Center" TextAlignment="Center"/>
+                                        </ScrollViewer>
+                                        <TextBlock Foreground="{Binding _color, Converter={StaticResource ColorTaskConverter}}" TextDecorations="{Binding _complete, Converter={StaticResource TaskDoneConverter}}" FontSize="15" FontWeight="Bold" Text="{Binding _time}" Grid.Column="1" TextWrapping="Wrap" VerticalAlignment="Center" TextAlignment="Center"/>
 
-                                </Grid>
+                                            <CheckBox IsChecked="{Binding _complete}" Background="White" Grid.Column="2"/>
+                                        <StackPanel Grid.Column="3"  Orientation="Horizontal">
+                                            <Button Width="55" Height="35" Background="Transparent" BorderBrush="Transparent" Command="{Binding DeleteCommand, Source={StaticResource ViewModel}}" CommandParameter="{Binding _id}" >
+                                                <Image Source="/Images/pencil.png" />
+                                            </Button>
+                                            <Button Width="55" Height="35" Background="Transparent" BorderBrush="Transparent" Command="{Binding DeleteCommand, Source={StaticResource ViewModel}}" CommandParameter="{Binding _id}" >
+                                                <Image Source="/Images/remove.png" />
+                                            </Button>
+                                        </StackPanel>
+
+                                    </Grid>
+                                </Border>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
@@ -236,7 +275,7 @@
                         </StackPanel.Background>
 
                         <Border BorderBrush="Black" BorderThickness="1">
-                            <TextBlock Foreground="Black" FontFamily="Global Sans Serif" Width="856" FontSize="14" Padding="10 5 0 0" VerticalAlignment="Center" Text="{Binding NameOfDay, Mode=OneWay}" />
+                            <TextBlock Foreground="Black" FontFamily="Global Sans Serif" Width="856" FontSize="14" Padding="10 5 0 0" VerticalAlignment="Center" Text="{Binding DaysInMonth[2]}" />
                         </Border>
 
                     </StackPanel>
@@ -276,7 +315,7 @@
                         </StackPanel.Background>
 
                         <Border BorderBrush="Black" BorderThickness="1">
-                            <TextBlock Foreground="Black" FontFamily="Global Sans Serif" Width="856" FontSize="14" Padding="10 5 0 0" VerticalAlignment="Center" Text="{Binding NameOfDay, Mode=OneWay}" />
+                            <TextBlock Foreground="Black" FontFamily="Global Sans Serif" Width="856" FontSize="14" Padding="10 5 0 0" VerticalAlignment="Center" Text="{Binding DaysInMonth[3]}" />
                         </Border>
 
                     </StackPanel>
@@ -305,29 +344,11 @@
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
                 </StackPanel>
+              
 
             </ScrollViewer>
         </Grid>
 
-
-        <ItemsControl ItemsSource="{Binding Tasks}">
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-
-                        <TextBlock Text="{Binding _name}" Grid.Column="0" />
-                        <TextBlock Text="{Binding _time}" Grid.Column="1" />
-                        <CheckBox IsChecked="{Binding _complete}" Grid.Column="2" />
-
-                    </Grid>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
 
 
 
