@@ -6,16 +6,8 @@ using System.Threading.Tasks;
 
 namespace Ore.ViewModels
 {
-    public class DayViewModel
+    public class Months
     {
-		private int number;
 
-		public int Number
-		{
-			get { return number; }
-			set { number = value; }
-		}
-
-
-	}
+    }
 }

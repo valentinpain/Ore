@@ -12,17 +12,45 @@ using System.Windows.Input;
 
 namespace Ore.ViewModels
 {
-	public class ShellViewModel : INotifyPropertyChanged
+	public class ShellViewModel : INotifyPropertyChanged         // Charger les jours en forme de liste
 	{
         #region Attributes
 
-        private ObservableCollection<TaskViewModel> tasks = new ObservableCollection<TaskViewModel>();
+        private static ObservableCollection<TaskViewModel> tasks = new ObservableCollection<TaskViewModel>();
 		private ObservableCollection<DayViewModel> days = new ObservableCollection<DayViewModel>();
+		public event PropertyChangedEventHandler PropertyChanged;
 		private static int bitOfDay = -3;
-		private string nameOfDay;
 		private string taskTime;
 		private string date;
-		public event PropertyChangedEventHandler PropertyChanged;
+		private string taskMonth = FindActualMonthYear(DateTime.Now, 0);
+		private int id = 0;
+		private string[] daysInMonth;
+
+		public string[] DaysInMonth
+		{
+			get { return ArrayOfDaysInMonth(convertMonthInt(taskMonth)); }
+			set 
+			{ 
+				daysInMonth = value;
+				NotifyPropertyChanged(nameof(DaysInMonth));
+			}
+		}
+
+
+		private static char bitMonthActualisation;
+
+		public static char BitMonthActualisation
+		{
+			get { return bitMonthActualisation; }
+			set { bitMonthActualisation = value; }
+		}
+
+
+		public ObservableCollection<DayViewModel> Days
+		{
+			get { return setDaysInMonth(days); }
+			set { days = value; }
+		}
 
 
 		public ObservableCollection<TaskViewModel> Tasks
@@ -30,11 +58,8 @@ namespace Ore.ViewModels
 			get { return tasks; }
 			set
 			{
-				if (tasks != value)
-				{
-					tasks = value;
-					NotifyPropertyChanged(nameof(Tasks));
-				}
+				tasks = value;
+				NotifyPropertyChanged(nameof(Tasks));
 			}
 		}
 
@@ -44,10 +69,10 @@ namespace Ore.ViewModels
 			set { bitOfDay = value; }
 		}
 
-		public string NameOfDay
+		public int Id
 		{
-			get { return DaysOfMonth(); }
-			set { nameOfDay = value; }
+			get { return id; }
+			set { id = value; }
 		}
 
 		public string actualMonday {
@@ -91,11 +116,20 @@ namespace Ore.ViewModels
 			set { actualSunday = value; }
 		}
 
-		public string actualMonthYear
+
+		private string actualMonthYear = FindActualMonthYear(DateTime.Now, 1);
+
+		public string ActualMonthYear
 		{
-			get { return FindActualMonthYear(DateTime.Now); }
-			set { actualMonthYear = value; }
+			get { return actualMonthYear; }
+			set 
+			{ 
+				actualMonthYear = value;
+				NotifyPropertyChanged(nameof(ActualMonthYear));
+			}
 		}
+
+
 
 		public string TaskColor { get; set; }
 
@@ -112,35 +146,28 @@ namespace Ore.ViewModels
 			get { return DateTimeToString(DateTime.Now); }
 			set { date = value; }
 		}
-		public int TaskDay { get; set; }
 
-		public ICommand TaskCommand { get { return new TaskCommand(); } }
-
-		public ObservableCollection<DayViewModel> Days
+		public string TaskMonth
 		{
-			get { return FillDaysCollection(days); }
+			get { return taskMonth; }
 			set 
-			{
-				if (days != value)
-				{
-					days = value;
-					NotifyPropertyChanged(nameof(Tasks));
-				}
+			{ 
+				taskMonth = value;
+				NotifyPropertyChanged(nameof(TaskMonth));
 			}
 		}
 
-        #endregion
+		public int TaskDay { get { return 1; } set { TaskDay = value; } }
 
-        #region Methods
+		public ICommand TaskCommand { get { return new TaskCommand(); } }
+		public ICommand DeleteCommand { get { return new DeleteCommand(); } }
+		public ICommand RightArrowMonthCommand { get { return new RightArrowMonthCommand(this); } }
+		public ICommand LeftArrowMonthCommand { get { return new LeftArrowMonthCommand(this); } }
 
-        public ObservableCollection<DayViewModel> FillDaysCollection(ObservableCollection<DayViewModel> daysCollection)
-		{
-			daysCollection.Add(new DayViewModel("1"));
-			daysCollection.Add(new DayViewModel("2"));
-			daysCollection.Add(new DayViewModel("3"));
+		#endregion
 
-			return daysCollection;
-		}
+
+		#region Methods
 
 		public static string DateTimeToString(DateTime date)
 		{
@@ -148,42 +175,63 @@ namespace Ore.ViewModels
 			return date.ToString().Substring(0, index);
 		}
 
-		public static string FindActualMonthYear(DateTime date)
+		public static string FindActualMonthYear(DateTime date, int yearFlag)
 		{
 			int index = (date.ToString()).IndexOf('/');
 			string month = date.ToString().Substring(index + 1, 2);
 			string year = date.ToString().Substring(index + 4, 4);
+			string convertedAnswer;
 
 
 			switch (month)
 			{
 				case "01":
-					return "JANVIER " + year;
+					convertedAnswer = "JANVIER " + year;
+					break;
 				case "02":
-					return "FÉVRIER " + year;
+					convertedAnswer = "FÉVRIER " + year;
+					break;
 				case "03":
-					return "MARS " + year;
+					convertedAnswer = "MARS " + year;
+					break;
 				case "04":
-					return "AVRIL " + year;
+					convertedAnswer = "AVRIL " + year;
+					break;
 				case "05":
-					return "MAI " + year;
+					convertedAnswer = "MAI " + year;
+					break;
 				case "06":
-					return "JUIN " + year;
+					convertedAnswer = "JUIN " + year;
+					break;
 				case "07":
-					return "JUILLET " + year;
+					convertedAnswer = "JUILLET " + year;
+					break;
 				case "08":
-					return "AOÛT " + year;
+					convertedAnswer = "AOÛT " + year;
+					break;
 				case "09":
-					return "SEPTEMBRE " + year;
+					convertedAnswer = "SEPTEMBRE " + year;
+					break;
 				case "10":
-					return "OCTOBRE " + year;
+					convertedAnswer = "OCTOBRE " + year;
+					break;
 				case "11":
-					return "NOVEMBRE " + year;
+					convertedAnswer = "NOVEMBRE " + year;
+					break;
 				case "12":
-					return "DECEMBRE " + year;
+					convertedAnswer = "DECEMBRE " + year;
+					break;
 				default:
-					return "error";
+					convertedAnswer = "error";
+					break;
 			}
+
+			if (yearFlag == 1)
+				return convertedAnswer;
+
+			string[] converterAnswerSplitted = convertedAnswer.Split(' ');
+			return converterAnswerSplitted[0].ToLower();
+
 		}
 
 		public int lastMonday(DateTime date)
@@ -271,48 +319,216 @@ namespace Ore.ViewModels
 			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
 		}
 
-		public static string DaysOfMonth()
+		public static void retrieveDataFromModel(string month)
 		{
-			bitOfDay++;
-			string DayOfMonth = (new DateTime(DateTime.Now.Year, DateTime.Now.Month, bitOfDay)).DayOfWeek.ToString();
-			string numberDayOfMonth = (new DateTime(DateTime.Now.Year, DateTime.Now.Month, bitOfDay)).ToString();
+			ObservableCollection<TaskViewModel> tempList = ShellModel.retrieveDataFromDatabase(month);
 
-			if (numberDayOfMonth[0] == '0')
-				numberDayOfMonth = numberDayOfMonth.Substring(1, 1);
-			else
-				numberDayOfMonth = numberDayOfMonth.Substring(0, 2);
-
-			switch (DayOfMonth.ToString())
+			if(tempList != null)
 			{
-				case "Monday":
-					DayOfMonth = "LUNDI";
+				foreach(TaskViewModel task in tempList)
+				{
+					tasks.Add(new TaskViewModel() { _name = task._name, _complete = task._complete, _day = task._day, _time = task._time, _color = task._color, _id = task._id });
+				}
+			}
+		}
+
+		public ObservableCollection<DayViewModel> setDaysInMonth(ObservableCollection<DayViewModel> days)
+		{
+			int nbOfDays = DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month);
+
+			for(int i = 1; i <= nbOfDays; i++)
+			{
+				days.Add(new DayViewModel() { Number = i });
+			}
+
+			return days;
+		}
+
+		public void changeMonthUp()
+		{
+			string[] monthYearSplitted = ActualMonthYear.Split(' ');
+
+			switch (monthYearSplitted[0])
+			{
+				case "JANVIER":
+					monthYearSplitted[0] = "FÉVRIER";
 					break;
-				case "Tuesday":
-					DayOfMonth = "MARDI";
+				case "FÉVRIER":
+					monthYearSplitted[0] = "MARS";
 					break;
-				case "Wednesday":
-					DayOfMonth = "MERCREDI";
+				case "MARS":
+					monthYearSplitted[0] = "AVRIL";
 					break;
-				case "Thursday":
-					DayOfMonth = "JEUDI";
+				case "AVRIL":
+					monthYearSplitted[0] = "MAI";
 					break;
-				case "Friday":
-					DayOfMonth = "VENDREDI";
+				case "MAI":
+					monthYearSplitted[0] = "JUIN";
 					break;
-				case "Saturday":
-					DayOfMonth = "SAMEDI";
+				case "JUIN":
+					monthYearSplitted[0] = "JUILLET";
 					break;
-				case "Sunday":
-					DayOfMonth = "DIMANCHE";
+				case "JUILLET":
+					monthYearSplitted[0] = "AOÛT";
+					break;
+				case "AOÛT":
+					monthYearSplitted[0] = "SEPTEMBRE";
+					break;
+				case "SEPTEMBRE":
+					monthYearSplitted[0] = "OCTOBRE";
+					break;
+				case "OCTOBRE":
+					monthYearSplitted[0] = "NOVEMBRE";
+					break;
+				case "NOVEMBRE":
+					monthYearSplitted[0] = "DÉCEMBRE";
+					break;
+				case "DÉCEMBRE":
+					monthYearSplitted[0] = "JANVIER";
+					monthYearSplitted[1] = (int.Parse(monthYearSplitted[1]) + 1).ToString();
 					break;
 				default:
-					DayOfMonth = "error";
+					monthYearSplitted[0] = monthYearSplitted[1] = "error";
 					break;
 			}
 
-			return DayOfMonth + " " + numberDayOfMonth;
+			ActualMonthYear = TaskMonth = String.Join(" ", monthYearSplitted);
+
+			string[] ActualMonthYearSplitted = ActualMonthYear.Split(' ');
+			TaskMonth = ActualMonthYearSplitted[0].ToString().ToLower();
+		}
+
+		public void changeMonthDown()
+		{
+			string[] monthYearSplitted = ActualMonthYear.Split(' ');
+
+			switch (monthYearSplitted[0])
+			{
+				case "JANVIER":
+					monthYearSplitted[0] = "DÉCEMBRE";
+					monthYearSplitted[1] = (int.Parse(monthYearSplitted[1]) - 1).ToString();
+					break;
+				case "FÉVRIER":
+					monthYearSplitted[0] = "JANVIER";
+					break;
+				case "MARS":
+					monthYearSplitted[0] = "FÉVRIER";
+					break;
+				case "AVRIL":
+					monthYearSplitted[0] = "MARS";
+					break;
+				case "MAI":
+					monthYearSplitted[0] = "AVRIL";
+					break;
+				case "JUIN":
+					monthYearSplitted[0] = "MAI";
+					break;
+				case "JUILLET":
+					monthYearSplitted[0] = "JUIN";
+					break;
+				case "AOÛT":
+					monthYearSplitted[0] = "JUILLET";
+					break;
+				case "SEPTEMBRE":
+					monthYearSplitted[0] = "AOÛT";
+					break;
+				case "OCTOBRE":
+					monthYearSplitted[0] = "SEPTEMBRE";
+					break;
+				case "NOVEMBRE":
+					monthYearSplitted[0] = "OCTOBRE";
+					break;
+				case "DÉCEMBRE":
+					monthYearSplitted[0] = "NOVEMBRE";
+					break;
+				default:
+					monthYearSplitted[0] = monthYearSplitted[1] = "error";
+					break;
+			}
+
+			ActualMonthYear = String.Join(" ", monthYearSplitted);
+
+			string[] ActualMonthYearSplitted = ActualMonthYear.Split(' ');
+			TaskMonth = ActualMonthYearSplitted[0].ToString().ToLower();
+		}
+
+		public int convertMonthInt(string month)
+		{
+			switch (month)
+			{
+				case "janvier":
+					return 1;
+				case "février":
+					return 2;
+				case "mars":
+					return 3;
+				case "avril":
+					return 4;
+				case "mai":
+					return 5;
+				case "juin":
+					return 6;
+				case "juillet":
+					return 7;
+				case "août":
+					return 8;
+				case "septembre":
+					return 9;
+				case "octobre":
+					return 10;
+				case "novembre":
+					return 11;
+				case "décembre":
+					return 12;
+				default:
+					return 0;
+			}
+		}
+
+		public string[] ArrayOfDaysInMonth(int month)
+		{
+			string[] daysArray = new string[32];
+			string DayOfMonth;
+			int nbOfDays = DateTime.DaysInMonth(2020, month);
+
+			for (int i = 1; i < nbOfDays; i++)
+			{
+				DayOfMonth = (new DateTime(int.Parse(DateTime.Now.Year.ToString()), month, i)).DayOfWeek.ToString();
+
+				switch (DayOfMonth)
+				{
+					case "Monday":
+						DayOfMonth = "LUNDI";
+						break;
+					case "Tuesday":
+						DayOfMonth = "MARDI";
+						break;
+					case "Wednesday":
+						DayOfMonth = "MERCREDI";
+						break;
+					case "Thursday":
+						DayOfMonth = "JEUDI";
+						break;
+					case "Friday":
+						DayOfMonth = "VENDREDI";
+						break;
+					case "Saturday":
+						DayOfMonth = "SAMEDI";
+						break;
+					case "Sunday":
+						DayOfMonth = "DIMANCHE";
+						break;
+					default:
+						DayOfMonth = "error";
+						break;
+				}
+
+				daysArray[i] = DayOfMonth + " " + i.ToString();
+			}
+
+			return daysArray;
 		}
 
 		#endregion
-    }
+	}
 }
