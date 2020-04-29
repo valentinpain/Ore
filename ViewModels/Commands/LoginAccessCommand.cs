@@ -1,4 +1,5 @@
-﻿using Ore.Views;
+﻿using Ore.Models;
+using Ore.Views;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,7 +30,6 @@ namespace Ore.ViewModels.Commands
             set { shellView = value; }
         }
 
-
         public LoginAccessCommand(LoginViewModel loginViewModel)
         {
             this.LoginViewModel = loginViewModel;
@@ -44,9 +44,20 @@ namespace Ore.ViewModels.Commands
         {
             var passwordBox = parameter as PasswordBox;
 
-            loginViewModel.User.Password = passwordBox.Password;
-            loginViewModel.CloseAction();
-            shellView.Show();
+            if (!passwordBox.Password.Equals(""))
+                loginViewModel.User.Password = passwordBox.Password;
+            else
+                loginViewModel.User.Password = "";
+
+            if (LoginModel.isUserRegistered(loginViewModel.User.Username, loginViewModel.User.Password))
+            {
+                loginViewModel.CloseAction();
+                shellView.Show();
+            }
+            else
+            {
+                loginViewModel.WrongInformations = "Visible";
+            }
             
         }
     }
