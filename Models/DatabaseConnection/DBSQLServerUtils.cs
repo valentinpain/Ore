@@ -9,7 +9,7 @@ namespace Ore.Models.DatabaseConnection
 {
     public class DBSQLServerUtils
     {
-        public static SqlConnection GetDBConnection(string datasource, string database, string username, string password)
+        public static SqlConnection GetDBConnectionServer(string datasource, string database, string username, string password)
         {
             string connString = @"Data Source=" + datasource + ";Initial Catalog="
                         + database + ";Persist Security Info=True;User ID=" + username + ";Password=" + password;

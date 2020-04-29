@@ -17,7 +17,7 @@ namespace Ore.Models.DatabaseConnection
             string username = "valentin";
             string password = "verniapain27";
 
-            return DBSQLServerUtils.GetDBConnection(datasource, database, username, password);
+            return DBSQLServerUtils.GetDBConnectionServer(datasource, database, username, password);
         }
     }
 }
