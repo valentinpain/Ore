@@ -12,9 +12,9 @@ namespace Ore.ViewModels
 {
     public class LoginViewModel : INotifyPropertyChanged
     {
-		private UserViewModel user = new UserViewModel();
+		private static UserViewModel user = new UserViewModel();
 
-		public UserViewModel User
+		public static UserViewModel User
 		{
 			get { return user; }
 			set { user = value; }

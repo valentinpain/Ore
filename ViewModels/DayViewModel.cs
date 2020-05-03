@@ -8,14 +8,27 @@ namespace Ore.ViewModels
 {
     public class DayViewModel
     {
-		private int number;
+		private string name;
 
-		public int Number
+		private bool isToday;
+
+		public string Name
 		{
-			get { return number; }
-			set { number = value; }
+			get { return name; }
+			set { name = value; }
 		}
 
+		public bool IsToday
+		{
+			get { return isToday; }
+			set { isToday = value; }
+		}
+
+		public DayViewModel(string name, bool isToday)
+		{
+			this.name = name;
+			this.isToday = isToday;
+		}
 
 	}
 }

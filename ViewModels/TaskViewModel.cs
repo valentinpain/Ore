@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,18 +9,141 @@ namespace Ore.ViewModels
 {
     public class TaskViewModel
     {
-        public int _id { get; set; }
 
-        public string _name { get; set; }
+        // Les traitements concernant les tâches doivent se faire ici !
 
-        public string _color { get; set; }
+        public int id { get; set; }
 
-        public int _day { get; set; }
+        public string name { get; set; }
 
-        public string _time { get; set; }
+        public string description { get; set; }
 
-        public string _month { get; set; }
+        public string color { get; set; }
 
-        public bool _complete { get; set; }
-    }
+        public string startDay { get; set; }
+
+        public string finishDay { get; set; }
+
+        public string startTime { get; set; }
+
+        public string finishTime { get; set; }
+
+        public string month { get; set; }
+
+        public string year { get; set; }
+
+        public bool isComplete { get; set; }
+
+        public int useId { get; set; }
+
+        
+        public static string formatDay(string day)
+        {
+            string[] daySplitted = day.Split('/');
+            string[] yearSplitted = daySplitted[2].Split(' ');
+
+            return setDaysInMonth(int.Parse(yearSplitted[0]), int.Parse(daySplitted[0]), int.Parse(daySplitted[1]));
+        }
+
+        public static string formatTime(string time)
+        {
+			if (time == null)
+				return "";
+
+			string[] dateSplitted = time.Split(' ');
+			string[] timeSplitted = dateSplitted[1].Split(':');
+
+			if (dateSplitted[2] == "PM")
+			{
+				switch (timeSplitted[0])
+				{
+					case "12":
+						timeSplitted[0] = "00";
+						break;
+					case "1":
+						timeSplitted[0] = "13";
+						break;
+					case "2":
+						timeSplitted[0] = "14";
+						break;
+					case "3":
+						timeSplitted[0] = "15";
+						break;
+					case "4":
+						timeSplitted[0] = "16";
+						break;
+					case "5":
+						timeSplitted[0] = "17";
+						break;
+					case "6":
+						timeSplitted[0] = "18";
+						break;
+					case "7":
+						timeSplitted[0] = "19";
+						break;
+					case "8":
+						timeSplitted[0] = "20";
+						break;
+					case "9":
+						timeSplitted[0] = "21";
+						break;
+					case "10":
+						timeSplitted[0] = "22";
+						break;
+					case "11":
+						timeSplitted[0] = "23";
+						break;
+				}
+			}
+
+			return timeSplitted[0] + "h" + timeSplitted[1];
+		}
+
+		public static string setDaysInMonth(int chosenYear, int chosenMonth, int chosenDay)
+		{
+			int numberOfDays = DateTime.DaysInMonth(chosenYear, chosenMonth);
+
+			for (int i = 0; i < numberOfDays; i++)
+			{
+				int dayNumber = i + 1;
+                string dayOfWeekConverted;
+				DateTime dayNotConverted = new DateTime(chosenYear, chosenMonth, i + 1);
+
+				if (int.Parse(dayNotConverted.Day.ToString()) == chosenDay)
+				{
+					switch (dayNotConverted.DayOfWeek.ToString())
+					{
+                        case "Monday":
+                            dayOfWeekConverted = "Lundi";
+                            break;
+                        case "Tuesday":
+                            dayOfWeekConverted = "Mardi";
+                            break;
+                        case "Wednesday":
+                            dayOfWeekConverted = "Mercredi";
+                            break;
+                        case "Thursday":
+                            dayOfWeekConverted = "Jeudi";
+                            break;
+                        case "Friday":
+                            dayOfWeekConverted = "Vendredi";
+                            break;
+                        case "Saturday":
+                            dayOfWeekConverted = "Samedi";
+                            break;
+                        case "Sunday":
+                            dayOfWeekConverted = "Dimanche";
+                            break;
+                        default:
+                            dayOfWeekConverted = "error";
+                            break;
+                    }
+
+					return dayOfWeekConverted + " " + dayNotConverted.Day;
+				}
+			}
+			
+			return "error";
+		}
+	}
 }

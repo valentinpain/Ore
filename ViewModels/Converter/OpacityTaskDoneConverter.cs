@@ -13,7 +13,7 @@ namespace Ore.ViewModels.Converter
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (bool.Parse(value.ToString()) == true)
-                return 0.4;
+                return 0.3;
             else
                 return 1;
         }

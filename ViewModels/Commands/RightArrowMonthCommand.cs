@@ -32,14 +32,14 @@ namespace Ore.ViewModels.Commands
 
         public void Execute(object parameter)
         {
-            shellViewModel.changeMonthUp();
+            /* shellViewModel.changeMonthUp();
             shellViewModel.Tasks.Clear();
             ShellViewModel.BitOfDay = 0;
             ShellViewModel.DaysInMonth = shellViewModel.ArrayOfDaysInMonth(shellViewModel.convertMonthInt(ShellViewModel.TaskMonth));
 
             string[] monthYearSplitted = shellViewModel.ActualMonthYear.Split(' ');
 
-            ShellViewModel.retrieveDataFromModel(monthYearSplitted[0]);
+            ShellViewModel.retrieveDataFromModel(monthYearSplitted[0]); */
         }
     }
 }

@@ -8,14 +8,14 @@ using System.Windows.Data;
 
 namespace Ore.ViewModels.Converter
 {
-    public class ActualDayColorConverter : IValueConverter
+    public class SuccessfulAccountCreationCommand : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (bool.Parse(value.ToString()))
-                return "#f7a72e";
-
-            return "White";
+            if (value.ToString().Equals("Création du compte réussie !"))
+                return "#44bd32";
+            else
+                return "#e84118";
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

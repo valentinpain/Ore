@@ -18,6 +18,11 @@ namespace Ore.ViewModels.Commands
             set { shellViewModel = value; }
         }
 
+        public DeleteCommand(ShellViewModel shellViewModel)
+        {
+            this.shellViewModel = shellViewModel;
+        }
+
         public event EventHandler CanExecuteChanged;
 
         public bool CanExecute(object parameter)
@@ -29,10 +34,11 @@ namespace Ore.ViewModels.Commands
         {
             foreach(TaskViewModel task in ShellViewModel.Tasks)
             {
-                if (int.Parse(task._id.ToString()) == int.Parse(parameter.ToString()))
+                if (int.Parse(task.id.ToString()) == int.Parse(parameter.ToString()))
                 {
                     ShellViewModel.Tasks.Remove(task);
-                    ShellModel.deleteTask(task._id);
+                    ShellModel.deleteTask(task.id);
+                    shellViewModel.ToDoNowTasks = ShellViewModel.SortTasks(ShellModel.retrieveAllTasks(1));
                     break;
                 }
             }

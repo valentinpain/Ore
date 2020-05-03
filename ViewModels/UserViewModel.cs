@@ -30,7 +30,8 @@ namespace Ore.ViewModels
 
         public UserViewModel()
         {
-
+            this.username = "";
+            this.password = "";
         }
     }
 }

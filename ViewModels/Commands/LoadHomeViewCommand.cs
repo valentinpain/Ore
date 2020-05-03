@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Ore.Models;
+using Ore.Views;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,7 +9,7 @@ using System.Windows.Input;
 
 namespace Ore.ViewModels.Commands
 {
-    public class LeftArrowMonthCommand : ICommand
+    public class LoadHomeViewCommand : ICommand
     {
         public event EventHandler CanExecuteChanged;
 
@@ -19,15 +21,11 @@ namespace Ore.ViewModels.Commands
             set { shellViewModel = value; }
         }
 
-
-        public LeftArrowMonthCommand(ShellViewModel shellViewModel)
+        public LoadHomeViewCommand(ShellViewModel shellViewModel)
         {
             this.shellViewModel = shellViewModel;
         }
 
-        public LeftArrowMonthCommand()
-        {
-        }
 
         public bool CanExecute(object parameter)
         {
@@ -36,12 +34,12 @@ namespace Ore.ViewModels.Commands
 
         public void Execute(object parameter)
         {
-            /* shellViewModel.changeMonthDown();
-            shellViewModel.Tasks.Clear();
-            ShellViewModel.DaysInMonth = shellViewModel.ArrayOfDaysInMonth(shellViewModel.convertMonthInt(ShellViewModel.TaskMonth));
+            ShellView shellView = parameter as ShellView;
 
-            string[] monthYearSplitted = shellViewModel.ActualMonthYear.Split(' ');
-            ShellViewModel.retrieveDataFromModel(monthYearSplitted[0]); */
+            shellView.stackName.Visibility = System.Windows.Visibility.Collapsed;
+            shellView.MainGrid.Visibility = System.Windows.Visibility.Visible;
+
+            shellViewModel.ToDoNowTasks = ShellViewModel.SortTasks(ShellModel.retrieveAllTasks(1));
         }
     }
 }
