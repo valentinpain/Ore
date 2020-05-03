@@ -92,13 +92,17 @@
     <Compile Include="Models\LoginModel.cs" />
     <Compile Include="Models\RegisterModel.cs" />
     <Compile Include="ViewModels\Commands\DeleteCommand.cs" />
+    <Compile Include="ViewModels\Commands\GoBackToConnectionCommand.cs" />
     <Compile Include="ViewModels\Commands\LeftArrowMonthCommand.cs" />
+    <Compile Include="ViewModels\Commands\LoadDayViewCommand.cs" />
+    <Compile Include="ViewModels\Commands\LoadHomeViewCommand.cs" />
     <Compile Include="ViewModels\Commands\LoadRegisterViewCommand.cs" />
     <Compile Include="ViewModels\Commands\LoginAccessCommand.cs" />
     <Compile Include="ViewModels\Commands\RegisterCommand.cs" />
     <Compile Include="ViewModels\Commands\RightArrowMonthCommand.cs" />
     <Compile Include="ViewModels\Commands\WindowLoaded.cs" />
     <Compile Include="ViewModels\Converter\ActualDayColorConverter.cs" />
+    <Compile Include="ViewModels\Converter\ChosenDayValuesConverter.cs" />
     <Compile Include="ViewModels\Converter\ColorTaskConverter.cs" />
     <Compile Include="ViewModels\Converter\DateConverter.cs" />
     <Compile Include="MainWindow.xaml.cs">
@@ -107,6 +111,7 @@
     <Compile Include="Models\ShellModel.cs" />
     <Compile Include="ViewModels\Commands\TaskCommand.cs" />
     <Compile Include="ViewModels\Converter\OpacityTaskDoneConverter.cs" />
+    <Compile Include="ViewModels\Converter\SuccessfulAccountCreationCommand.cs" />
     <Compile Include="ViewModels\Converter\TaskDoneConverter.cs" />
     <Compile Include="ViewModels\DayViewModel.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
@@ -115,6 +120,9 @@
     <Compile Include="ViewModels\ShellViewModel.cs" />
     <Compile Include="ViewModels\TaskViewModel.cs" />
     <Compile Include="ViewModels\UserViewModel.cs" />
+    <Compile Include="Views\DayView.xaml.cs">
+      <DependentUpon>DayView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\LoginView.xaml.cs">
       <DependentUpon>LoginView.xaml</DependentUpon>
     </Compile>
@@ -129,6 +137,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="MainWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DayView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -186,6 +198,12 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\rightArrow.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\user.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\lock.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\backArrow.png" />

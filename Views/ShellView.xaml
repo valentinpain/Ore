@@ -7,17 +7,17 @@
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         xmlns:ViewModels="clr-namespace:Ore.ViewModels"
         xmlns:Models="clr-namespace:Ore.Models"
-        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" 
         xmlns:convt="clr-namespace:Ore.ViewModels.Converter"
         xmlns:comd="clr-namespace:Ore.ViewModels.Commands"
+        xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
-        Title="Ore" Height="600" Width="1080" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" Foreground="White" Loaded="Windowloading">
-
+        Title="Ore - A Light Task Manager" Height="600" Width="1080" x:Name="ShellViewName" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" Loaded="Windowloading">
+<!-- Ajouter le window Loading -->
+    
     <Window.DataContext>
         <ViewModels:ShellViewModel x:Name="ShellViewModel" />
     </Window.DataContext>
-    
-    <!-- Ressources -->
+
     <Window.Resources>
         <Storyboard x:Key="MenuOpen">
             <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)" Storyboard.TargetName="GridMenu" >
@@ -32,7 +32,8 @@
             </DoubleAnimationUsingKeyFrames>
         </Storyboard>
 
-        <ViewModels:ShellViewModel x:Key="ViewModel" />
+        <ViewModels:ShellViewModel x:Key="ShellViewModel" />
+        <ViewModels:LoginViewModel x:Key="LoginViewModel" />
         <Models:ShellModel x:Key="Model" />
 
         <convt:ActualDayColorConverter x:Key="ActualDayColorConverter" />
@@ -40,417 +41,150 @@
         <convt:TaskDoneConverter x:Key="TaskDoneConverter" />
         <convt:OpacityTaskDoneConverter x:Key="OpacityTaskDoneConverter" />
         <convt:ColorTaskConverter x:Key="ColorTaskConverter" />
+        <convt:ChosenDayValuesConverter x:Key="ChosenDayValuesConverter" />
 
     </Window.Resources>
 
-    <!-- Triggers -->
-    <Window.Triggers>
-        <EventTrigger RoutedEvent="ButtonBase.Click" SourceName="ButtonOpenMenu">
-            <BeginStoryboard Storyboard="{StaticResource MenuOpen}" />
-        </EventTrigger>
-        <EventTrigger RoutedEvent="ButtonBase.Click" SourceName="ButtonCloseMenu">
-            <BeginStoryboard Storyboard="{StaticResource MenuClose}" />
-        </EventTrigger>
-    </Window.Triggers>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="80" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
 
-    <!-- The GUI -->
-    <Grid Background="Transparent">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="169" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
 
-        <!-- The Header -->
-        <Border CornerRadius="5">
-            <Grid DataContext="{Binding Source={StaticResource ViewModel}}" Height="70" VerticalAlignment="Top" Background="#7F673AB7">
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                    <TextBlock Text="Utilisateur non enregistré" VerticalAlignment="Center" FontSize="16" Foreground="Black" TextWrapping="Wrap" Width="75" TextAlignment="Center"/>
-                    
-                    <!-- Changer ce bout de code ! -->
-                    <materialDesign:PopupBox PlacementMode="BottomAndAlignRightEdges" StaysOpen="False" Margin="10" Foreground="Black">
-                        <StackPanel Width="150">
-                            <Button Content="Settings"/>
-                            <Button Content="Account"/>
-                            <Button Content="Help"/>
-                            <Separator/>
-                            <Button Content="Logout"/>
-                        </StackPanel>
-                    </materialDesign:PopupBox>
-                </StackPanel>
-                <Grid Width="700">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="300" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
+        <Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" BorderBrush="#707070" BorderThickness="2 2 2 2">
+            <StackPanel Orientation="Horizontal" Background="#353B48">
+                <MaterialDesign:PackIcon Kind="Menu" Width="40" Height="40" Foreground="White" VerticalAlignment="Center" Margin="20 0 0 0" />
+                <Button Margin="341 0 0 0" Height="50" VerticalAlignment="Center" HorizontalAlignment="Center" Background="Transparent" BorderBrush="Transparent" Foreground="Transparent" Command="{Binding LoadHomeViewCommand, Source={StaticResource ShellViewModel}}" CommandParameter="{Binding ElementName=ShellViewName}">
+                    <TextBlock Text="Ore" VerticalAlignment="Center" HorizontalAlignment="Center" FontFamily="OCR A Extended" FontSize="50" Foreground="White"/>
+                </Button>
+                <TextBlock Text="Compte" VerticalAlignment="Center" HorizontalAlignment="Center" FontFamily="OCR A Extended" Margin="220 0 0 0" FontSize="25" Foreground="White"/>
+                <TextBlock Text="Paramètres" VerticalAlignment="Center" HorizontalAlignment="Center" FontFamily="OCR A Extended" Margin="30 0 0 0" FontSize="25" Foreground="White"/>
+                <MaterialDesign:PackIcon Kind="Power" Height="30" Width="30" VerticalAlignment="Center" HorizontalAlignment="Center" FontFamily="OCR A Extended" Margin="15 0 0 0" Foreground="White" />
+            </StackPanel>
+        </Border>
 
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*" />
-                        <RowDefinition Height="*" />
-                    </Grid.RowDefinitions>
+        <Border Grid.Row="1" Grid.Column="0" BorderBrush="#707070" BorderThickness="2 0 2 2">
+            <Grid>
+                <ScrollViewer Grid.Row="1">
+                    <ItemsControl ItemsSource="{Binding DaysInMonth}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <VirtualizingStackPanel Orientation="Vertical" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
 
-                    <Button Grid.Column="0" Grid.RowSpan="2" Command="{Binding LeftArrowMonthCommand, Source={StaticResource ViewModel}}" Background="Transparent" BorderBrush="Transparent" HorizontalAlignment="Right" Margin="0 0 10 0">
-                        <Image Source="/Images/leftArrow.png" />
-                    </Button>
-                    <TextBlock Grid.Column="1" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="18" Foreground="Black" FontFamily="Global Sans Serif" FontWeight="UltraBold" Text="{Binding ActualMonthYear}" />
-                    <Button Grid.Column="2" Grid.RowSpan="2" Command="{Binding RightArrowMonthCommand, Source={StaticResource ViewModel}}" Background="Transparent" BorderBrush="Transparent" HorizontalAlignment="Left" >
-                        <Image Source="/Images/rightArrow.png" />
-                    </Button>
-                    <StackPanel Grid.Column="1" Grid.Row="1" Orientation="Horizontal" Width="280">
-                        <Button VerticalAlignment="Center" Foreground="{Binding actualTuesday, Converter={StaticResource ActualDayColorConverter}}" Background="Transparent" BorderBrush="Transparent" Width="30" Height="30" FontSize="11" Padding="-20 -20 -20 -20">
-                            <TextBlock TextAlignment="Center" TextWrapping="Wrap" Width="30" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Global Sans Serif" Text="{Binding actualMonday}" />
-                        </Button>
-                        <Button VerticalAlignment="Center" Foreground="{Binding actualTuesday, Converter={StaticResource ActualDayColorConverter}}" Background="Transparent" BorderBrush="Transparent" Width="30" Height="30" FontSize="11" Padding="-20 -20 -20 -20" Margin="10 0 0 0">
-                            <TextBlock TextAlignment="Center" TextWrapping="Wrap" Width="30" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Global Sans Serif" Text="{Binding actualTuesday}" />
-                        </Button>
-                        <Button VerticalAlignment="Center" Foreground="{Binding actualWednesday, Converter={StaticResource ActualDayColorConverter}}" Background="Transparent" BorderBrush="Transparent" Width="30" Height="30" FontSize="11" Padding="-20 -20 -20 -20" Margin="10 0 0 0">
-                            <TextBlock TextAlignment="Center" TextWrapping="Wrap" Width="30" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Global Sans Serif" Text="{Binding actualWednesday}" />
-                        </Button>
-                        <Button VerticalAlignment="Center" Foreground="{Binding actualThursday, Converter={StaticResource ActualDayColorConverter}}" Background="Transparent" BorderBrush="Transparent" Width="30" Height="30" FontSize="11" Padding="-20 -20 -20 -20" Margin="10 0 0 0">
-                            <TextBlock TextAlignment="Center" TextWrapping="Wrap" Width="30" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Global Sans Serif" Text="{Binding actualThursday}" />
-                        </Button>
-                        <Button VerticalAlignment="Center" Foreground="{Binding actualFriday, Converter={StaticResource ActualDayColorConverter}}" Background="Transparent" BorderBrush="Transparent" Width="30" Height="30" FontSize="11" Padding="-20 -20 -20 -20" Margin="10 0 0 0">
-                            <TextBlock TextAlignment="Center" TextWrapping="Wrap" Width="30" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Global Sans Serif" Text="{Binding actualFriday}" />
-                        </Button>
-                        <Button VerticalAlignment="Center" Foreground="{Binding actualSaturday, Converter={StaticResource ActualDayColorConverter}}" Background="Transparent" BorderBrush="Transparent" Width="30" Height="30" FontSize="11" Padding="-20 -20 -20 -20" Margin="10 0 0 0">
-                            <TextBlock TextAlignment="Center" TextWrapping="Wrap" Width="30" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Global Sans Serif" Text="{Binding actualSaturday}" />
-                        </Button>
-                        <Button VerticalAlignment="Center" Foreground="{Binding actualSunday, Converter={StaticResource ActualDayColorConverter}}" Background="Transparent" BorderBrush="Transparent" Width="30" Height="30" FontSize="11" Padding="-20 -20 -20 -20" Margin="10 0 0 0">
-                            <TextBlock TextAlignment="Center" TextWrapping="Wrap" Width="30" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Global Sans Serif" Text="{Binding actualSunday}" />
-                        </Button>
-
-                    </StackPanel>
-                </Grid>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border CornerRadius="15" BorderThickness="1" BorderBrush="#707070" Background="{Binding IsToday, Converter={StaticResource ActualDayColorConverter}}" Margin="4 5 4 0" Height="30">
+                                    <Button Background="Transparent" BorderBrush="Transparent" Foreground="White" Command="{Binding LoadDayViewCommand, Source={StaticResource ShellViewModel}}" HorizontalAlignment="Center" VerticalAlignment="Center" >
+                                        <TextBlock x:Name="DayText" Text="{Binding Name}" Foreground="Black" FontSize="16" FontFamily="Segoe UI" Margin="0 -3 0 0"/>
+                                        <Button.CommandParameter>
+                                            <MultiBinding Converter="{StaticResource ChosenDayValuesConverter}">
+                                                <Binding ElementName="DayText" Path="Text" />
+                                                <Binding ElementName="ShellViewName"/>
+                                            </MultiBinding>
+                                        </Button.CommandParameter>
+                                    </Button>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
             </Grid>
         </Border>
 
-        <!-- The Menu aside -->
-        <Grid x:Name="GridMenu" Width="60" HorizontalAlignment="Left" Background="Transparent">
-            <StackPanel>
-                <Grid Height="70" Background="White">
-                    <Button x:Name="ButtonCloseMenu" Width="60" Height="60" Background="{x:Null}" BorderBrush="{x:Null}" VerticalAlignment="Top" HorizontalAlignment="Right" Visibility="Collapsed" Click="ButtonCloseMenu_Click" >
-                        <materialDesign:PackIcon Foreground="#FFCBC9C9" Kind="ArrowLeft" Width="25" Height="25" />
-                    </Button>
-                    <Button x:Name="ButtonOpenMenu" Width="60" Height="60" Background="{x:Null}" BorderBrush="{x:Null}" VerticalAlignment="Top" HorizontalAlignment="Right" Click="ButtonOpenMenu_Click" >
-                        <materialDesign:PackIcon Foreground="#FFCBC9C9" Kind="Menu" Width="25" Height="25" />
-                    </Button>
-                </Grid>
-                <ListView x:Name="ListOfViews" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
-                    <ListViewItem Height="60">
-                        <StackPanel Orientation="Horizontal">
-                            <materialDesign:PackIcon x:Name="ButtonDefaultView" Kind="Calendar" Width="25" Height="25" Margin="10" VerticalAlignment="Center" Foreground="White" />
-                            <TextBlock Text="Home" VerticalAlignment="Center" Margin="20 10" />
-                        </StackPanel>
-                    </ListViewItem>
-                    <ListViewItem Height="60">
-                        <StackPanel Orientation="Horizontal">
-                            <materialDesign:PackIcon x:Name="ButtonDailyView" Kind="Pencil" Width="25" Height="25" Margin="10" VerticalAlignment="Center" Foreground="White" />
-                            <TextBlock Text="Create" VerticalAlignment="Center" Margin="20 10" />
-                        </StackPanel>
-                    </ListViewItem>
-                    <ListViewItem Height="60">
-                        <StackPanel Orientation="Horizontal">
-                            <materialDesign:PackIcon x:Name="ButtonMonthlyView" Kind="Ticket" Width="25" Height="25" Margin="10" VerticalAlignment="Center" Foreground="White" />
-                            <TextBlock Text="Tickets" VerticalAlignment="Center" Margin="20 10" />
-                        </StackPanel>
-                    </ListViewItem>
-                </ListView>
-            </StackPanel>
-        </Grid>
+        <StackPanel x:Name="stackName" Grid.Row="1" Grid.Column="1" Width="910" Height="520">
+        </StackPanel>
 
-
-        <Grid x:Name="GridMain" HorizontalAlignment="Right" VerticalAlignment="Bottom" Height="500" Width="875" Margin="0 0 10 0">
+        <Grid x:Name="MainGrid" Grid.Row="1" Grid.Column="1" Background="#f5f6fa">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="455" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
 
             <Grid.RowDefinitions>
                 <RowDefinition Height="200" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
-            <!-- The menu to add a task -->
-            <Border Grid.Row="0" Margin="0 30 0 0" Padding="10 10 10 10" BorderBrush="Black" BorderThickness="2" CornerRadius="5" Height="162">
-                <Grid DataContext="{Binding Source={StaticResource ViewModel}}">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
-
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="80" />
-                        <RowDefinition Height="*" />
-                    </Grid.RowDefinitions>
-
-                    <!--<TextBlock Text="{Binding Date, Mode=OneWay}" ></TextBlock>-->
-
-
-                    <StackPanel Grid.Column="0" Grid.Row="0">
-                        <TextBlock Foreground="Black" FontFamily="Global Sans Serif" Text="Entrez une description : " FontWeight="Bold" TextWrapping="Wrap" VerticalAlignment="Center" HorizontalAlignment="Center" TextAlignment="Center"/>
-                        <TextBox FontFamily="Global Sans Serif" Text="{Binding TaskName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Background="#FFF7F7F7" Foreground="Black" Margin="0 5 0 0" AcceptsReturn="True" VerticalScrollBarVisibility="Visible" Height="40" />
-                    </StackPanel>
-
-                    <StackPanel Grid.Column="1" Grid.Row="0" Margin="5 0 5 0">
-                        <TextBlock FontFamily="Global Sans Serif" Foreground="Black" Text="Entrez un jour de réalisation pour ce mois : " FontWeight="Bold" TextWrapping="Wrap" VerticalAlignment="Center" HorizontalAlignment="Center" TextAlignment="Center"/>
-                        <ComboBox ItemsSource="{Binding Days, Mode=TwoWay}" DisplayMemberPath="Number" FontFamily="Global Sans Serif" Foreground="Black" Margin="0 4 0 0" HorizontalAlignment="Center" Width="150" />
-                    </StackPanel>
-
-                    <StackPanel Grid.Column="2" Grid.Row="0" Margin="5 0 5 0">
-                        <TextBlock FontFamily="Global Sans Serif" Foreground="Black" Text="Entrez une heure de réalisation pour cette tâche : " FontWeight="Bold" TextWrapping="Wrap" VerticalAlignment="Center" HorizontalAlignment="Center" TextAlignment="Center"/>
-                        <materialDesign:TimePicker FontFamily="Global Sans Serif" Foreground="Black" Margin="0 4 0 0" SelectedTime="{Binding TaskTime, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                    </StackPanel>
-
-                    <StackPanel Grid.Column="1" Grid.Row="1" Margin="5 0 5 0">
-                        <TextBlock FontFamily="Global Sans Serif" Foreground="Black" Text="Choisissez une couleur pour votre tâche : " FontWeight="Bold" TextWrapping="Wrap" VerticalAlignment="Center" HorizontalAlignment="Center" TextAlignment="Center"/>
-                        <xctk:ColorPicker FontFamily="Global Sans Serif" SelectedColor="{Binding TaskColor, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></xctk:ColorPicker>
-                    </StackPanel>
-
-                    <!--<TextBlock FontFamily="Global Sans Serif" Grid.Row="1" Grid.Column="0" Foreground="Black" Text="{Binding taskColor}"></TextBlock>-->
-
-                    <TextBlock Grid.Column="2" Grid.Row="1" FontFamily="Global Sans Serif" Text="{Binding TaskMonth, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Background="White" Foreground="White" />
-
-                    <Button FontFamily="Global Sans Serif" Grid.Column="3" Grid.RowSpan="2" Content="Ajouter une tâche !" Command="{Binding TaskCommand}" CommandParameter="{Binding}" Width="150" Margin="35 0 0 0"/>
-                </Grid>
-            </Border>
-
-            <ScrollViewer Grid.Row="1">
-                <StackPanel>
-
-                    <!-- First Day -->
-                    <StackPanel DataContext="{Binding Source={StaticResource ViewModel}}" Orientation="Horizontal" Height="30" Width="875" Margin="0 40 0 0">
-                        <StackPanel.Background>
-                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                                <GradientStop Color="#FFF3F3F3" Offset="0"/>
-                                <GradientStop Color="Gainsboro" Offset="1"/>
-                            </LinearGradientBrush>
-                        </StackPanel.Background>
-
-                        <Border BorderBrush="Black" BorderThickness="1" CornerRadius="3">
-                            <TextBlock Foreground="Black" FontFamily="Global Sans Serif" Width="856" FontSize="14" Padding="10 5 0 0" VerticalAlignment="Center" Text="{Binding DaysInMonth[1]}" />
-                        </Border>
-
-                    </StackPanel>
-                    <ItemsControl Grid.Row="1" ItemsSource="{Binding Tasks}">
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <VirtualizingStackPanel Orientation="Vertical" />
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <Border Padding="5 0 0 0" CornerRadius="20" BorderBrush="Black" BorderThickness="1" Visibility="{Binding _day, Converter={StaticResource DateConverter}, ConverterParameter=1}" Opacity="{Binding _complete, Converter={StaticResource OpacityTaskDoneConverter}}" Background="{Binding _color}" Margin="10 4 0 0" Height="40">
-                                    <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="*" />
-                                        </Grid.ColumnDefinitions>
-
-                                        <ScrollViewer VerticalScrollBarVisibility="Auto">
-                                            <TextBlock Foreground="{Binding _color, Converter={StaticResource ColorTaskConverter}}" TextDecorations="{Binding _complete, Converter={StaticResource TaskDoneConverter}}" FontSize="15" FontWeight="Bold" Text="{Binding _name}" Grid.Column="0" TextWrapping="Wrap" Padding="5 0 0 0" VerticalAlignment="Center" TextAlignment="Center"/>
-                                        </ScrollViewer>
-                                        <TextBlock Foreground="{Binding _color, Converter={StaticResource ColorTaskConverter}}" TextDecorations="{Binding _complete, Converter={StaticResource TaskDoneConverter}}" FontSize="15" FontWeight="Bold" Text="{Binding _time}" Grid.Column="1" TextWrapping="Wrap" VerticalAlignment="Center" TextAlignment="Center"/>
-
-                                            <CheckBox IsChecked="{Binding _complete}" Background="White" Grid.Column="2"/>
-                                        <StackPanel Grid.Column="3"  Orientation="Horizontal">
-                                            <Button Width="55" Height="35" Background="Transparent" BorderBrush="Transparent" Command="{Binding DeleteCommand, Source={StaticResource ViewModel}}" CommandParameter="{Binding _id}" >
-                                                <Image Source="/Images/pencil.png" />
-                                            </Button>
-                                            <Button Width="55" Height="35" Background="Transparent" BorderBrush="Transparent" Command="{Binding DeleteCommand, Source={StaticResource ViewModel}}" CommandParameter="{Binding _id}" >
-                                                <Image Source="/Images/remove.png" />
-                                            </Button>
-                                        </StackPanel>
-
-                                    </Grid>
-                                </Border>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-
-                    <!-- Second Day -->
-                    <StackPanel Orientation="Horizontal" Height="30" Width="875" Margin="0 40 0 0">
-                        <StackPanel.Background>
-                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                                <GradientStop Color="#FFF3F3F3" Offset="0"/>
-                                <GradientStop Color="Gainsboro" Offset="1"/>
-                            </LinearGradientBrush>
-                        </StackPanel.Background>
-
-                        <Border BorderBrush="Black" BorderThickness="1">
-                            <TextBlock Foreground="Black" FontFamily="Global Sans Serif" Width="856" FontSize="14" Padding="10 5 0 0" VerticalAlignment="Center" Text="{Binding DaysInMonth[2]}" />
-                        </Border>
-
-                    </StackPanel>
-                    <ItemsControl Grid.Row="1" ItemsSource="{Binding Tasks}">
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <VirtualizingStackPanel Orientation="Vertical" />
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <Grid Visibility="{Binding _day, Converter={StaticResource DateConverter}, ConverterParameter=2}" Background="{Binding _color}" Margin="10 4 0 0">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="*" />
-                                    </Grid.ColumnDefinitions>
-
-                                    <TextBlock Foreground="White" FontSize="15" FontWeight="Bold" Text="{Binding _name}" Grid.Column="0" TextWrapping="Wrap" Padding="3 0 0 0"/>
-                                    <TextBlock Foreground="White" FontSize="15" FontWeight="Bold" Text="{Binding _time}" Grid.Column="1" TextWrapping="Wrap"/>
-                                    <CheckBox IsChecked="{Binding _complete}" Background="White" Grid.Column="2" />
-
-                                </Grid>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-
-
-                    <!-- Third Day -->
-                    <StackPanel Orientation="Horizontal" Height="30" Width="875" Margin="0 40 0 0">
-                        <StackPanel.Background>
-                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                                <GradientStop Color="#FFF3F3F3" Offset="0"/>
-                                <GradientStop Color="Gainsboro" Offset="1"/>
-                            </LinearGradientBrush>
-                        </StackPanel.Background>
-
-                        <Border BorderBrush="Black" BorderThickness="1">
-                            <TextBlock Foreground="Black" FontFamily="Global Sans Serif" Width="856" FontSize="14" Padding="10 5 0 0" VerticalAlignment="Center" Text="{Binding DaysInMonth[3]}" />
-                        </Border>
-
-                    </StackPanel>
-                    <ItemsControl Grid.Row="1" ItemsSource="{Binding Tasks}">
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <VirtualizingStackPanel Orientation="Vertical" />
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <Grid Visibility="{Binding _day, Converter={StaticResource DateConverter}, ConverterParameter=3}" Background="{Binding _color}" Margin="10 4 0 0">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="*" />
-                                    </Grid.ColumnDefinitions>
-
-                                    <TextBlock Foreground="White" FontSize="15" FontWeight="Bold" Text="{Binding _name}" Grid.Column="0" TextWrapping="Wrap" Padding="3 0 0 0"/>
-                                    <TextBlock Foreground="White" FontSize="15" FontWeight="Bold" Text="{Binding _time}" Grid.Column="1" TextWrapping="Wrap"/>
-                                    <CheckBox IsChecked="{Binding _complete}" Background="White" Grid.Column="2" />
-
-                                </Grid>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
+            <StackPanel Orientation="Horizontal" Grid.Column="0" Grid.Row="0">
+                <StackPanel Width="150" Margin="15 31 0 0">
+                    <TextBlock Text="Mois" FontSize="30" FontFamily="OCR A Extended" HorizontalAlignment="Center"/>
+                    <Border CornerRadius="15" BorderThickness="2" Background="#dcdde1" Width="142" Height="40" Margin="0 10 0 0">
+                        <ComboBox ItemsSource="{Binding MonthsTab}" SelectedItem="{Binding TaskStartMonth, Mode=TwoWay}" Foreground="Black" Padding="10 0 0 0" Margin="0 7 5 0" FontFamily="OCR A Extended" FontSize="20" Style="{StaticResource MaterialDesignDataGridComboBox}" VerticalAlignment="Center" />
+                    </Border>
                 </StackPanel>
-              
-
-            </ScrollViewer>
-        </Grid>
-
-
-
-
-        <!--
-    </StackPanel>
-
-                <StackPanel Orientation="Horizontal" Height="30" Width="875" Margin="0 40 0 0">
-                    <StackPanel.Background>
-                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                            <GradientStop Color="#FFF3F3F3" Offset="0"/>
-                            <GradientStop Color="Gainsboro" Offset="1."/>
-                        </LinearGradientBrush>
-                    </StackPanel.Background>
-                    <TextBlock Foreground="Black" FontFamily="Global Sans Serif" Width="800" FontSize="14" Padding="10 5 0 0" VerticalAlignment="Center">LUNDI 19 AVRIL</TextBlock>
-                    <Button Name="button2" Background="Transparent" BorderBrush="Transparent">
-                        <Image Source="{StaticResource ResourceKey=plusLogo}" />
-                    </Button>
+                <StackPanel Width="150" Margin="0 31 0 0">
+                    <TextBlock Text="Année" FontSize="30" FontFamily="OCR A Extended" HorizontalAlignment="Center"/>
+                    <Border CornerRadius="15" BorderThickness="2" Background="#dcdde1" Width="100" Height="40" Margin="0 10 0 0">
+                        <ComboBox ItemsSource="{Binding YearsTab}" SelectedItem="{Binding TaskYear, Mode=TwoWay}" Foreground="Black" Padding="10 0 0 0" Margin="0 7 5 0" FontFamily="OCR A Extended" FontSize="20" Style="{StaticResource MaterialDesignDataGridComboBox}" VerticalAlignment="Center" />
+                    </Border>
                 </StackPanel>
-                <ListBox x:Name="listBox2">
-
-                </ListBox>
-
-                <StackPanel Orientation="Horizontal" Height="30" Width="875" Margin="0 40 0 0">
-                    <StackPanel.Background>
-                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                            <GradientStop Color="#FFF3F3F3" Offset="0"/>
-                            <GradientStop Color="Gainsboro" Offset="1"/>
-                        </LinearGradientBrush>
-                    </StackPanel.Background>
-                    <TextBlock Foreground="Black" FontFamily="Global Sans Serif" Width="800" FontSize="14" Padding="10 5 0 0" VerticalAlignment="Center">LUNDI 19 AVRIL</TextBlock>
-                    <Button Name="button3" Background="Transparent" BorderBrush="Transparent">
-                        <Image Source="{StaticResource ResourceKey=plusLogo}" />
-                    </Button>
-                </StackPanel>
-                <ListBox x:Name="listBox3"></ListBox>
-
-                <StackPanel Orientation="Horizontal" Height="30" Width="875" Margin="0 40 0 0">
-                    <StackPanel.Background>
-                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                            <GradientStop Color="#FFF3F3F3" Offset="0"/>
-                            <GradientStop Color="Gainsboro" Offset="1"/>
-                        </LinearGradientBrush>
-                    </StackPanel.Background>
-                    <TextBlock Foreground="Black" FontFamily="Global Sans Serif" Width="800" FontSize="14" Padding="10 5 0 0" VerticalAlignment="Center">LUNDI 19 AVRIL</TextBlock>
-                    <Button Name="button4" Background="Transparent" BorderBrush="Transparent">
-                        <Image Source="{StaticResource ResourceKey=plusLogo}" />
-                    </Button>
-                </StackPanel>
-                <ListBox x:Name="listBox4"></ListBox>
-
-                <StackPanel Orientation="Horizontal" Height="30" Width="875" Margin="0 40 0 0">
-                    <StackPanel.Background>
-                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                            <GradientStop Color="#FFF3F3F3" Offset="0"/>
-                            <GradientStop Color="Gainsboro" Offset="1"/>
-                        </LinearGradientBrush>
-                    </StackPanel.Background>
-                    <TextBlock Foreground="Black" FontFamily="Global Sans Serif" Width="800" FontSize="14" Padding="10 5 0 0" VerticalAlignment="Center">LUNDI 19 AVRIL</TextBlock>
-                    <Button Name="button5" Background="Transparent" BorderBrush="Transparent">
-                        <Image Source="{StaticResource ResourceKey=plusLogo}" />
-                    </Button>
-                </StackPanel>
-                <ListBox x:Name="listBox5"></ListBox>
-
-                <StackPanel Orientation="Horizontal" Height="30" Width="875" Margin="0 40 0 0">
-                    <StackPanel.Background>
-                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                            <GradientStop Color="#FFF3F3F3" Offset="0"/>
-                            <GradientStop Color="Gainsboro" Offset="1"/>
-                        </LinearGradientBrush>
-                    </StackPanel.Background>
-                    <TextBlock Foreground="Black" FontFamily="Global Sans Serif" Width="800" FontSize="14" Padding="10 5 0 0" VerticalAlignment="Center">LUNDI 19 AVRIL</TextBlock>
-                    <Button Name="button6" Background="Transparent" BorderBrush="Transparent">
-                        <Image Source="{StaticResource ResourceKey=plusLogo}" />
-                    </Button>
-                </StackPanel>
-                <ListBox x:Name="listBox6"></ListBox>
-
-                <StackPanel Orientation="Horizontal" Height="30" Width="875" Margin="0 40 0 0">
-                    <StackPanel.Background>
-                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                            <GradientStop Color="#FFF3F3F3" Offset="0"/>
-                            <GradientStop Color="Gainsboro" Offset="1"/>
-                        </LinearGradientBrush>
-                    </StackPanel.Background>
-                    <TextBlock Foreground="Black" FontFamily="Global Sans Serif" Width="800" FontSize="14" Padding="10 5 0 0" VerticalAlignment="Center">LUNDI 19 AVRIL</TextBlock>
-                    <Button Name="button7" Background="Transparent" BorderBrush="Transparent">
-                        <Image Source="{StaticResource ResourceKey=plusLogo}" />
-                    </Button>
-                </StackPanel>
-                <ListBox x:Name="listBox7"></ListBox>
-
-                <Button Height="23" Width="76" Margin="0 0 0 0" Name="DeleteButton" VerticalAlignment="Top">
-                </Button>
-
             </StackPanel>
 
+            <Border Grid.Column="1" Grid.Row="0">
+                <StackPanel Margin="100 0 0 0" Width="307" Height="130" Background="#273C75">
+                    <TextBlock Text="Par où commencer ?" Foreground="White" FontFamily="OCR A Extended" Padding="0 5 0 0" FontSize="25" Height="35" Width="307" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center"/>
+                    <Separator Background="White"/>
+                    <TextBlock Height="90" Text="Choisissez un mois et une année puis cliquez sur un jour pour ajouter un événement !" Padding="5 10 0 0" TextWrapping="Wrap" FontSize="16" Foreground="White" Width="307" FontFamily="OCR A Extended"/>
+                </StackPanel>
+            </Border>
+
+            <StackPanel Grid.Row="1" Grid.Column="0">
+                <TextBlock Text="Les plus urgentes" FontSize="30" FontFamily="OCR A Extended" HorizontalAlignment="Center"/>
+                <Border Padding="15" CornerRadius="30" BorderThickness="2" BorderBrush="#707070" Background="White" Margin="10 10 0 0" Width="390" Height="220">
+                    <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Visible">
+                        <ItemsControl DataContext="{Binding Source={StaticResource ShellViewModel}}" ItemsSource="{Binding ToDoNowTasks, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <VirtualizingStackPanel Orientation="Vertical" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border BorderThickness="0 0 0 1" Padding="0 0 0 5" BorderBrush="#707070" Margin="0 5 4 4" HorizontalAlignment="Left">
+                                        <Button Background="Transparent" BorderBrush="Transparent" Foreground="White" Command="{Binding LoadDayViewCommand, Source={StaticResource ShellViewModel}}" HorizontalAlignment="Center" VerticalAlignment="Center" >
+                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="-15 0 0 0">
+                                                <TextBlock Height="30" Width="10" Background="{Binding color}" Margin="5 0 0 0" HorizontalAlignment="Left"/>
+                                                <TextBlock Text="{Binding name}" Foreground="Black" FontSize="16" FontFamily="Segoe UI" Margin="10 0 0 0"/>
+                                                <TextBlock Text=" pour le " Foreground="Black" FontSize="16" FontFamily="Segoe UI" Margin="0 0 0 0"/>
+                                                <TextBlock x:Name="DayText" Text="{Binding startDay}" Foreground="Black" FontSize="16" FontFamily="Segoe UI" Margin="3 0 0 0"/>
+                                                <TextBlock Text="{Binding month}" Foreground="Black" FontSize="16" FontFamily="Segoe UI" Margin="3 0 0 0"/>
+                                                <TextBlock Text="{Binding year}" Foreground="Black" FontSize="16" FontFamily="Segoe UI" Margin="3 0 0 0"/>
+                                                <Separator />
+                                            </StackPanel>
+                                            <Button.CommandParameter>
+                                                <MultiBinding Converter="{StaticResource ChosenDayValuesConverter}">
+                                                    <Binding ElementName="DayText" Path="Text" />
+                                                    <Binding ElementName="ShellViewName"/>
+                                                </MultiBinding>
+                                            </Button.CommandParameter>
+                                        </Button>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </Border>
+            </StackPanel>
+
+            <StackPanel Grid.Row="1" Grid.Column="1">
+                <TextBlock Text="Vos listes" FontSize="30" FontFamily="OCR A Extended"  HorizontalAlignment="Center"/>
+                <Border CornerRadius="30" BorderThickness="2" BorderBrush="#707070" Background="White" Margin="10 10 0 0" Width="200" Height="220">
+                    <TextBlock/>
+                </Border>
+            </StackPanel>
 
         </Grid>
-    </Grid> -->
+
     </Grid>
-    
+
 </Window>
 
     

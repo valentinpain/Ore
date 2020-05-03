@@ -7,16 +7,16 @@
         xmlns:commands="clr-namespace:Ore.ViewModels.Commands"
         xmlns:local="clr-namespace:Ore.Views"
         mc:Ignorable="d"
-        Title="Se connecter" Height="370" Width="400" WindowStartupLocation="CenterScreen" FontSize="14" Background="#F18B5FD8">
+        Title="Se connecter" Height="380" Width="400" WindowStartupLocation="CenterScreen" FontSize="14" Background="#8c7ae6">
 
     <Window.DataContext>
         <viewmodels:LoginViewModel x:Name="LoginViewModel" />
     </Window.DataContext>
 
-    <Border Background="#2E3137" CornerRadius="20" Margin="20">
+    <Border Background="#2f3640" CornerRadius="20" Margin="20">
         <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition Height="220" />
+                <RowDefinition Height="230" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
@@ -24,16 +24,21 @@
                 <TextBlock Text="Se connecter" Foreground="White" FontSize="25" HorizontalAlignment="Center" />
                 <Separator />
                 <TextBlock Text="Nom d'utilisateur" Foreground="White" Margin="0 15 0 0" />
-                <TextBox Background="#545D6A" Foreground="White" FontSize="13" Height="25" Margin="0 2 0 0" Text="{Binding User.Username, Mode=TwoWay}"/>
+                <StackPanel Orientation="Horizontal" Background="#545D6A" Height="30" Margin="0 2 0 0">
+                    <Image Source="/Images/user.png" Height="20" Width="20"/>
+                    <TextBox Background="#545D6A" Foreground="White" VerticalAlignment="Center" BorderBrush="Transparent" FontSize="13" Width="280" Height="25" Text="{Binding User.Username, Mode=TwoWay}" Margin="5 6 0 0"/>
+                </StackPanel>
                 <TextBlock Text="Mot de passe" Foreground="White" Margin="0 10 0 0"/>
-                <PasswordBox x:Name="txtPassword" Background="#545D6A" Foreground="White" FontSize="13" Height="25" Margin="0 2 0 0" />
+                <StackPanel Orientation="Horizontal" Background="#545D6A" Height="30" Margin="0 2 0 0">
+                    <Image Source="/Images/lock.png" Height="20" Width="20"/>
+                    <PasswordBox x:Name="txtPassword" Width="280" Background="#545D6A" Foreground="White" FontSize="13" BorderBrush="Transparent" Height="30" Margin="5 0 0 0" />
+                </StackPanel>
                 <Button HorizontalAlignment="Left" Background="Transparent" BorderBrush="Transparent" Height="30" Command="{Binding LoadRegisterViewCommand}" >
-                    <TextBlock Text="Je n'ai pas de compte" Foreground="#3842FF" FontSize="12" Margin="0 5 0 0" />
+                    <TextBlock Text="Je n'ai pas de compte" Foreground="#0097e6" FontSize="12" Margin="0 5 0 0" />
                 </Button>
             </StackPanel>
-
             <StackPanel Grid.Row="1">
-                <TextBlock Foreground="#FFD63535" Visibility="{Binding WrongInformations}" Text="*** Informations incorrectes ***" Height="20" FontSize="12" Margin="90 0 0 10"/>
+                <TextBlock Foreground="#e84118" Visibility="{Binding WrongInformations}" Text="*** Informations incorrectes ***" Height="20" FontSize="12" Margin="90 0 0 10"/>
                 <Button Content="Valider" Margin="60 0" Background="#545D6A" BorderBrush="#545D6A" Command="{Binding LoginAccessCommand}" CommandParameter="{Binding ElementName=txtPassword}"/>
             </StackPanel>
         </Grid>

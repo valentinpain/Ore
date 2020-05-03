@@ -1,4 +1,5 @@
-﻿using Ore.ViewModels;
+﻿using Ore.Models;
+using Ore.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,7 +33,7 @@ namespace Ore.Views
             Application.Current.Shutdown();
         }
 
-        private void ButtonOpenMenu_Click(object sender, RoutedEventArgs e)
+        /* private void ButtonOpenMenu_Click(object sender, RoutedEventArgs e)
         {
             ButtonOpenMenu.Visibility = Visibility.Collapsed;
             ButtonCloseMenu.Visibility = Visibility.Visible;
@@ -52,60 +53,30 @@ namespace Ore.Views
             ButtonDefaultView.Foreground = Brushes.White;
             ButtonDailyView.Foreground = Brushes.White;
             ButtonMonthlyView.Foreground = Brushes.White;
-        }
+        } */
 
         public void Windowloading(object sender, RoutedEventArgs e)
         {
-            DateTime date = DateTime.Now;
-            int index = (date.ToString()).IndexOf('/');
-            string month = date.ToString().Substring(index + 1, 2);
+           //ShellViewModel.ToDoNowTasks = ShellViewModel.SortTasks();
+        }
 
-            string actualMonth;
+        private void ButtonDay_Click(object sender, RoutedEventArgs e)
+        {
+            if (stackName.Children.Count == 1)
+                stackName.Children.RemoveAt(0);
 
-            switch (month)
-            {
-                case "01":
-                    actualMonth = "JANVIER";
-                    break;
-                case "02":
-                    actualMonth = "FÉVRIER";
-                    break;
-                case "03":
-                    actualMonth = "MARS";
-                    break;
-                case "04":
-                    actualMonth = "AVRIL";
-                    break;
-                case "05":
-                    actualMonth = "MAI";
-                    break;
-                case "06":
-                    actualMonth = "JUIN";
-                    break;
-                case "07":
-                    actualMonth = "JUILLET";
-                    break;
-                case "08":
-                    actualMonth = "AOÛT";
-                    break;
-                case "09":
-                    actualMonth = "SEPTEMBRE";
-                    break;
-                case "10":
-                    actualMonth = "OCTOBRE";
-                    break;
-                case "11":
-                    actualMonth = "NOVEMBRE";
-                    break;
-                case "12":
-                    actualMonth = "DECEMBRE";
-                    break;
-                default:
-                    actualMonth = "error";
-                    break;
-            }
+            string[] clickedButtonSplitted = sender.ToString().Split(' ');
 
-            ShellViewModel.retrieveDataFromModel(actualMonth);
+            ShellViewModel.ChosenDate = clickedButtonSplitted[1] + " " + clickedButtonSplitted[2];
+
+            DayView dayView = new DayView();
+            dayView.Height = 520;
+            dayView.Width = 910;
+
+            stackName.Visibility = Visibility.Visible;
+            MainGrid.Visibility = Visibility.Collapsed;
+
+            stackName.Children.Add(dayView);
         }
     }
 }

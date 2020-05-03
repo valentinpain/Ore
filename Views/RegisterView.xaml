@@ -3,36 +3,55 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:viewmodels="clr-namespace:Ore.ViewModels"
+        xmlns:converters="clr-namespace:Ore.ViewModels.Converter"
         xmlns:local="clr-namespace:Ore.Views"
         mc:Ignorable="d"
-        Title="Créer un nouveau compte" Height="370" Width="410" WindowStartupLocation="Manual" FontSize="14" Background="#F18B5FD8">
+        Title="Créer un nouveau compte" Height="425" Width="410" x:Name="registerWindow" WindowStartupLocation="Manual" FontSize="14" Background="#8c7ae6">
 
-    <Border Background="#2E3137" CornerRadius="20" Margin="20">
+    <Window.DataContext>
+        <viewmodels:RegisterViewModel x:Name="RegisterViewModel" />
+    </Window.DataContext>
+
+    <Window.Resources>
+        <converters:SuccessfulAccountCreationCommand x:Key="SuccessfulAccountCreationCommand" />
+    </Window.Resources>
+
+    <Border Background="#2f3640" CornerRadius="20" Margin="20">
         <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition Height="245" />
+                <RowDefinition Height="275" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
             <StackPanel Grid.Row="0" Margin="20">
-                <Border CornerRadius="15" Background="#545D6A" Height="35" Width="185" HorizontalAlignment="Left">
-                    <StackPanel Orientation="Horizontal">
-                        <Button Background="Transparent" Foreground="Transparent" BorderBrush="Transparent" Width="50" HorizontalAlignment="Left">
-                            <Image Source="/Images/backArrow.png" />
-                        </Button>
-                        <Button Content="Quitter sans valider" Background="Transparent" BorderBrush="Transparent" Margin="-23 0 0 0"/>
-                    </StackPanel>
-                </Border>
+                <Button Command="{Binding GoBackToConnectionCommand}" CommandParameter="{Binding ElementName=registerWindow}" Background="Transparent" BorderBrush="Transparent" HorizontalAlignment="Left" VerticalAlignment="Center" Height="60" Margin="-15 -5 0 0">
+                    <Border CornerRadius="15" Background="#545D6A" Height="45" Width="200" HorizontalAlignment="Left">
+                        <StackPanel Orientation="Horizontal" Height="50" Width="300">
+                            <Button Background="Transparent" BorderBrush="Transparent" Height="50" VerticalAlignment="Center" Margin="0 0 0 3">
+                                <Image Source="/Images/backArrow.png" Height="30" Margin="-10 0 0 0" />
+                            </Button>
+                            <TextBlock Text="Retour à la connexion" VerticalAlignment="Center" Foreground="White" Width="150" FontSize="15" Margin="-7 0 0 3"/>
+                        </StackPanel>
+                    </Border>
+                </Button>
                 <TextBlock Text="Créer un nouveau compte" Foreground="White" FontSize="25" HorizontalAlignment="Center" Margin="0 15 0 0"/>
                 <Separator />
                 <TextBlock Text="Nom d'utilisateur" Foreground="White" Margin="0 15 0 0" />
-                <TextBox Background="#545D6A" Foreground="White" FontSize="13" Height="25" Margin="0 2 0 0"/>
+                <StackPanel Orientation="Horizontal" Background="#545D6A" Height="30" Margin="0 2 0 0">
+                    <Image Source="/Images/user.png" Height="20" Width="20"/>
+                    <TextBox Text="{Binding User.Username}" Background="#545D6A" Foreground="White" Width="300" FontSize="13" Height="28" BorderBrush="Transparent" Margin="5 2 0 0"/>
+                </StackPanel>
                 <TextBlock Text="Mot de passe" Foreground="White" Margin="0 10 0 0"/>
-                <PasswordBox x:Name="txtPassword" Background="#545D6A" Foreground="White" FontSize="13" Height="25" Margin="0 2 0 0" />
+                <StackPanel Orientation="Horizontal" Background="#545D6A" Height="30" Margin="0 2 0 0">
+                    <Image Source="/Images/lock.png" Height="20" Width="20" />
+                    <PasswordBox x:Name="txtPassword" Width="300" Background="#545D6A" Foreground="White" BorderBrush="Transparent" FontSize="13" Height="27" Margin="5 2 0 0" />
+                </StackPanel>
             </StackPanel>
 
             <StackPanel Grid.Row="1">
-                <Button Content="Valider" Margin="60 0" Background="#545D6A" BorderBrush="#545D6A"/>
+                <TextBlock Foreground="{Binding TextInformations, Converter={StaticResource SuccessfulAccountCreationCommand}}" Visibility="{Binding WrongInformations}" Text="{Binding TextInformations}" Height="20" FontSize="12" Margin="90 0 0 10"/>
+                <Button Content="Valider" Margin="60 0" Background="#545D6A" BorderBrush="#545D6A" Command="{Binding RegisterCommand}" CommandParameter="{Binding ElementName=txtPassword}" />
             </StackPanel>
         </Grid>
     </Border>
