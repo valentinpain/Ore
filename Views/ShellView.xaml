@@ -11,7 +11,7 @@
         xmlns:comd="clr-namespace:Ore.ViewModels.Commands"
         xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
-        Title="Ore - A Light Task Manager" Height="600" Width="1080" x:Name="ShellViewName" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" Loaded="Windowloading">
+        Title="Ore - A Light Task Manager" Height="600" Width="1080" x:Name="ShellViewName" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
 <!-- Ajouter le window Loading -->
     
     <Window.DataContext>
@@ -42,6 +42,7 @@
         <convt:OpacityTaskDoneConverter x:Key="OpacityTaskDoneConverter" />
         <convt:ColorTaskConverter x:Key="ColorTaskConverter" />
         <convt:ChosenDayValuesConverter x:Key="ChosenDayValuesConverter" />
+        <convt:LoadListViewConverter x:Key="LoadListViewConverter" />
 
     </Window.Resources>
 
@@ -62,9 +63,10 @@
                 <Button Margin="341 0 0 0" Height="50" VerticalAlignment="Center" HorizontalAlignment="Center" Background="Transparent" BorderBrush="Transparent" Foreground="Transparent" Command="{Binding LoadHomeViewCommand, Source={StaticResource ShellViewModel}}" CommandParameter="{Binding ElementName=ShellViewName}">
                     <TextBlock Text="Ore" VerticalAlignment="Center" HorizontalAlignment="Center" FontFamily="OCR A Extended" FontSize="50" Foreground="White"/>
                 </Button>
-                <TextBlock Text="Compte" VerticalAlignment="Center" HorizontalAlignment="Center" FontFamily="OCR A Extended" Margin="220 0 0 0" FontSize="25" Foreground="White"/>
-                <TextBlock Text="Paramètres" VerticalAlignment="Center" HorizontalAlignment="Center" FontFamily="OCR A Extended" Margin="30 0 0 0" FontSize="25" Foreground="White"/>
-                <MaterialDesign:PackIcon Kind="Power" Height="30" Width="30" VerticalAlignment="Center" HorizontalAlignment="Center" FontFamily="OCR A Extended" Margin="15 0 0 0" Foreground="White" />
+                <TextBlock DataContext="{StaticResource LoginViewModel}" Text="{Binding User.Username}" VerticalAlignment="Center" HorizontalAlignment="Center" FontFamily="OCR A Extended" Margin="350 0 0 0" FontSize="25" Foreground="White"/>
+                <Button Width="60" Margin="10 0 0 0" Background="Transparent" BorderBrush="Transparent" Foreground="Transparent" Command="{Binding DisconnectUserCommand, Source={StaticResource ShellViewModel}}" CommandParameter="{Binding ElementName=ShellViewName}">
+                    <MaterialDesign:PackIcon Kind="Power" Height="30" Width="30" VerticalAlignment="Center" HorizontalAlignment="Center" FontFamily="OCR A Extended" Foreground="White" />
+                </Button>
             </StackPanel>
         </Border>
 
@@ -80,13 +82,15 @@
 
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <Border CornerRadius="15" BorderThickness="1" BorderBrush="#707070" Background="{Binding IsToday, Converter={StaticResource ActualDayColorConverter}}" Margin="4 5 4 0" Height="30">
-                                    <Button Background="Transparent" BorderBrush="Transparent" Foreground="White" Command="{Binding LoadDayViewCommand, Source={StaticResource ShellViewModel}}" HorizontalAlignment="Center" VerticalAlignment="Center" >
+                                <Border CornerRadius="15" BorderThickness="1" BorderBrush="#707070" Background="{Binding IsToday, Converter={StaticResource ActualDayColorConverter}}" Margin="4 5 4 0" Height="30" MouseEnter="Button_MouseEnter" MouseLeave="Button_MouseLeave">
+                                    <Button Background="Transparent" Width="130" BorderBrush="Transparent" Foreground="White" Command="{Binding LoadDayViewCommand, Source={StaticResource ShellViewModel}}" HorizontalAlignment="Center" VerticalAlignment="Center">
                                         <TextBlock x:Name="DayText" Text="{Binding Name}" Foreground="Black" FontSize="16" FontFamily="Segoe UI" Margin="0 -3 0 0"/>
                                         <Button.CommandParameter>
                                             <MultiBinding Converter="{StaticResource ChosenDayValuesConverter}">
                                                 <Binding ElementName="DayText" Path="Text" />
                                                 <Binding ElementName="ShellViewName"/>
+                                                <Binding ElementName="MonthText" Path="Text" />
+                                                <Binding ElementName="YearText" Path="Text" />
                                             </MultiBinding>
                                         </Button.CommandParameter>
                                     </Button>
@@ -98,7 +102,10 @@
             </Grid>
         </Border>
 
-        <StackPanel x:Name="stackName" Grid.Row="1" Grid.Column="1" Width="910" Height="520">
+        <StackPanel x:Name="stackDay" Grid.Row="1" Grid.Column="1" Width="910" Height="520">
+        </StackPanel>
+
+        <StackPanel x:Name="stackList" Grid.Row="1" Grid.Column="1" Width="910" Height="520">
         </StackPanel>
 
         <Grid x:Name="MainGrid" Grid.Row="1" Grid.Column="1" Background="#f5f6fa">
@@ -113,16 +120,16 @@
             </Grid.RowDefinitions>
 
             <StackPanel Orientation="Horizontal" Grid.Column="0" Grid.Row="0">
-                <StackPanel Width="150" Margin="15 31 0 0">
+                <StackPanel Width="155" Margin="15 31 0 0">
                     <TextBlock Text="Mois" FontSize="30" FontFamily="OCR A Extended" HorizontalAlignment="Center"/>
-                    <Border CornerRadius="15" BorderThickness="2" Background="#dcdde1" Width="142" Height="40" Margin="0 10 0 0">
-                        <ComboBox ItemsSource="{Binding MonthsTab}" SelectedItem="{Binding TaskStartMonth, Mode=TwoWay}" Foreground="Black" Padding="10 0 0 0" Margin="0 7 5 0" FontFamily="OCR A Extended" FontSize="20" Style="{StaticResource MaterialDesignDataGridComboBox}" VerticalAlignment="Center" />
+                    <Border CornerRadius="15" BorderThickness="2" Background="#dcdde1" Width="155" Height="40" Margin="0 10 0 0">
+                        <ComboBox x:Name="MonthText" ItemsSource="{Binding MonthsTab}" SelectedItem="{Binding TaskStartMonth, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Foreground="Black" Padding="10 0 0 0" Margin="0 7 5 0" FontFamily="OCR A Extended" FontSize="20" Style="{StaticResource MaterialDesignDataGridComboBox}" VerticalAlignment="Center" />
                     </Border>
                 </StackPanel>
                 <StackPanel Width="150" Margin="0 31 0 0">
                     <TextBlock Text="Année" FontSize="30" FontFamily="OCR A Extended" HorizontalAlignment="Center"/>
                     <Border CornerRadius="15" BorderThickness="2" Background="#dcdde1" Width="100" Height="40" Margin="0 10 0 0">
-                        <ComboBox ItemsSource="{Binding YearsTab}" SelectedItem="{Binding TaskYear, Mode=TwoWay}" Foreground="Black" Padding="10 0 0 0" Margin="0 7 5 0" FontFamily="OCR A Extended" FontSize="20" Style="{StaticResource MaterialDesignDataGridComboBox}" VerticalAlignment="Center" />
+                        <ComboBox x:Name="YearText" ItemsSource="{Binding YearsTab}" SelectedItem="{Binding TaskStartYear, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Foreground="Black" Padding="10 0 0 0" Margin="0 7 5 0" FontFamily="OCR A Extended" FontSize="20" Style="{StaticResource MaterialDesignDataGridComboBox}" VerticalAlignment="Center" />
                     </Border>
                 </StackPanel>
             </StackPanel>
@@ -136,10 +143,10 @@
             </Border>
 
             <StackPanel Grid.Row="1" Grid.Column="0">
-                <TextBlock Text="Les plus urgentes" FontSize="30" FontFamily="OCR A Extended" HorizontalAlignment="Center"/>
+                <TextBlock Text="Les plus urgentes" FontSize="30" FontFamily="OCR A Extended" HorizontalAlignment="Center" Margin="0 -13 0 0"/>
                 <Border Padding="15" CornerRadius="30" BorderThickness="2" BorderBrush="#707070" Background="White" Margin="10 10 0 0" Width="390" Height="220">
                     <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Visible">
-                        <ItemsControl DataContext="{Binding Source={StaticResource ShellViewModel}}" ItemsSource="{Binding ToDoNowTasks, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                        <ItemsControl DataContext="{Binding Source={StaticResource ShellViewModel}}" ItemsSource="{Binding ToDoNowTasks}">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
                                     <VirtualizingStackPanel Orientation="Vertical" />
@@ -152,17 +159,19 @@
                                         <Button Background="Transparent" BorderBrush="Transparent" Foreground="White" Command="{Binding LoadDayViewCommand, Source={StaticResource ShellViewModel}}" HorizontalAlignment="Center" VerticalAlignment="Center" >
                                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="-15 0 0 0">
                                                 <TextBlock Height="30" Width="10" Background="{Binding color}" Margin="5 0 0 0" HorizontalAlignment="Left"/>
-                                                <TextBlock Text="{Binding name}" Foreground="Black" FontSize="16" FontFamily="Segoe UI" Margin="10 0 0 0"/>
-                                                <TextBlock Text=" pour le " Foreground="Black" FontSize="16" FontFamily="Segoe UI" Margin="0 0 0 0"/>
-                                                <TextBlock x:Name="DayText" Text="{Binding startDay}" Foreground="Black" FontSize="16" FontFamily="Segoe UI" Margin="3 0 0 0"/>
-                                                <TextBlock Text="{Binding month}" Foreground="Black" FontSize="16" FontFamily="Segoe UI" Margin="3 0 0 0"/>
-                                                <TextBlock Text="{Binding year}" Foreground="Black" FontSize="16" FontFamily="Segoe UI" Margin="3 0 0 0"/>
+                                                <TextBlock Text="{Binding name}" FontWeight="Bold" Foreground="Black" FontSize="16" FontFamily="Segoe UI" Margin="7 0 0 0"/>
+                                                <TextBlock Text=" pour le" Foreground="Black" FontSize="16" FontFamily="Segoe UI" Margin="0 0 0 0"/>
+                                                <TextBlock x:Name="DayText" Text="{Binding finishDay}" Foreground="Black" FontSize="16" FontFamily="Segoe UI" Margin="3 0 0 0"/>
+                                                <TextBlock Text="{Binding finishMonth}" Foreground="Black" FontSize="16" FontFamily="Segoe UI" Margin="3 0 0 0"/>
+                                                <TextBlock Text="{Binding finishYear}" Foreground="Black" FontSize="16" FontFamily="Segoe UI" Margin="3 0 0 0"/>
                                                 <Separator />
                                             </StackPanel>
                                             <Button.CommandParameter>
                                                 <MultiBinding Converter="{StaticResource ChosenDayValuesConverter}">
                                                     <Binding ElementName="DayText" Path="Text" />
                                                     <Binding ElementName="ShellViewName"/>
+                                                    <Binding ElementName="MonthText" Path="Text" />
+                                                    <Binding ElementName="YearText" Path="Text" />
                                                 </MultiBinding>
                                             </Button.CommandParameter>
                                         </Button>
@@ -175,9 +184,43 @@
             </StackPanel>
 
             <StackPanel Grid.Row="1" Grid.Column="1">
-                <TextBlock Text="Vos listes" FontSize="30" FontFamily="OCR A Extended"  HorizontalAlignment="Center"/>
-                <Border CornerRadius="30" BorderThickness="2" BorderBrush="#707070" Background="White" Margin="10 10 0 0" Width="200" Height="220">
-                    <TextBlock/>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Margin="120 -10 0 0" Text="Vos listes" FontSize="30" FontFamily="OCR A Extended"  HorizontalAlignment="Center"/>
+                    <Button Width="60" Height="40" Margin="-5 -15 0 0" Foreground="Transparent" BorderBrush="Transparent" Background="Transparent" Command="{Binding ListCommand}" CommandParameter="{Binding ElementName=ShellViewName}">
+                        <Image Source="/Images/plus.png" />
+                    </Button>
+                </StackPanel>
+                <StackPanel x:Name="addAListPanel" Orientation="Horizontal" Visibility="Collapsed" HorizontalAlignment="Center">
+                    <TextBlock Text="Nom : " HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15" Margin="15 0 -30 0"/>
+                    <TextBox Text="{Binding ListName, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}" Width="200" Height="30" Margin="35 -10 0 0" FontSize="13"/>
+                    <Button BorderBrush="Transparent" Foreground="Black" Background="Transparent" Content="Valider" Command="{Binding AddAListCommand}" CommandParameter="{Binding ElementName=ShellViewName}"/>
+                </StackPanel>
+                <Border Padding="15" CornerRadius="30" BorderThickness="2" BorderBrush="#707070" Background="White" Margin="10 0 0 0" Width="300" Height="220">
+                    <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Visible">
+                        <ItemsControl ItemsSource="{x:Static ViewModels:ShellViewModel.Lists}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <VirtualizingStackPanel Orientation="Vertical" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border BorderThickness="0 0 0 1" Width="250" Padding="0 0 0 5" BorderBrush="#707070" Margin="0 5 4 4" HorizontalAlignment="Center">
+                                        <Button Background="Transparent" BorderBrush="Transparent" Foreground="Transparent" HorizontalAlignment="Center" VerticalAlignment="Center" Command="{Binding LoadListViewCommand, Source={StaticResource ShellViewModel}}" >
+                                            <TextBlock x:Name="txtListName" FontSize="18" Foreground="Black" Width="200" Text="{Binding Name}" TextAlignment="Center" HorizontalAlignment="Center"/>
+                                            <Button.CommandParameter>
+                                                <MultiBinding Converter="{StaticResource LoadListViewConverter}">
+                                                    <Binding ElementName="txtListName" Path="Text" />
+                                                    <Binding ElementName="ShellViewName" />
+                                                </MultiBinding>
+                                            </Button.CommandParameter>
+                                        </Button>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
                 </Border>
             </StackPanel>
 

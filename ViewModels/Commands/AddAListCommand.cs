@@ -1,5 +1,4 @@
-﻿using Ore.Models;
-using Ore.Views;
+﻿using Ore.Views;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +8,7 @@ using System.Windows.Input;
 
 namespace Ore.ViewModels.Commands
 {
-    public class LoadHomeViewCommand : ICommand
+    public class AddAListCommand : ICommand
     {
         public event EventHandler CanExecuteChanged;
 
@@ -21,11 +20,10 @@ namespace Ore.ViewModels.Commands
             set { shellViewModel = value; }
         }
 
-        public LoadHomeViewCommand(ShellViewModel shellViewModel)
+        public AddAListCommand(ShellViewModel shellViewModel)
         {
             this.shellViewModel = shellViewModel;
         }
-
 
         public bool CanExecute(object parameter)
         {
@@ -36,11 +34,9 @@ namespace Ore.ViewModels.Commands
         {
             ShellView shellView = parameter as ShellView;
 
-            shellView.stackDay.Visibility = System.Windows.Visibility.Collapsed;
-            shellView.stackList.Visibility = System.Windows.Visibility.Collapsed;
-            shellView.MainGrid.Visibility = System.Windows.Visibility.Visible;
+            shellView.addAListPanel.Visibility = System.Windows.Visibility.Collapsed;
 
-            ShellViewModel.ToDoNowTasks = ShellViewModel.SortTasks(ShellModel.retrieveAllTasks(LoginViewModel.User.Id));
+            ShellViewModel.Lists.Add(new ListViewModel() { TaskList = new System.Collections.ObjectModel.ObservableCollection<TaskViewModel>(), Name = shellViewModel.ListName });
         }
     }
 }

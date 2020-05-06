@@ -4,7 +4,9 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Media;
 
 namespace Ore.ViewModels.Converter
 {
@@ -13,7 +15,7 @@ namespace Ore.ViewModels.Converter
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (bool.Parse(value.ToString()))
-                return "#f7a72e";
+                return Brushes.Orange;
 
             return "White";
         }

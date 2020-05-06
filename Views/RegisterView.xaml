@@ -9,6 +9,10 @@
         mc:Ignorable="d"
         Title="Créer un nouveau compte" Height="425" Width="410" x:Name="registerWindow" WindowStartupLocation="Manual" FontSize="14" Background="#8c7ae6">
 
+    <Window.InputBindings>
+        <KeyBinding Key="Enter" Command="{Binding RegisterCommand}" CommandParameter="{Binding ElementName=txtPassword}"/>
+    </Window.InputBindings>
+
     <Window.DataContext>
         <viewmodels:RegisterViewModel x:Name="RegisterViewModel" />
     </Window.DataContext>

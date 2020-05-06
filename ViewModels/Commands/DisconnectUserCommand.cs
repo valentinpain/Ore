@@ -1,5 +1,4 @@
-﻿using Ore.Models;
-using Ore.Views;
+﻿using Ore.Views;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,23 +8,21 @@ using System.Windows.Input;
 
 namespace Ore.ViewModels.Commands
 {
-    public class LoadHomeViewCommand : ICommand
+    public class DisconnectUserCommand : ICommand
     {
         public event EventHandler CanExecuteChanged;
 
         private ShellViewModel shellViewModel;
-
         public ShellViewModel ShellViewModel
         {
             get { return shellViewModel; }
             set { shellViewModel = value; }
         }
 
-        public LoadHomeViewCommand(ShellViewModel shellViewModel)
+        public DisconnectUserCommand(ShellViewModel shellViewModel)
         {
             this.shellViewModel = shellViewModel;
         }
-
 
         public bool CanExecute(object parameter)
         {
@@ -35,12 +32,10 @@ namespace Ore.ViewModels.Commands
         public void Execute(object parameter)
         {
             ShellView shellView = parameter as ShellView;
+            shellView.Visibility = System.Windows.Visibility.Hidden;
 
-            shellView.stackDay.Visibility = System.Windows.Visibility.Collapsed;
-            shellView.stackList.Visibility = System.Windows.Visibility.Collapsed;
-            shellView.MainGrid.Visibility = System.Windows.Visibility.Visible;
-
-            ShellViewModel.ToDoNowTasks = ShellViewModel.SortTasks(ShellModel.retrieveAllTasks(LoginViewModel.User.Id));
+            LoginView loginView = new LoginView();
+            loginView.Show();
         }
     }
 }

@@ -8,9 +8,11 @@ using System.Windows.Input;
 
 namespace Ore.ViewModels.Commands
 {
-    public class DeleteCommand : ICommand
+    public class TaskDoneCommand : ICommand
     {
-        private ShellViewModel shellViewModel = new ShellViewModel();
+        public event EventHandler CanExecuteChanged;
+
+        private ShellViewModel shellViewModel;
 
         public ShellViewModel ShellViewModel
         {
@@ -18,12 +20,11 @@ namespace Ore.ViewModels.Commands
             set { shellViewModel = value; }
         }
 
-        public DeleteCommand(ShellViewModel shellViewModel)
+        public TaskDoneCommand(ShellViewModel shellViewModel)
         {
             this.shellViewModel = shellViewModel;
         }
 
-        public event EventHandler CanExecuteChanged;
 
         public bool CanExecute(object parameter)
         {
@@ -32,12 +33,17 @@ namespace Ore.ViewModels.Commands
 
         public void Execute(object parameter)
         {
-            foreach(TaskViewModel task in ShellViewModel.Tasks)
+            foreach (TaskViewModel task in ShellViewModel.Tasks)
             {
-                if (int.Parse(task.id.ToString()) == int.Parse(parameter.ToString()))
+                if (int.Parse(task.id.ToString()) == int.Parse(parameter.ToString()) && !ShellModel.isChecked(int.Parse(parameter.ToString())))
                 {
-                    ShellViewModel.Tasks.Remove(task);
-                    ShellModel.deleteTask(task.id);
+                    ShellModel.checkTask(task.id);
+                    ShellViewModel.SortTasks(ShellModel.retrieveAllTasks(LoginViewModel.User.Id));
+                    break;
+                }
+                else
+                {
+                    ShellModel.unCheckTask(task.id);
                     ShellViewModel.SortTasks(ShellModel.retrieveAllTasks(LoginViewModel.User.Id));
                     break;
                 }

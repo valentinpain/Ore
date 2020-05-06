@@ -35,20 +35,6 @@ namespace Ore.ViewModels.Commands
             this.LoginViewModel = loginViewModel;
         }
 
-        private ShellViewModel shellViewModel = new ShellViewModel();
-
-        public ShellViewModel ShellViewModel
-        {
-            get { return shellViewModel; }
-            set { shellViewModel = value; }
-        }
-
-
-        public LoginAccessCommand(ShellViewModel shellViewModel)
-        {
-            this.shellViewModel = shellViewModel;
-        }
-
         public bool CanExecute(object parameter)
         {
             return true;
@@ -58,19 +44,26 @@ namespace Ore.ViewModels.Commands
         {
             var passwordBox = parameter as PasswordBox;
 
-            if (!passwordBox.Password.Equals(""))
-                LoginViewModel.User.Password = passwordBox.Password;
-            else
-                LoginViewModel.User.Password = "";
-
-            if (LoginModel.isUserRegistered(LoginViewModel.User.Username, LoginViewModel.User.Password))
+            if(passwordBox != null)
             {
-                loginViewModel.CloseAction();
+                if (!passwordBox.Password.Equals(""))
+                    LoginViewModel.User.Password = passwordBox.Password;
+                else
+                    LoginViewModel.User.Password = "";
 
-                shellView.Show();
+                int userId = LoginModel.findUserId(LoginViewModel.User.Username, LoginViewModel.User.Password);
+
+                if (userId > 0)
+                {
+                    LoginViewModel.User.Id = userId;
+                    ShellViewModel.TaskIdUser = userId;
+                    loginViewModel.CloseAction();
+
+                    shellView.Show();
+                }
+                else
+                    loginViewModel.WrongInformations = "Visible";
             }
-            else
-                loginViewModel.WrongInformations = "Visible";
             
         }
     }

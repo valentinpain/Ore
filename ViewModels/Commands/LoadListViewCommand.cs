@@ -1,20 +1,16 @@
-﻿using Ore.Models;
-using Ore.Views;
+﻿using Ore.Views;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Input;
 
 namespace Ore.ViewModels.Commands
 {
-    public class LoadDayViewCommand : ICommand
+    public class LoadListViewCommand : ICommand
     {
         public event EventHandler CanExecuteChanged;
-
-        private ShellViewModel shellViewModel;
 
         private static int memoryColorNumber = 0;
 
@@ -24,6 +20,7 @@ namespace Ore.ViewModels.Commands
             set { memoryColorNumber = value; }
         }
 
+        private ShellViewModel shellViewModel;
 
         public ShellViewModel ShellViewModel
         {
@@ -31,7 +28,7 @@ namespace Ore.ViewModels.Commands
             set { shellViewModel = value; }
         }
 
-        public LoadDayViewCommand(ShellViewModel shellViewModel)
+        public LoadListViewCommand(ShellViewModel shellViewModel)
         {
             this.shellViewModel = shellViewModel;
         }
@@ -47,26 +44,13 @@ namespace Ore.ViewModels.Commands
             Random random = new Random();
             int randomColorNumber = 0;
 
-            ShellView shellview = values[1] as ShellView;
-            ShellViewModel.ChosenMonth = values[2].ToString();
-            ShellViewModel.ChosenYear = values[3].ToString();
-
-            if (shellview.stackDay.Children.Count == 1)
-                shellview.stackDay.Children.RemoveAt(0);
-
-            ShellViewModel.ChosenDate = values[0].ToString();
-
-            shellViewModel.Tasks = ShellModel.retrieveDataFromDatabase(int.Parse(ShellViewModel.ChosenDate.Substring(ShellViewModel.ChosenDate.IndexOf(' '), ShellViewModel.ChosenDate.Length - ShellViewModel.ChosenDate.IndexOf(' '))),
-                                                                       int.Parse(shellViewModel.monthNameToNumber(ShellViewModel.ChosenMonth)),
-                                                                       int.Parse(ShellViewModel.ChosenYear),
-                                                                       LoginViewModel.User.Id);
+            ShellView shellView = values[1] as ShellView;
+            ListViewModel.FocusedName = values[0].ToString();
 
             randomColorNumber = random.Next(1, 9);
 
             while (randomColorNumber == memoryColorNumber)
-            {
                 randomColorNumber = random.Next(1, 6);
-            }
 
             switch (randomColorNumber)
             {
@@ -104,15 +88,15 @@ namespace Ore.ViewModels.Commands
                     break;
             }
 
-            DayView dayView = new DayView();
-            dayView.Height = 520;
-            dayView.Width = 910;
+            ListView listView = new ListView();
+            listView.Height = 520;
+            listView.Width = 910;
 
-            shellview.stackDay.Visibility = Visibility.Visible;
-            shellview.stackList.Visibility = Visibility.Collapsed;
-            shellview.MainGrid.Visibility = Visibility.Collapsed;
+            shellView.stackList.Children.Add(listView);
 
-            shellview.stackDay.Children.Add(dayView);
+            shellView.stackDay.Visibility = System.Windows.Visibility.Collapsed;
+            shellView.stackList.Visibility = System.Windows.Visibility.Visible;
+            shellView.MainGrid.Visibility = System.Windows.Visibility.Collapsed;
         }
     }
 }

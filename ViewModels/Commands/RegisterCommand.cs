@@ -41,15 +41,26 @@ namespace Ore.ViewModels.Commands
             else
                 RegisterViewModel.User.Password = "";
 
-            if(!RegisterViewModel.User.Username.Equals("") && !RegisterViewModel.User.Password.Equals(""))
+            if (!RegisterModel.isUserAlreadyCreated(registerViewModel.User.Username, RegisterViewModel.User.Password))
             {
-                registerViewModel.TextInformations = "Création du compte réussie !";
-                registerViewModel.WrongInformations = "Visible";
-                RegisterModel.InsertNewAccountInDatabase(registerViewModel.LastUserId, RegisterViewModel.User.Username, RegisterViewModel.User.Password);
-                registerViewModel.LastUserId++;
+                if (!RegisterViewModel.User.Username.Equals("") && !RegisterViewModel.User.Password.Equals(""))
+                {
+                    registerViewModel.TextInformations = "Création du compte réussie !";
+                    registerViewModel.WrongInformations = "Visible";
+                    RegisterModel.InsertNewAccountInDatabase(registerViewModel.LastUserId, RegisterViewModel.User.Username, RegisterViewModel.User.Password);
+                    registerViewModel.LastUserId++;
+                }
+                else
+                {
+                    registerViewModel.TextInformations = "*** Informations incorrectes ***";
+                    registerViewModel.WrongInformations = "Visible";
+                }
             }
-            else
+            else 
+            {
+                registerViewModel.TextInformations = "Ce compte existe déjà";
                 registerViewModel.WrongInformations = "Visible";
+            }
         }
     }
 }

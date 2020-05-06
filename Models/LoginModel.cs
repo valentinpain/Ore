@@ -1,4 +1,6 @@
 ﻿using Ore.Models.DatabaseConnection;
+using Ore.Models.EncryptingData;
+using Ore.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -10,8 +12,8 @@ namespace Ore.Models
 {
     public class LoginModel
     {
-        public static bool isUserRegistered(string username, string password)
-        {
+		public static int findUserId(string username, string password)
+		{
 			SqlConnection connection = DBUtils.GetDBConnection();
 
 			try
@@ -23,16 +25,17 @@ namespace Ore.Models
 				Console.WriteLine("Error: " + e.Message);
 			}
 
+			string encryptedPassword = EncryptingUtils.EncryptString(password, "test");
+
 			SqlCommand command = connection.CreateCommand();
-			command.CommandText = "SELECT * FROM [dbo].[T_USERS] WHERE USE_name = '" + username + "' AND USE_password = '" + password + "'";
+			command.CommandText = "SELECT * FROM [dbo].[T_USERS] WHERE USE_name = '" + username + "' AND USE_password = '" + encryptedPassword + "'";
 
 			SqlDataReader dataReader = command.ExecuteReader();
 
 			while (dataReader.Read())
-					return true;
+				return int.Parse(dataReader["USE_id"].ToString());
 
-			return false;
-
+			return 0;
 		}
     }
 }

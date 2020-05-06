@@ -37,39 +37,37 @@ namespace Ore.ViewModels.Commands
                 shellViewModel.TaskId = ShellModel.lastRowNumber() + 1;
             }
 
-            if(!shellViewModel.TaskName.Equals(""))
+            if(shellViewModel.TaskName != null && shellViewModel.TaskFinishDay != null && shellViewModel.TaskStartTime != null && shellViewModel.TaskFinishTime != null && shellViewModel.TaskFinishDay != null)
             {
-                if(shellViewModel.TaskColor == null)
+                if (shellViewModel.TaskColor == null)
                     shellViewModel.TaskColor = "#FFFFFFFF";
+
+                if (shellViewModel.TaskDescription == null)
+                    shellViewModel.TaskDescription = "";
 
                 string[] dayNameSplitted = ShellViewModel.ChosenDate.Split(' ');
 
-                shellViewModel.Tasks.Add(new TaskViewModel() { id = shellViewModel.TaskId,
-                                                               name = shellViewModel.TaskName,
-                                                               description = shellViewModel.TaskDescription,
-                                                               color = shellViewModel.TaskColor,
-                                                               startDay = ShellViewModel.ChosenDate,
-                                                               finishDay = TaskViewModel.formatDay(shellViewModel.TaskFinishDay),
-                                                               startTime = TaskViewModel.formatTime(shellViewModel.TaskStartTime),
-                                                               finishTime = TaskViewModel.formatTime(shellViewModel.TaskFinishTime),
-                                                               month = shellViewModel.TaskStartMonth,
-                                                               year = shellViewModel.TaskYear,
-                                                               isComplete = false,
-                                                               useId = shellViewModel.TaskIdUser
-                });
+                string[] finishDateSplittedByDay = shellViewModel.TaskFinishDay.Split(' ');
+                string[] finishDayFormatted = TaskViewModel.setDate(finishDateSplittedByDay[0]);
 
-                shellViewModel.TaskName = "";
-                shellViewModel.TaskDescription = "";
+                shellViewModel.TaskFinishDay = finishDayFormatted[0];
+                shellViewModel.TaskFinishMonth = finishDayFormatted[1];
+                shellViewModel.TaskFinishYear = finishDayFormatted[2];
+
+                shellViewModel.addTask();
+
+                shellViewModel.TaskName = shellViewModel.TaskDescription = shellViewModel.TaskFinishDay = shellViewModel.TaskStartTime = shellViewModel.TaskFinishTime = shellViewModel.TaskStartMonth = shellViewModel.TaskStartYear = null;
                 shellViewModel.TaskColor = "#FFFFFFFF";
-                shellViewModel.TaskFinishDay = "";
-                shellViewModel.TaskStartTime = "";
-                shellViewModel.TaskFinishTime = "";
-                shellViewModel.TaskStartMonth = "";
-                shellViewModel.TaskYear = "";
 
                 ShellModel.addTaskToDatabase(shellViewModel.Tasks[shellViewModel.Tasks.Count - 1]);
                 shellViewModel.TaskId++;
-                shellViewModel.ToDoNowTasks = ShellViewModel.SortTasks(ShellModel.retrieveAllTasks(1));
+                ShellViewModel.SortTasks(ShellModel.retrieveAllTasks(LoginViewModel.User.Id));
+                shellViewModel.WrongInformations = false;
+            }
+            else
+            {
+                shellViewModel.TextInformations = "Certains champs obligatoires sont vides";
+                shellViewModel.WrongInformations = true;
             }
         }
     }
