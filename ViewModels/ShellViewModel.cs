@@ -18,8 +18,34 @@ namespace Ore.ViewModels
 
         private static ObservableCollection<TaskViewModel> tasks = new ObservableCollection<TaskViewModel>();
 		private ObservableCollection<DayViewModel> daysInMonth = new ObservableCollection<DayViewModel>();
+		private ObservableCollection<TaskViewModel> toDoNowTasks = new ObservableCollection<TaskViewModel>();
+		private static ObservableCollection<ListViewModel> lists = new ObservableCollection<ListViewModel>();
 
-		private ObservableCollection<TaskViewModel> toDoNowTasks = ShellModel.retrieveAllTasks(1);
+		public static ObservableCollection<ListViewModel> Lists
+		{
+			get { return lists; }
+			set { lists = value; }
+		}
+
+		private string listName;
+
+		public string ListName
+		{
+			get { return listName; }
+			set 
+			{ 
+				listName = value;
+				NotifyPropertyChanged(nameof(ListName));
+			}
+		}
+
+		private static ObservableCollection<TaskViewModel> focusedList = new ObservableCollection<TaskViewModel>();
+
+		public static ObservableCollection<TaskViewModel> FocusedList
+		{
+			get { return focusedList; }
+			set { focusedList = value; }
+		}
 
 		public event PropertyChangedEventHandler PropertyChanged;
 
@@ -33,14 +59,42 @@ namespace Ore.ViewModels
 		private string taskFinishTime;
 		private string taskStartMonth = monthNumberToName(DateTime.Now.Month.ToString());
 		private string taskFinishMonth;
-		private string taskYear = DateTime.Now.Year.ToString();
+		private string taskStartYear = DateTime.Now.Year.ToString();
+		private string taskFinishYear;
 		private bool taskChecked;
-		private int taskIdUser = 1;
+		private static int taskIdUser = LoginViewModel.User.Id;
 
 		private string[] monthsTab = {"Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre" };
 
 		private static string randomColor;
 		private string[] yearsTab;
+
+		private bool wrongInformations = false;
+
+		public bool WrongInformations
+		{
+			get { return wrongInformations; }
+			set 
+			{ 
+				wrongInformations = value;
+				NotifyPropertyChanged(nameof(WrongInformations));
+				NotifyPropertyChanged(nameof(TextInformations));
+			}
+		}
+
+		private string textInformations;
+
+		public string TextInformations
+		{
+			get { return textInformations; }
+			set 
+			{ 
+				textInformations = value;
+				NotifyPropertyChanged(nameof(TextInformations));
+				NotifyPropertyChanged(nameof(WrongInformations));
+			}
+		}
+
 
 
 		public static string RandomColor
@@ -51,9 +105,6 @@ namespace Ore.ViewModels
 				randomColor = value;
 			}
 		}
-
-
-
 
 		public string[] MonthsTab
 		{
@@ -73,18 +124,18 @@ namespace Ore.ViewModels
 
 		public ObservableCollection<TaskViewModel> ToDoNowTasks
 		{
-			get { return SortTasks(ShellModel.retrieveAllTasks(1)); }
-			set 
-			{ 
-				toDoNowTasks = value;
-				NotifyPropertyChanged(nameof(ToDoNowTasks));
-			}
+			get { return SortTasks(ShellModel.retrieveAllTasks(LoginViewModel.User.Id)); }
+			set { toDoNowTasks = value; }
 		}
 
 		public string TaskFinishMonth
 		{
 			get { return taskFinishMonth; }
-			set { taskFinishMonth = value; }
+			set 
+			{ 
+				taskFinishMonth = value;
+				NotifyPropertyChanged(nameof(TaskFinishMonth));
+			}
 		}
 
 
@@ -136,7 +187,7 @@ namespace Ore.ViewModels
 
 		public ObservableCollection<DayViewModel> DaysInMonth
 		{
-			get { return setDaysInMonth(taskYear, taskStartMonth); }
+			get { return setDaysInMonth(taskStartYear, taskStartMonth); }
 			set 
 			{ 
 				daysInMonth = value;
@@ -150,6 +201,22 @@ namespace Ore.ViewModels
 		{
 			get { return chosenDate; }
 			set { chosenDate = value; }
+		}
+
+		private static string chosenMonth;
+
+		public static string ChosenMonth
+		{
+			get { return chosenMonth; }
+			set { chosenMonth = value; }
+		}
+
+		private static string chosenYear;
+
+		public static string ChosenYear
+		{
+			get { return chosenYear; }
+			set { chosenYear = value; }
 		}
 
 		public string TaskDescription
@@ -171,7 +238,7 @@ namespace Ore.ViewModels
 			set { actualDate = value; }
 		}
 
-		public int TaskIdUser
+		public static int TaskIdUser
 		{
 			get { return taskIdUser; }
 			set { taskIdUser = value; }
@@ -183,19 +250,31 @@ namespace Ore.ViewModels
 			get { return taskStartMonth; }
 			set 
 			{
-				taskStartMonth = value;
+				this.taskStartMonth = value;
 				NotifyPropertyChanged(nameof(TaskStartMonth));
 				NotifyPropertyChanged(nameof(DaysInMonth));
 			}
 		}
 
-		public string TaskYear
+		public string TaskFinishYear
 		{
-			get { return taskYear; }
+			get { return taskFinishYear; }
+			set 
+			{ 
+				taskFinishYear = value;
+				NotifyPropertyChanged(nameof(TaskFinishYear));
+			}
+		}
+
+
+
+		public string TaskStartYear
+		{
+			get { return taskStartYear; }
 			set 
 			{
-				taskYear = value;
-				NotifyPropertyChanged(nameof(taskYear));
+				taskStartYear = value;
+				NotifyPropertyChanged(nameof(TaskStartYear));
 				NotifyPropertyChanged(nameof(DaysInMonth));
 			}
 		}
@@ -230,7 +309,10 @@ namespace Ore.ViewModels
 		public bool TaskChecked
 		{
 			get { return taskChecked; }
-			set { taskChecked = value; }
+			set 
+			{ 
+				taskChecked = value;
+			}
 		}
 
 		private string actualMonthYear = FindActualMonthYear(DateTime.Now, 1);
@@ -261,9 +343,14 @@ namespace Ore.ViewModels
 		public ICommand DeleteCommand { get { return new DeleteCommand(this); } }
 		public ICommand RightArrowMonthCommand { get { return new RightArrowMonthCommand(this); } }
 		public ICommand LeftArrowMonthCommand { get { return new LeftArrowMonthCommand(this); } }
-		public ICommand LoginAccessCommand { get { return new LoginAccessCommand(this); } }
 		public ICommand LoadDayViewCommand { get { return new LoadDayViewCommand(this); } }
 		public ICommand LoadHomeViewCommand { get { return new LoadHomeViewCommand(this); } }
+		public ICommand TaskDoneCommand { get { return new TaskDoneCommand(this); } }
+		public ICommand DisconnectUserCommand { get { return new DisconnectUserCommand(this); } }
+		public ICommand ListCommand { get { return new ListCommand(this); } }
+		public ICommand AddAListCommand { get { return new AddAListCommand(this); } }
+		public ICommand LoadListViewCommand { get { return new LoadListViewCommand(this); } }
+		public ICommand AddTaskToListCommand { get { return new AddTaskToListCommand(this); } }
 
 		#endregion
 
@@ -519,7 +606,7 @@ namespace Ore.ViewModels
 
 		public string monthNameToNumber(string monthName)
 		{
-			switch (taskStartMonth)
+			switch (monthName)
 			{
 				case "Janvier":
 					return "1";
@@ -596,7 +683,7 @@ namespace Ore.ViewModels
 
 				for(int i = 0; i < sortedTasks.Length - 1; i++)
 				{
-					if (int.Parse(sortedTasks[i + 1].year) < int.Parse(sortedTasks[i].year))
+					if (int.Parse(sortedTasks[i + 1].finishYear) < int.Parse(sortedTasks[i].finishYear))
 					{
 						memory = sortedTasks[i];
 						sortedTasks[i] = sortedTasks[i + 1];
@@ -604,9 +691,9 @@ namespace Ore.ViewModels
 
 						isSorted = false;
 					}
-					else if (int.Parse(sortedTasks[i + 1].year) == int.Parse(sortedTasks[i].year))
+					else if (int.Parse(sortedTasks[i + 1].finishYear) == int.Parse(sortedTasks[i].finishYear))
 					{
-						if (int.Parse(monthNameToNumber(sortedTasks[i + 1].month)) < int.Parse(monthNameToNumber(sortedTasks[i].month)))
+						if (int.Parse(monthNameToNumber(sortedTasks[i + 1].startMonth)) < int.Parse(monthNameToNumber(sortedTasks[i].startMonth)))
 						{
 							memory = sortedTasks[i];
 							sortedTasks[i] = sortedTasks[i + 1];
@@ -614,7 +701,7 @@ namespace Ore.ViewModels
 
 							isSorted = false;
 						}
-						else if (int.Parse(monthNameToNumber(sortedTasks[i + 1].month)) == int.Parse(monthNameToNumber(sortedTasks[i].month)))
+						else if (int.Parse(monthNameToNumber(sortedTasks[i + 1].startMonth)) == int.Parse(monthNameToNumber(sortedTasks[i].startMonth)))
 						{
 							string[] startDaySplitted1 = sortedTasks[i].startDay.Split(' ');
 							string[] startDaySplitted2 = sortedTasks[i + 1].startDay.Split(' ');
@@ -638,6 +725,27 @@ namespace Ore.ViewModels
 			}
 
 			return sortedTasksList;
+		}
+
+		public void addTask()
+		{
+			Tasks.Add(new TaskViewModel()
+			{
+				id = TaskId,
+				name = TaskName,
+				description = TaskDescription,
+				color = TaskColor,
+				startDay = ChosenDate,
+				finishDay = TaskFinishDay,
+				startTime = TaskViewModel.formatTime(TaskStartTime),
+				finishTime = TaskViewModel.formatTime(TaskFinishTime),
+				startMonth = ChosenMonth,
+				finishMonth = TaskFinishMonth,
+				startYear = ChosenYear,
+				finishYear = TaskFinishYear,
+				isComplete = false,
+				useId = LoginViewModel.User.Id
+			});
 		}
 
 		#endregion

@@ -11,6 +11,7 @@ namespace Ore.ViewModels
     {
 
         // Les traitements concernant les tâches doivent se faire ici !
+		// propfull à faire
 
         public int id { get; set; }
 
@@ -28,9 +29,13 @@ namespace Ore.ViewModels
 
         public string finishTime { get; set; }
 
-        public string month { get; set; }
+        public string startMonth { get; set; }
 
-        public string year { get; set; }
+		public string finishMonth { get; set; }
+
+        public string startYear { get; set; }
+
+        public string finishYear { get; set; }
 
         public bool isComplete { get; set; }
 
@@ -144,6 +149,41 @@ namespace Ore.ViewModels
 			}
 			
 			return "error";
+		}
+
+		public static string[] setDate(string dateNotFormatted)
+		{
+			string[] formattedDate = new string[3];
+			string[] dateNotFormattedSplittedByDay = dateNotFormatted.Split('/');
+
+			formattedDate[0] = EnglishDayOfWeekToFrench(new DateTime(int.Parse(dateNotFormattedSplittedByDay[2]), int.Parse(dateNotFormattedSplittedByDay[0]), int.Parse(dateNotFormattedSplittedByDay[1])).DayOfWeek.ToString()) + " " + dateNotFormattedSplittedByDay[1];
+			formattedDate[1] = ShellViewModel.monthNumberToName(dateNotFormattedSplittedByDay[0]);
+			formattedDate[2] = dateNotFormattedSplittedByDay[2];
+
+			return formattedDate;
+		}
+
+		public static string EnglishDayOfWeekToFrench(string day)
+		{
+			switch (day)
+			{
+				case "Monday":
+					return "Lundi";
+				case "Tuesday":
+					return "Mardi";
+				case "Wednesday":
+					return "Mercredi";
+				case "Thursday":
+					return "Jeudi";
+				case "Friday":
+					return "Vendredi";
+				case "Saturday":
+					return "Samedi";
+				case "Sunday":
+					return "Dimanche";
+				default:
+					return "error";
+			}
 		}
 	}
 }

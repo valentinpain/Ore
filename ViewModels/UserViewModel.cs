@@ -10,6 +10,7 @@ namespace Ore.ViewModels
     {
         private string username;
         private string password;
+        private int id;
 
         public string Username
         {
@@ -22,16 +23,18 @@ namespace Ore.ViewModels
             get { return password; }
             set { password = value; }
         }
-        public UserViewModel(string username, string password)
+
+        public int Id
         {
-            this.username = username;
-            this.password = password;
+            get { return id; }
+            set { id = value; }
         }
 
         public UserViewModel()
         {
             this.username = "";
             this.password = "";
+            this.id = 0;
         }
     }
 }
