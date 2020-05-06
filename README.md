@@ -1,2 +1,2 @@
 # Ore
-A light task planner
+A light task manager
