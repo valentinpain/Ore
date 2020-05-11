@@ -16,13 +16,24 @@ using System.Windows.Shapes;
 namespace Ore.Views
 {
     /// <summary>
-    /// Logique d'interaction pour ListView.xaml
+    /// Logique d'interaction pour la vue <c>ListView</c>
     /// </summary>
     public partial class ListView : UserControl
     {
+        #region Properties
+
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Initialises the view
+        /// </summary>
         public ListView()
         {
             InitializeComponent();
         }
+
+        #endregion
     }
 }

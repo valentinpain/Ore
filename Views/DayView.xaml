@@ -5,17 +5,21 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:ViewModels="clr-namespace:Ore.ViewModels"
-             xmlns:Converters="clr-namespace:Ore.ViewModels.Converter"
+             xmlns:Converters="clr-namespace:Ore.ViewModels.Converters"
              xmlns:local="clr-namespace:Ore.Views"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
-             d:DesignHeight="520" d:DesignWidth="910" >
+             d:DesignHeight="520" d:DesignWidth="910">
 
+    <!-- All the static ressources used in this view -->
     <UserControl.Resources>
+        <!-- The view-model ressources -->
         <ViewModels:ShellViewModel x:Key="ShellViewModel"/>
 
+        <!-- The converter ressources -->
         <Converters:OpacityTaskDoneConverter x:Key="OpacityTaskDoneConverter" />
 
+        <!-- The start time picker style -->
         <Style x:Key="TimePickerStyle2" TargetType="{x:Type MaterialDesign:TimePicker}">
             <Setter Property="MaterialDesign:HintAssist.IsFloating" Value="True"/>
             <Style.BasedOn>
@@ -30,6 +34,7 @@
             </Style.BasedOn>
         </Style>
 
+        <!-- The finish time picker style -->
         <Style x:Key="TimePickerStyle1" TargetType="{x:Type MaterialDesign:TimePicker}">
             <Setter Property="MaterialDesign:HintAssist.IsFloating" Value="True"/>
             <Style.BasedOn>
@@ -46,12 +51,14 @@
 
     </UserControl.Resources>
 
+    <!-- The grid that contains everything -->
     <Grid DataContext="{Binding Source={StaticResource ShellViewModel}}" Background="#f5f6fa">
         <Grid.RowDefinitions>
             <RowDefinition Height="180" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
+        <!-- The form to add a task for the day -->
         <Border Grid.Row="0" CornerRadius="60" Background="{Binding RandomColor, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Height="160" Width="842" Margin="0 10 0 0" HorizontalAlignment="Center">
             <Grid>
                 <Grid.RowDefinitions>
@@ -98,12 +105,13 @@
                     </StackPanel>
                     <TextBlock Foreground="#353B48" FontWeight="Bold" FontSize="11" TextAlignment="Center" Margin="30 -70 0 0" Text="{Binding TextInformations, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Visibility="{Binding WrongInformations}" Height="50" Width="100" TextWrapping="Wrap"/>
                     <Border Background="White" CornerRadius="20" Width="100" Height="50" Margin="15 -80 0 0">
-                        <Button Background="Transparent" Height="30" BorderBrush="Transparent" Content="AJOUTER !" FontWeight="Medium" FontSize="16" Foreground="{Binding RandomColor}" FontFamily="Segoe UI" Command="{Binding TaskCommand, Source={StaticResource ShellViewModel}}" />
+                        <Button Background="Transparent" Height="30" BorderBrush="Transparent" Content="AJOUTER !" FontWeight="Medium" FontSize="16" Foreground="{Binding RandomColor}" FontFamily="Segoe UI" Command="{Binding AddATaskCommand}" />
                     </Border>
                 </StackPanel>
             </Grid>
         </Border>
 
+        <!-- The list of tasks for the day -->
         <ScrollViewer Grid.Row="2">
             <Grid>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
@@ -122,35 +130,35 @@
 
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <StackPanel Opacity="{Binding isComplete, Converter={StaticResource OpacityTaskDoneConverter}}" Height="80" Width="750" Margin="20 0 0 10" Background="White" Orientation="Horizontal">
-                                <TextBlock Height="80" Width="15" Background="{Binding color}" />
+                            <StackPanel Opacity="{Binding IsComplete, Converter={StaticResource OpacityTaskDoneConverter}}" Height="80" Width="750" Margin="20 0 0 10" Background="White" Orientation="Horizontal">
+                                <TextBlock Height="80" Width="15" Background="{Binding Color}" />
                                 <StackPanel>
-                                    <TextBlock Margin="7 3 0 0" Text="{Binding name}" FontSize="18" FontWeight="Medium"/>
-                                    <TextBlock Margin="7 3 0 0" Text="{Binding description}" Width="300" Height="50" TextWrapping="Wrap" />
+                                    <TextBlock Margin="7 3 0 0" Text="{Binding Name}" FontSize="18" FontWeight="Medium"/>
+                                    <TextBlock Margin="7 3 0 0" Text="{Binding Description}" Width="300" Height="50" TextWrapping="Wrap" />
                                 </StackPanel>
                                 <StackPanel Margin="100 0 0 0" VerticalAlignment="Center">
                                     <StackPanel Orientation="Horizontal"  HorizontalAlignment="Center">
-                                        <TextBlock Text="{Binding startDay}" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
-                                        <TextBlock Margin="1 0 0 0" Text="{Binding startMonth}" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
-                                        <TextBlock Margin="2 0 0 0" Text="{Binding startYear}" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
+                                        <TextBlock Text="{Binding StartDay}" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
+                                        <TextBlock Margin="1 0 0 0" Text="{Binding StartMonth}" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
+                                        <TextBlock Margin="2 0 0 0" Text="{Binding StartYear}" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
                                         <TextBlock Text=" à " VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
-                                        <TextBlock Text="{Binding startTime}" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
+                                        <TextBlock Text="{Binding StartTime}" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
                                     </StackPanel>
                                     <TextBlock Margin="0 5 0 5" Text="jusqu'à" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                        <TextBlock Text="{Binding finishDay}" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
-                                        <TextBlock Margin="1 0 0 0" Text="{Binding startMonth}" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
-                                        <TextBlock Margin="2 0 0 0" Text="{Binding finishYear}" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
+                                        <TextBlock Text="{Binding FinishDay}" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
+                                        <TextBlock Margin="1 0 0 0" Text="{Binding StartMonth}" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
+                                        <TextBlock Margin="2 0 0 0" Text="{Binding FinishYear}" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
                                         <TextBlock Text=" à " VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
-                                        <TextBlock Text="{Binding finishTime}" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
+                                        <TextBlock Text="{Binding FinishTime}" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
                                     </StackPanel>
                                 </StackPanel>
-                                <CheckBox IsChecked="{Binding isComplete}" VerticalAlignment="Center" Margin="90 0 0 0" Style="{StaticResource MaterialDesignAccentCheckBox}" Command="{Binding TaskDoneCommand, Source={StaticResource ShellViewModel}}" CommandParameter="{Binding id}">
+                                <CheckBox IsChecked="{Binding IsComplete}" VerticalAlignment="Center" Margin="90 0 0 0" Style="{StaticResource MaterialDesignAccentCheckBox}" Command="{Binding TaskDoneCommand, Source={StaticResource ShellViewModel}}" CommandParameter="{Binding Id}">
                                     <CheckBox.LayoutTransform>
                                         <ScaleTransform ScaleX="1.5" ScaleY="1.5" />
                                     </CheckBox.LayoutTransform>
                                 </CheckBox>
-                                <Button Background="Transparent" Foreground="Transparent" BorderBrush="Transparent" Command="{Binding DeleteCommand, Source={StaticResource ShellViewModel}}" CommandParameter="{Binding id}" >
+                                <Button Background="Transparent" Foreground="Transparent" BorderBrush="Transparent" Command="{Binding DeleteATaskCommand, Source={StaticResource ShellViewModel}}" CommandParameter="{Binding Id}" >
                                     <Image Source="/Images/remove.png" />
                                 </Button>
                             </StackPanel>

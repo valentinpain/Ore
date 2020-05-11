@@ -7,50 +7,181 @@ using System.Threading.Tasks;
 
 namespace Ore.ViewModels
 {
-    public class TaskViewModel
-    {
+	/// <summary>
+	/// The view-model class of the task view that decides how a task view must behave
+	/// </summary>
+	public class TaskViewModel
+	{
+		#region Properties 
 
-        // Les traitements concernant les tâches doivent se faire ici !
-		// propfull à faire
+		/// <summary>
+		/// The id of the task
+		/// </summary>
+		private int id;
+		public int Id
+		{
+			get { return id; }
+			set { id = value; }
+		}
 
-        public int id { get; set; }
+		/// <summary>
+		/// The name of the task
+		/// </summary>
+		private string name;
+		public string Name
+		{
+			get { return name; }
+			set { name = value; }
+		}
 
-        public string name { get; set; }
+		/// <summary>
+		/// The description of the task
+		/// </summary>
+		private string description;
+		public string Description
+		{
+			get { return description; }
+			set { description = value; }
+		}
 
-        public string description { get; set; }
+		/// <summary>
+		/// The color of the task
+		/// </summary>
+		private string color;
+		public string Color
+		{
+			get { return color; }
+			set { color = value; }
+		}
 
-        public string color { get; set; }
+		/// <summary>
+		/// The start day of the task
+		/// </summary>
+		private string startDay;
+		public string StartDay
+		{
+			get { return startDay; }
+			set { startDay = value; }
+		}
 
-        public string startDay { get; set; }
+		/// <summary>
+		/// The finish day of the day
+		/// </summary>
+		private string finishDay;
+		public string FinishDay
+		{
+			get { return finishDay; }
+			set { finishDay = value; }
+		}
 
-        public string finishDay { get; set; }
+		/// <summary>
+		/// The start time of the task
+		/// </summary>
+		private string startTime;
+		public string StartTime
+		{
+			get { return startTime; }
+			set { startTime = value; }
+		}
 
-        public string startTime { get; set; }
+		/// <summary>
+		/// The finish time of the task
+		/// </summary>
+		private string finishTime;
+		public string FinishTime
+		{
+			get { return finishTime; }
+			set { finishTime = value; }
+		}
 
-        public string finishTime { get; set; }
+		/// <summary>
+		/// The start month of the task
+		/// </summary>
+		private string startMonth;
+		public string StartMonth
+		{
+			get { return startMonth; }
+			set { startMonth = value; }
+		}
 
-        public string startMonth { get; set; }
+		/// <summary>
+		/// The finish month of the task
+		/// </summary>
+		private string finishMonth;
+		public string FinishMonth
+		{
+			get { return finishMonth; }
+			set { finishMonth = value; }
+		}
 
-		public string finishMonth { get; set; }
+		/// <summary>
+		/// The start year of the task
+		/// </summary>
+		private string startYear;
+		public string StartYear
+		{
+			get { return startYear; }
+			set { startYear = value; }
+		}
 
-        public string startYear { get; set; }
+		/// <summary>
+		/// The finish year of the task
+		/// </summary>
+		private string finishYear;
+		public string FinishYear
+		{
+			get { return finishYear; }
+			set { finishYear = value; }
+		}
 
-        public string finishYear { get; set; }
+		/// <summary>
+		/// The task-done flag of the task
+		/// </summary>
+		private bool isComplete;
+		public bool IsComplete
+		{
+			get { return isComplete; }
+			set { isComplete = value; }
+		}
 
-        public bool isComplete { get; set; }
+		/// <summary>
+		/// The id of the user that created the task
+		/// </summary>
+		private int useId;
+		public int UseId
+		{
+			get { return useId; }
+			set { useId = value; }
+		}
 
-        public int useId { get; set; }
+		/// <summary>
+		/// The id of the list where belongs the task
+		/// </summary>
+		/// <remarks>
+		/// Equals 0 if the task belongs to a day
+		/// </remarks>
+		private int listId;
+		public int ListId
+		{
+			get { return listId; }
+			set { listId = value; }
+		}
 
-        
-        public static string formatDay(string day)
-        {
-            string[] daySplitted = day.Split('/');
-            string[] yearSplitted = daySplitted[2].Split(' ');
 
-            return setDaysInMonth(int.Parse(yearSplitted[0]), int.Parse(daySplitted[0]), int.Parse(daySplitted[1]));
-        }
+        #endregion
 
-        public static string formatTime(string time)
+        #region Constructor
+
+        #endregion
+
+        #region Methods
+
+		/// <summary>
+		/// The method that formats the time so we can put it in the database 
+		/// </summary>
+		/// <param name="time">The time we want to convert</param>
+		/// <returns>The formatted time</returns>
+		public static string formatTime(string time)
         {
 			if (time == null)
 				return "";
@@ -58,6 +189,7 @@ namespace Ore.ViewModels
 			string[] dateSplitted = time.Split(' ');
 			string[] timeSplitted = dateSplitted[1].Split(':');
 
+			// Check if we use the AM/PM system so we have to convert the value
 			if (dateSplitted[2] == "PM")
 			{
 				switch (timeSplitted[0])
@@ -104,6 +236,13 @@ namespace Ore.ViewModels
 			return timeSplitted[0] + "h" + timeSplitted[1];
 		}
 
+		/// <summary>
+		/// Finds the day of week for a special day
+		/// </summary>
+		/// <param name="chosenYear">The year of the day</param>
+		/// <param name="chosenMonth">The month of the day</param>
+		/// <param name="chosenDay">The number of the day</param>
+		/// <returns>The day of week and the number of the day in a string</returns>
 		public static string setDaysInMonth(int chosenYear, int chosenMonth, int chosenDay)
 		{
 			int numberOfDays = DateTime.DaysInMonth(chosenYear, chosenMonth);
@@ -151,6 +290,11 @@ namespace Ore.ViewModels
 			return "error";
 		}
 
+		/// <summary>
+		/// The method that formats the day so we can put it in the database and in our code as well
+		/// </summary>
+		/// <param name="dateNotFormatted">The day we want to convert</param>
+		/// <returns>The formatted day</returns>
 		public static string[] setDate(string dateNotFormatted)
 		{
 			string[] formattedDate = new string[3];
@@ -163,6 +307,11 @@ namespace Ore.ViewModels
 			return formattedDate;
 		}
 
+		/// <summary>
+		/// The method we use to convert an english day of week to a french one
+		/// </summary>
+		/// <param name="day">The day of week we want to convert</param>
+		/// <returns>The converted day</returns>
 		public static string EnglishDayOfWeekToFrench(string day)
 		{
 			switch (day)
@@ -185,5 +334,7 @@ namespace Ore.ViewModels
 					return "error";
 			}
 		}
-	}
+
+        #endregion
+    }
 }

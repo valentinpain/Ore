@@ -4,23 +4,28 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:viewmodels="clr-namespace:Ore.ViewModels"
-        xmlns:converters="clr-namespace:Ore.ViewModels.Converter"
+        xmlns:converters="clr-namespace:Ore.ViewModels.Converters"
         xmlns:local="clr-namespace:Ore.Views"
         mc:Ignorable="d"
-        Title="Créer un nouveau compte" Height="425" Width="410" x:Name="registerWindow" WindowStartupLocation="Manual" FontSize="14" Background="#8c7ae6">
+        Title="Créer un nouveau compte" Height="425" Width="410" x:Name="registerWindow" WindowStartupLocation="Manual" FontSize="14" Background="#8c7ae6" Icon="/Images/Ore.ico">
 
-    <Window.InputBindings>
-        <KeyBinding Key="Enter" Command="{Binding RegisterCommand}" CommandParameter="{Binding ElementName=txtPassword}"/>
-    </Window.InputBindings>
-
+    <!-- The data context to connect the view to the view-model -->
     <Window.DataContext>
         <viewmodels:RegisterViewModel x:Name="RegisterViewModel" />
     </Window.DataContext>
 
+    <!-- All the static ressources used in this view -->
     <Window.Resources>
-        <converters:SuccessfulAccountCreationCommand x:Key="SuccessfulAccountCreationCommand" />
+        <!-- The converters ressources -->
+        <converters:SuccessfulAccountCreationConverter x:Key="SuccessfulAccountCreationConverter" />
     </Window.Resources>
 
+    <!-- The Enter shortcut command -->
+    <Window.InputBindings>
+        <KeyBinding Key="Enter" Command="{Binding RegisterCommand}" CommandParameter="{Binding ElementName=txtPassword}"/>
+    </Window.InputBindings>
+
+    <!-- The grid that contains everything -->
     <Border Background="#2f3640" CornerRadius="20" Margin="20">
         <Grid>
             <Grid.RowDefinitions>
@@ -29,6 +34,7 @@
             </Grid.RowDefinitions>
 
             <StackPanel Grid.Row="0" Margin="20">
+                <!-- The go-back button -->
                 <Button Command="{Binding GoBackToConnectionCommand}" CommandParameter="{Binding ElementName=registerWindow}" Background="Transparent" BorderBrush="Transparent" HorizontalAlignment="Left" VerticalAlignment="Center" Height="60" Margin="-15 -5 0 0">
                     <Border CornerRadius="15" Background="#545D6A" Height="45" Width="200" HorizontalAlignment="Left">
                         <StackPanel Orientation="Horizontal" Height="50" Width="300">
@@ -39,6 +45,8 @@
                         </StackPanel>
                     </Border>
                 </Button>
+                
+                <!-- The form to create an account -->
                 <TextBlock Text="Créer un nouveau compte" Foreground="White" FontSize="25" HorizontalAlignment="Center" Margin="0 15 0 0"/>
                 <Separator />
                 <TextBlock Text="Nom d'utilisateur" Foreground="White" Margin="0 15 0 0" />
@@ -53,8 +61,9 @@
                 </StackPanel>
             </StackPanel>
 
+            <!-- The submit button -->
             <StackPanel Grid.Row="1">
-                <TextBlock Foreground="{Binding TextInformations, Converter={StaticResource SuccessfulAccountCreationCommand}}" Visibility="{Binding WrongInformations}" Text="{Binding TextInformations}" Height="20" FontSize="12" Margin="90 0 0 10"/>
+                <TextBlock Foreground="{Binding TextInformations, Converter={StaticResource SuccessfulAccountCreationConverter}}" Visibility="{Binding WrongInformations}" Text="{Binding TextInformations}" Height="20" FontSize="12" Margin="90 0 0 10"/>
                 <Button Content="Valider" Margin="60 0" Background="#545D6A" BorderBrush="#545D6A" Command="{Binding RegisterCommand}" CommandParameter="{Binding ElementName=txtPassword}" />
             </StackPanel>
         </Grid>

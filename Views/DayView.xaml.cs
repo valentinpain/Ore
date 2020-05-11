@@ -16,13 +16,24 @@ using System.Windows.Shapes;
 namespace Ore.Views
 {
     /// <summary>
-    /// Logique d'interaction pour DayView.xaml
+    /// Logique d'interaction pour la vue <c>DayView</c>
     /// </summary>
     public partial class DayView : UserControl
     {
+        #region Properties
+
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Initialises the view
+        /// </summary>
         public DayView()
         {
             InitializeComponent();
         }
+
+        #endregion
     }
 }

@@ -1,4 +1,5 @@
-﻿using Ore.Views;
+﻿using Ore.Models;
+using Ore.Views;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,45 +9,90 @@ using System.Windows.Input;
 
 namespace Ore.ViewModels.Commands
 {
+    /// <summary>
+    /// The command that loads the list view
+    /// </summary>
     public class LoadListViewCommand : ICommand
     {
-        public event EventHandler CanExecuteChanged;
+        #region Properties
 
-        private static int memoryColorNumber = 0;
-
-        public static int MemoryColorNumber
-        {
-            get { return memoryColorNumber = 0; }
-            set { memoryColorNumber = value; }
-        }
-
+        /// <summary>
+        /// The attribute that helps us to communicate with the behavior of the view <c>ShellView</c>
+        /// </summary>
         private ShellViewModel shellViewModel;
-
         public ShellViewModel ShellViewModel
         {
             get { return shellViewModel; }
             set { shellViewModel = value; }
         }
 
+        /// <summary>
+        /// Helps us to randomise properly the header color
+        /// </summary>
+        private static int memoryColorNumber = 0;
+        public static int MemoryColorNumber
+        {
+            get { return memoryColorNumber = 0; }
+            set { memoryColorNumber = value; }
+        }
+
+        /// <summary>
+        /// The event of the <c>ICommand</c> interface which fires the command event
+        /// </summary>
+        public event EventHandler CanExecuteChanged;
+
+
+        #endregion
+
+        #region Constructor
+
+        /// <summary>
+        /// Initialises our <c>ShellViewModel</c> attribute so we can communicate with him and the <c>ShellView</c>
+        /// </summary>
+        /// <param name="shellViewModel">The actual used view-model</param>
         public LoadListViewCommand(ShellViewModel shellViewModel)
         {
             this.shellViewModel = shellViewModel;
         }
 
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Determines whether the command will be executed or not
+        /// </summary>
+        /// <param name="parameter">Data used by the command</param>
+        /// <returns>true if this command can be executed, false otherwise</returns>
         public bool CanExecute(object parameter)
         {
             return true;
         }
 
+        /// <summary>
+        /// The actions needed to be executed when the command occurs
+        /// </summary>
+        /// <param name="parameter">The parameter sent by the view to help the command to process if needed</param>
+        /// <remarks>
+        /// Here, we are loading the list view
+        /// </remarks>
         public void Execute(object parameter)
         {
             var values = (object[])parameter;
+
+            // The randomiser attributes
             Random random = new Random();
             int randomColorNumber = 0;
 
             ShellView shellView = values[1] as ShellView;
-            ListViewModel.FocusedName = values[0].ToString();
+            ShellViewModel.FocusedListId = int.Parse(values[2].ToString());
 
+            // Instantiating the list displayed
+            ShellViewModel.FocusedList = ShellModel.retrieveTaskListFromDatabase(ShellViewModel.FocusedListId);
+
+            ShellViewModel.FocusedListName = values[0].ToString();
+
+            // Color randomiser
             randomColorNumber = random.Next(1, 9);
 
             while (randomColorNumber == memoryColorNumber)
@@ -88,15 +134,24 @@ namespace Ore.ViewModels.Commands
                     break;
             }
 
+            // Creating a new list view
             ListView listView = new ListView();
             listView.Height = 520;
             listView.Width = 910;
 
+            // Removing the previous focused list
+            if (shellView.stackList.Children.Count > 0)
+                shellView.stackList.Children.RemoveAt(0);
+
+            // Adding the view to his belonging stack
             shellView.stackList.Children.Add(listView);
 
+            // Then displaying it
             shellView.stackDay.Visibility = System.Windows.Visibility.Collapsed;
             shellView.stackList.Visibility = System.Windows.Visibility.Visible;
             shellView.MainGrid.Visibility = System.Windows.Visibility.Collapsed;
         }
+
+        #endregion
     }
 }

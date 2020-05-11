@@ -5,24 +5,31 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:viewmodels="clr-namespace:Ore.ViewModels"
         xmlns:commands="clr-namespace:Ore.ViewModels.Commands"
-        xmlns:converter="clr-namespace:Ore.ViewModels.Converter"
+        xmlns:converter="clr-namespace:Ore.ViewModels.Converters"
         xmlns:local="clr-namespace:Ore.Views"
         mc:Ignorable="d"
-        Title="Se connecter" Height="380" Width="400" x:Name="LoginViewName" WindowStartupLocation="CenterScreen" FontSize="14" Background="#8c7ae6">
+        Title="Se connecter" Height="380" Width="400" x:Name="LoginViewName" WindowStartupLocation="CenterScreen" FontSize="14" Background="#8c7ae6" Icon="/Images/Ore.ico">
 
-    <Window.Resources>
-        <converter:LoadViewConverter x:Key="LoadViewConverter" />
-        <viewmodels:LoginViewModel x:Key="LoginViewModel" />
-    </Window.Resources>
-    
-    <Window.InputBindings>
-        <KeyBinding Key="Enter" Command="{Binding LoginAccessCommand}" CommandParameter="{Binding ElementName=txtPassword}"/>
-    </Window.InputBindings>
-
+    <!-- The data context to connect the view to the view-model -->
     <Window.DataContext>
         <viewmodels:LoginViewModel x:Name="LoginViewModel" />
     </Window.DataContext>
 
+    <!-- All the static ressources used in this view -->
+    <Window.Resources>
+        <!-- The converter ressources -->
+        <converter:LoadViewConverter x:Key="LoadViewConverter" />
+
+        <!-- The view-model ressources -->
+        <viewmodels:LoginViewModel x:Key="LoginViewModel" />
+    </Window.Resources>
+
+    <!-- The Enter shortcut command -->
+    <Window.InputBindings>
+        <KeyBinding Key="Enter" Command="{Binding LoginAccessCommand}" CommandParameter="{Binding ElementName=txtPassword}"/>
+    </Window.InputBindings>
+
+    <!-- The grid that contains everything -->
     <Border Background="#2f3640" CornerRadius="20" Margin="20">
         <Grid>
             <Grid.RowDefinitions>
@@ -30,6 +37,7 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
+            <!-- The Login form -->
             <StackPanel Grid.Row="0" Margin="20">
                 <TextBlock Text="Se connecter" Foreground="White" FontSize="25" HorizontalAlignment="Center" />
                 <Separator />
@@ -47,15 +55,11 @@
                     <TextBlock Text="Je n'ai pas de compte" Foreground="#0097e6" FontSize="12" Margin="0 5 0 0" />
                 </Button>
             </StackPanel>
+            
+            <!-- The submit button -->
             <StackPanel Grid.Row="1">
                 <TextBlock Foreground="#e84118" Visibility="{Binding WrongInformations}" Text="*** Informations incorrectes ***" Height="20" FontSize="12" Margin="90 0 0 10"/>
-                <Button Content="Valider" Margin="60 0" Background="#545D6A" BorderBrush="#545D6A" Command="{Binding LoginAccessCommand, Source={StaticResource LoginViewModel}}">
-                    <Button.CommandParameter>
-                        <MultiBinding Converter="{StaticResource LoadViewConverter}">
-                            <Binding ElementName="txtPassword" Path="Text" />
-                        </MultiBinding>
-                    </Button.CommandParameter>
-                </Button>
+                <Button Content="Valider" Margin="60 0" Background="#545D6A" BorderBrush="#545D6A" Command="{Binding LoginAccessCommand}" CommandParameter="{Binding ElementName=txtPassword}" />
             </StackPanel>
         </Grid>
     </Border>

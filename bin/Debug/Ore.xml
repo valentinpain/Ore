@@ -1,0 +1,1693 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Ore</name>
+    </assembly>
+    <members>
+        <member name="T:Ore.Models.DatabaseConnection.DBConnection">
+            <summary>
+            The class which instantiates the real database connection 
+            </summary>
+        </member>
+        <member name="M:Ore.Models.DatabaseConnection.DBConnection.openConnection">
+            <summary>
+            Instantiate and open the database connection
+            </summary>
+            <returns>The real database connection</returns>
+        </member>
+        <member name="T:Ore.Models.DatabaseConnection.DBSQLServerUtils">
+            <summary>
+            A class with only one method named <c>GetDBConnection</c> who returns the connection string to instanciate the database connection
+            </summary>
+        </member>
+        <member name="M:Ore.Models.DatabaseConnection.DBSQLServerUtils.GetDBConnectionServer(System.String,System.String,System.String,System.String)">
+            <summary>
+            Use the informations of the <c>DBSQLServerUtils</c> class to create the connection string for the database connection
+            </summary>
+            <param name="datasource">Server name</param>
+            <param name="database">Database name</param>
+            <param name="username">User name</param>
+            <param name="password">User password</param>
+            <returns>The connection string</returns>
+        </member>
+        <member name="T:Ore.Models.DatabaseConnection.DBUtils">
+            <summary>
+            A class that contains the basics informations in clear to instantiate the database connection
+            </summary>
+        </member>
+        <member name="M:Ore.Models.DatabaseConnection.DBUtils.GetDBConnection">
+            <summary>
+            Contains the database informations and uses the <c>DBSQLServerUtils</c> class to format the string
+            </summary>
+            <returns>The formatted string for the database connection</returns>
+        </member>
+        <member name="T:Ore.Models.EncryptingData.EncryptingUtils">
+            <summary>
+            The class used to encrypt passwords before inserting them in the database or to find a match when login in
+            </summary>
+            <remarks>
+            To encrypt, we need an initVector and a keysize
+            </remarks>
+        </member>
+        <member name="F:Ore.Models.EncryptingData.EncryptingUtils.InitVector">
+            <summary>
+            The 16-bit initVector
+            </summary>
+            <remarks>
+            The vector must always be 16-bit long in our case to work
+            </remarks>
+        </member>
+        <member name="F:Ore.Models.EncryptingData.EncryptingUtils.Keysize">
+            <summary>
+            The key size to encrypt our passwords strongly 
+            </summary>
+        </member>
+        <member name="M:Ore.Models.EncryptingData.EncryptingUtils.EncryptString(System.String,System.String)">
+            <summary>
+            The main method we use to encrypt the data
+            </summary>
+            <param name="plainText">The data that we need to encrypt</param>
+            <param name="passPhrase">A password that we uses to encrypt data</param>
+            <remarks>
+            The pass phrase must be the same everytime if we want to have the real passwords back.
+            We mainly use the <c>plainText</c> parameter to encrypt our passwords.
+            </remarks>
+            <returns>The encrypted data</returns>
+        </member>
+        <member name="T:Ore.Models.LoginModel">
+            <summary>
+            The model that contains elements to communicate with the database to retrieve some login data
+            </summary>
+        </member>
+        <member name="M:Ore.Models.LoginModel.findUserId(System.String,System.String)">
+            <summary>
+            The method used to find the user in the database or not for the login feature
+            </summary>
+            <param name="username">The user name</param>
+            <param name="password">The password of the user account</param>
+            <returns></returns>
+        </member>
+        <member name="T:Ore.Models.RegisterModel">
+            <summary>
+            The model that contains elements to communicate with the database to retrieve register data
+            </summary>
+        </member>
+        <member name="M:Ore.Models.RegisterModel.lastRowUserNumber">
+            <summary>
+            Finds the id of the user registered in the database if he exists
+            </summary>
+            <returns>The last user id</returns>
+        </member>
+        <member name="M:Ore.Models.RegisterModel.InsertNewAccountInDatabase(System.Int32,System.String,System.String)">
+            <summary>
+            Creates a new user in the database with his connection informations and gives him a personnal id
+            </summary>
+            <param name="id">The user id</param>
+            <param name="username">The user name</param>
+            <param name="password">The user password</param>
+        </member>
+        <member name="M:Ore.Models.RegisterModel.isUserAlreadyCreated(System.String,System.String)">
+            <summary>
+            Checks if a user is already existing in the databases with connection informations
+            </summary>
+            <param name="username">The user name</param>
+            <param name="password">The user password</param>
+            <returns>The boolean value that indicates whether the user exists or not</returns>
+        </member>
+        <member name="T:Ore.Models.ShellModel">
+            <summary>
+            The main model class that communicates with the database for the main view and view-model
+            </summary>
+        </member>
+        <member name="M:Ore.Models.ShellModel.retrieveDayTasksFromDatabase(System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Retrieve all the data of only one day
+            </summary>
+            <param name="day">The focused day</param>
+            <param name="month">The focused month</param>
+            <param name="year">The focused year</param>
+            <param name="idUser">The user id</param>
+            <returns>All the tasks of the focused day in a list</returns>
+        </member>
+        <member name="M:Ore.Models.ShellModel.lastRowTaskNumber">
+            <summary>
+            Gives the last id used for a task in the database
+            </summary>
+            <returns>The last task id</returns>
+        </member>
+        <member name="M:Ore.Models.ShellModel.deleteTask(System.Int32)">
+            <summary>
+            Deletes a task in the database whether it belongs to a list or not
+            </summary>
+            <param name="idTask">The task id in the database</param>
+        </member>
+        <member name="M:Ore.Models.ShellModel.deleteList(System.Int32)">
+            <summary>
+            Deletes a list in the database and all the tasks associated
+            </summary>
+            <param name="idList">The list id</param>
+        </member>
+        <member name="M:Ore.Models.ShellModel.addTaskToDatabase(Ore.ViewModels.TaskViewModel)">
+            <summary>
+            Adds a task to the database with all its informations
+            </summary>
+            <param name="task">The task we want to add</param>
+        </member>
+        <member name="M:Ore.Models.ShellModel.retrieveAllTasks(System.Int32)">
+            <summary>
+            Retrieves to the behavior code all the different tasks of the user that are not in a list
+            </summary>
+            <param name="idUser">The user id</param>
+            <returns>All the tasks in a list</returns>
+        </member>
+        <member name="M:Ore.Models.ShellModel.retrieveAllLists(System.Int32)">
+            <summary>
+            Retrieves to the behavior code all the different lists created by the user
+            </summary>
+            <param name="idUser">The user id</param>
+            <returns>All the lists in a list</returns>
+        </member>
+        <member name="M:Ore.Models.ShellModel.checkTask(System.Int32)">
+            <summary>
+            Checks the task checked information in the database using her id
+            </summary>
+            <param name="idTask">The task id</param>
+        </member>
+        <member name="M:Ore.Models.ShellModel.unCheckTask(System.Int32)">
+            <summary>
+            Unchecks the task checked information in the database using her id
+            </summary>
+            <param name="idTask">The task id</param>
+        </member>
+        <member name="M:Ore.Models.ShellModel.isChecked(System.Int32)">
+            <summary>
+            Checks if the task is checked in the database
+            </summary>
+            <param name="idTask">The task id</param>
+            <returns>A boolean value that indicates whether the task is checked or not in the database</returns>
+        </member>
+        <member name="M:Ore.Models.ShellModel.lastListRowNumber">
+            <summary>
+            Finds the last id used to save a list in the database
+            </summary>
+            <returns>The last list id used</returns>
+        </member>
+        <member name="M:Ore.Models.ShellModel.addListToDatabase(Ore.ViewModels.ListViewModel)">
+            <summary>
+            Adds a list to the database with its informations
+            </summary>
+            <param name="list">The list id</param>
+        </member>
+        <member name="M:Ore.Models.ShellModel.retrieveTaskListFromDatabase(System.Int32)">
+            <summary>
+            Retrieves all the tasks that belongs to a certain list
+            </summary>
+            <param name="listId">The list id</param>
+            <returns>The tasks belonging to the list in a list</returns>
+        </member>
+        <member name="T:Ore.ViewModels.Commands.AddAListCommand">
+            <summary>
+            The command that adds a list for the connected user
+            </summary>
+        </member>
+        <member name="F:Ore.ViewModels.Commands.AddAListCommand.shellViewModel">
+            <summary>
+            The attribute that helps us to communicate with the behavior of the view <c>ShellView</c>
+            </summary>
+        </member>
+        <member name="F:Ore.ViewModels.Commands.AddAListCommand.lastListId">
+            <summary>
+            The id of the last list created
+            </summary>
+            <remarks>
+            Helps us to not overriding already used ids
+            </remarks>
+        </member>
+        <member name="E:Ore.ViewModels.Commands.AddAListCommand.CanExecuteChanged">
+            <summary>
+            The event of the <c>ICommand</c> interface which fires the command event
+            </summary>
+        </member>
+        <member name="M:Ore.ViewModels.Commands.AddAListCommand.#ctor(Ore.ViewModels.ShellViewModel)">
+            <summary>
+            Initialises our <c>ShellViewModel</c> attribute so we can communicate with him and the <c>ShellView</c>
+            </summary>
+            <param name="shellViewModel">The actual used view-model</param>
+        </member>
+        <member name="M:Ore.ViewModels.Commands.AddAListCommand.CanExecute(System.Object)">
+            <summary>
+            Determines whether the command will be executed or not
+            </summary>
+            <param name="parameter">Data used by the command</param>
+            <returns>true if this command can be executed, false otherwise</returns>
+        </member>
+        <member name="M:Ore.ViewModels.Commands.AddAListCommand.Execute(System.Object)">
+            <summary>
+            The actions needed to be executed when the command occurs
+            </summary>
+            <param name="parameter">The parameter sent by the view to help the command to process if needed</param>
+            <remarks>
+            Here, we are adding list for the connected user
+            </remarks>
+        </member>
+        <member name="T:Ore.ViewModels.Commands.AddATaskCommand">
+            <summary>
+            The commands that add a task for the day and the connected user
+            </summary>
+        </member>
+        <member name="F:Ore.ViewModels.Commands.AddATaskCommand.shellViewModel">
+            <summary>
+            The attribute that helps us to communicate with the behavior of the view <c>ShellView</c>
+            </summary>
+        </member>
+        <member name="E:Ore.ViewModels.Commands.AddATaskCommand.CanExecuteChanged">
+            <summary>
+            The event of the <c>ICommand</c> interface which fires the command event
+            </summary>
+        </member>
+        <member name="M:Ore.ViewModels.Commands.AddATaskCommand.#ctor(Ore.ViewModels.ShellViewModel)">
+            <summary>
+            Initialises our <c>ShellViewModel</c> attribute so we can communicate with him and the <c>ShellView</c>
+            </summary>
+            <param name="shellViewModel">The actual used view-model</param>
+        </member>
+        <member name="M:Ore.ViewModels.Commands.AddATaskCommand.CanExecute(System.Object)">
+            <summary>
+            Determines whether the command will be executed or not
+            </summary>
+            <param name="parameter">Data used by the command</param>
+            <returns>true if this command can be executed, false otherwise</returns>
+        </member>
+        <member name="M:Ore.ViewModels.Commands.AddATaskCommand.Execute(System.Object)">
+            <summary>
+            The actions needed to be executed when the command occurs
+            </summary>
+            <param name="parameter">The parameter sent by the view to help the command to process if needed</param>
+            <remarks>
+            Here, we are adding a task for the day and the connected user
+            </remarks>
+        </member>
+        <member name="T:Ore.ViewModels.Commands.AddTaskToListCommand">
+            <summary>
+            The command that adds a task to a list the user created
+            </summary>
+        </member>
+        <member name="F:Ore.ViewModels.Commands.AddTaskToListCommand.shellViewModel">
+            <summary>
+            The attribute that helps us to communicate with the behavior of the view <c>ShellView</c>
+            </summary>
+        </member>
+        <member name="E:Ore.ViewModels.Commands.AddTaskToListCommand.CanExecuteChanged">
+            <summary>
+            The event of the <c>ICommand</c> interface which fires the command event
+            </summary>
+        </member>
+        <member name="M:Ore.ViewModels.Commands.AddTaskToListCommand.#ctor(Ore.ViewModels.ShellViewModel)">
+            <summary>
+            Initialises our <c>ShellViewModel</c> attribute so we can communicate with him and the <c>ShellView</c>
+            </summary>
+            <param name="shellViewModel">The actual used view-model</param>
+        </member>
+        <member name="M:Ore.ViewModels.Commands.AddTaskToListCommand.CanExecute(System.Object)">
+            <summary>
+            Determines whether the command will be executed or not
+            </summary>
+            <param name="parameter">Data used by the command</param>
+            <returns>true if this command can be executed, false otherwise</returns>
+        </member>
+        <member name="M:Ore.ViewModels.Commands.AddTaskToListCommand.Execute(System.Object)">
+            <summary>
+            The actions needed to be executed when the command occurs
+            </summary>
+            <param name="parameter">The parameter sent by the view to help the command to process if needed</param>
+            <remarks>
+            Here, we are adding a task for the focused list the user created
+            </remarks>
+        </member>
+        <member name="T:Ore.ViewModels.Commands.DeleteListCommand">
+            <summary>
+            The command that deletes a complete list
+            </summary>
+        </member>
+        <member name="F:Ore.ViewModels.Commands.DeleteListCommand.shellViewModel">
+            <summary>
+            The attribute that helps us to communicate with the behavior of the view <c>ShellView</c>
+            </summary>
+        </member>
+        <member name="E:Ore.ViewModels.Commands.DeleteListCommand.CanExecuteChanged">
+            <summary>
+            The event of the <c>ICommand</c> interface which fires the command event
+            </summary>
+        </member>
+        <member name="M:Ore.ViewModels.Commands.DeleteListCommand.#ctor(Ore.ViewModels.ShellViewModel)">
+            <summary>
+            Initialises our <c>ShellViewModel</c> attribute so we can communicate with him and the <c>ShellView</c>
+            </summary>
+            <param name="shellViewModel">The actual used view-model</param>
+        </member>
+        <member name="M:Ore.ViewModels.Commands.DeleteListCommand.CanExecute(System.Object)">
+            <summary>
+            Determines whether the command will be executed or not
+            </summary>
+            <param name="parameter">Data used by the command</param>
+            <returns>true if this command can be executed, false otherwise</returns>
+        </member>
+        <member name="M:Ore.ViewModels.Commands.DeleteListCommand.Execute(System.Object)">
+            <summary>
+            The actions needed to be executed when the command occurs
+            </summary>
+            <param name="parameter">The parameter sent by the view to help the command to process if needed</param>
+            <remarks>
+            Here, we are deletting an entire list
+            </remarks>
+        </member>
+        <member name="T:Ore.ViewModels.Commands.DeleteATaskCommand">
+            <summary>
+            The command that deletes a task
+            </summary>
+        </member>
+        <member name="F:Ore.ViewModels.Commands.DeleteATaskCommand.shellViewModel">
+            <summary>
+            The attribute that helps us to communicate with the behavior of the view <c>ShellView</c>
+            </summary>
+        </member>
+        <member name="E:Ore.ViewModels.Commands.DeleteATaskCommand.CanExecuteChanged">
+            <summary>
+            The event of the <c>ICommand</c> interface which fires the command event
+            </summary>
+        </member>
+        <member name="M:Ore.ViewModels.Commands.DeleteATaskCommand.#ctor(Ore.ViewModels.ShellViewModel)">
+            <summary>
+            Initialises our <c>ShellViewModel</c> attribute so we can communicate with him and the <c>ShellView</c>
+            </summary>
+            <param name="shellViewModel">The actual used view-model</param>
+        </member>
+        <member name="M:Ore.ViewModels.Commands.DeleteATaskCommand.CanExecute(System.Object)">
+            <summary>
+            Determines whether the command will be executed or not
+            </summary>
+            <param name="parameter">Data used by the command</param>
+            <returns>true if this command can be executed, false otherwise</returns>
+        </member>
+        <member name="M:Ore.ViewModels.Commands.DeleteATaskCommand.Execute(System.Object)">
+            <summary>
+            The actions needed to be executed when the command occurs
+            </summary>
+            <param name="parameter">The parameter sent by the view to help the command to process if needed</param>
+            <remarks>
+            Here, we are deletting a task
+            </remarks>
+        </member>
+        <member name="T:Ore.ViewModels.Commands.DisconnectUserCommand">
+            <summary>
+            A command that disconnects the connected user
+            </summary>
+        </member>
+        <member name="F:Ore.ViewModels.Commands.DisconnectUserCommand.shellViewModel">
+            <summary>
+            The attribute that helps us to communicate with the behavior of the view <c>ShellView</c>
+            </summary>
+        </member>
+        <member name="E:Ore.ViewModels.Commands.DisconnectUserCommand.CanExecuteChanged">
+            <summary>
+            The event of the <c>ICommand</c> interface which fires the command event
+            </summary>
+        </member>
+        <member name="M:Ore.ViewModels.Commands.DisconnectUserCommand.#ctor(Ore.ViewModels.ShellViewModel)">
+            <summary>
+            Initialises our <c>ShellViewModel</c> attribute so we can communicate with him and the <c>ShellView</c>
+            </summary>
+            <param name="shellViewModel">The actual used view-model</param>
+        </member>
+        <member name="M:Ore.ViewModels.Commands.DisconnectUserCommand.CanExecute(System.Object)">
+            <summary>
+            Determines whether the command will be executed or not
+            </summary>
+            <param name="parameter">Data used by the command</param>
+            <returns>true if this command can be executed, false otherwise</returns>
+        </member>
+        <member name="M:Ore.ViewModels.Commands.DisconnectUserCommand.Execute(System.Object)">
+            <summary>
+            The actions needed to be executed when the command occurs
+            </summary>
+            <param name="parameter">The parameter sent by the view to help the command to process if needed</param>
+            <remarks>
+            Here, we are disconnecting the user
+            </remarks>
+        </member>
+        <member name="T:Ore.ViewModels.Commands.GoBackToConnectionCommand">
+            <summary>
+            The command that leads the user back to the login view
+            </summary>
+        </member>
+        <member name="F:Ore.ViewModels.Commands.GoBackToConnectionCommand.registerViewModel">
+            <summary>
+            The attribute that helps us to communicate with the behavior of the view <c>RegisterView</c>
+            </summary>
+        </member>
+        <member name="E:Ore.ViewModels.Commands.GoBackToConnectionCommand.CanExecuteChanged">
+            <summary>
+            The event of the <c>ICommand</c> interface which fires the command event
+            </summary>
+        </member>
+        <member name="M:Ore.ViewModels.Commands.GoBackToConnectionCommand.#ctor(Ore.ViewModels.RegisterViewModel)">
+            <summary>
+            Initialises our <c>RegisterViewModel</c> attribute so we can communicate with him and the <c>RegisterView</c>
+            </summary>
+            <param name="registerViewModel">The actual used view-model</param>
+        </member>
+        <member name="M:Ore.ViewModels.Commands.GoBackToConnectionCommand.CanExecute(System.Object)">
+            <summary>
+            Determines whether the command will be executed or not
+            </summary>
+            <param name="parameter">Data used by the command</param>
+            <returns>true if this command can be executed, false otherwise</returns>
+        </member>
+        <member name="M:Ore.ViewModels.Commands.GoBackToConnectionCommand.Execute(System.Object)">
+            <summary>
+            The actions needed to be executed when the command occurs
+            </summary>
+            <param name="parameter">The parameter sent by the view to help the command to process if needed</param>
+            <remarks>
+            Here, we are leading the user back to the login view
+            </remarks>
+        </member>
+        <member name="F:Ore.ViewModels.Commands.ListCommand.shellViewModel">
+            <summary>
+            The attribute that helps us to communicate with the behavior of the view <c>ShellView</c>
+            </summary>
+        </member>
+        <member name="E:Ore.ViewModels.Commands.ListCommand.CanExecuteChanged">
+            <summary>
+            The event of the <c>ICommand</c> interface which fires the command event
+            </summary>
+        </member>
+        <member name="M:Ore.ViewModels.Commands.ListCommand.#ctor(Ore.ViewModels.ShellViewModel)">
+            <summary>
+            Initialises our <c>ShellViewModel</c> attribute so we can communicate with him and the <c>ShellView</c>
+            </summary>
+            <param name="shellViewModel">The actual used view-model</param>
+        </member>
+        <member name="M:Ore.ViewModels.Commands.ListCommand.CanExecute(System.Object)">
+            <summary>
+            Determines whether the command will be executed or not
+            </summary>
+            <param name="parameter">Data used by the command</param>
+            <returns>true if this command can be executed, false otherwise</returns>
+        </member>
+        <member name="M:Ore.ViewModels.Commands.ListCommand.Execute(System.Object)">
+            <summary>
+            The actions needed to be executed when the command occurs
+            </summary>
+            <param name="parameter">The parameter sent by the view to help the command to process if needed</param>
+            <remarks>
+            Here, we are adding list for the connected user
+            </remarks>
+        </member>
+        <member name="T:Ore.ViewModels.Commands.LoadDayViewCommand">
+            <summary>
+            The command that loads the day view
+            </summary>
+        </member>
+        <member name="F:Ore.ViewModels.Commands.LoadDayViewCommand.shellViewModel">
+            <summary>
+            The attribute that helps us to communicate with the behavior of the view <c>ShellView</c>
+            </summary>
+        </member>
+        <member name="F:Ore.ViewModels.Commands.LoadDayViewCommand.memoryColorNumber">
+            <summary>
+            Helps us to randomise properly the header color
+            </summary>
+        </member>
+        <member name="E:Ore.ViewModels.Commands.LoadDayViewCommand.CanExecuteChanged">
+            <summary>
+            The event of the <c>ICommand</c> interface which fires the command event
+            </summary>
+        </member>
+        <member name="M:Ore.ViewModels.Commands.LoadDayViewCommand.#ctor(Ore.ViewModels.ShellViewModel)">
+            <summary>
+            Initialises our <c>ShellViewModel</c> attribute so we can communicate with him and the <c>ShellView</c>
+            </summary>
+            <param name="shellViewModel">The actual used view-model</param>
+        </member>
+        <member name="M:Ore.ViewModels.Commands.LoadDayViewCommand.CanExecute(System.Object)">
+            <summary>
+            Determines whether the command will be executed or not
+            </summary>
+            <param name="parameter">Data used by the command</param>
+            <returns>true if this command can be executed, false otherwise</returns>
+        </member>
+        <member name="M:Ore.ViewModels.Commands.LoadDayViewCommand.Execute(System.Object)">
+            <summary>
+            The actions needed to be executed when the command occurs
+            </summary>
+            <param name="parameter">The parameter sent by the view to help the command to process if needed</param>
+            <remarks>
+            Here, we are loading the day view
+            </remarks>
+        </member>
+        <member name="T:Ore.ViewModels.Commands.LoadHomeViewCommand">
+            <summary>
+            The command that loads the home view
+            </summary>
+        </member>
+        <member name="F:Ore.ViewModels.Commands.LoadHomeViewCommand.shellViewModel">
+            <summary>
+            The attribute that helps us to communicate with the behavior of the view <c>ShellView</c>
+            </summary>
+        </member>
+        <member name="E:Ore.ViewModels.Commands.LoadHomeViewCommand.CanExecuteChanged">
+            <summary>
+            The event of the <c>ICommand</c> interface which fires the command event
+            </summary>
+        </member>
+        <member name="M:Ore.ViewModels.Commands.LoadHomeViewCommand.#ctor(Ore.ViewModels.ShellViewModel)">
+            <summary>
+            Initialises our <c>ShellViewModel</c> attribute so we can communicate with him and the <c>ShellView</c>
+            </summary>
+            <param name="shellViewModel">The actual used view-model</param>
+        </member>
+        <member name="M:Ore.ViewModels.Commands.LoadHomeViewCommand.CanExecute(System.Object)">
+            <summary>
+            Determines whether the command will be executed or not
+            </summary>
+            <param name="parameter">Data used by the command</param>
+            <returns>true if this command can be executed, false otherwise</returns>
+        </member>
+        <member name="M:Ore.ViewModels.Commands.LoadHomeViewCommand.Execute(System.Object)">
+            <summary>
+            The actions needed to be executed when the command occurs
+            </summary>
+            <param name="parameter">The parameter sent by the view to help the command to process if needed</param>
+            <remarks>
+            Here, we are loading the home view
+            </remarks>
+        </member>
+        <member name="T:Ore.ViewModels.Commands.LoadListViewCommand">
+            <summary>
+            The command that loads the list view
+            </summary>
+        </member>
+        <member name="F:Ore.ViewModels.Commands.LoadListViewCommand.shellViewModel">
+            <summary>
+            The attribute that helps us to communicate with the behavior of the view <c>ShellView</c>
+            </summary>
+        </member>
+        <member name="F:Ore.ViewModels.Commands.LoadListViewCommand.memoryColorNumber">
+            <summary>
+            Helps us to randomise properly the header color
+            </summary>
+        </member>
+        <member name="E:Ore.ViewModels.Commands.LoadListViewCommand.CanExecuteChanged">
+            <summary>
+            The event of the <c>ICommand</c> interface which fires the command event
+            </summary>
+        </member>
+        <member name="M:Ore.ViewModels.Commands.LoadListViewCommand.#ctor(Ore.ViewModels.ShellViewModel)">
+            <summary>
+            Initialises our <c>ShellViewModel</c> attribute so we can communicate with him and the <c>ShellView</c>
+            </summary>
+            <param name="shellViewModel">The actual used view-model</param>
+        </member>
+        <member name="M:Ore.ViewModels.Commands.LoadListViewCommand.CanExecute(System.Object)">
+            <summary>
+            Determines whether the command will be executed or not
+            </summary>
+            <param name="parameter">Data used by the command</param>
+            <returns>true if this command can be executed, false otherwise</returns>
+        </member>
+        <member name="M:Ore.ViewModels.Commands.LoadListViewCommand.Execute(System.Object)">
+            <summary>
+            The actions needed to be executed when the command occurs
+            </summary>
+            <param name="parameter">The parameter sent by the view to help the command to process if needed</param>
+            <remarks>
+            Here, we are loading the list view
+            </remarks>
+        </member>
+        <member name="T:Ore.ViewModels.Commands.LoadRegisterViewCommand">
+            <summary>
+            The command that loads the register view
+            </summary>
+        </member>
+        <member name="F:Ore.ViewModels.Commands.LoadRegisterViewCommand.loginViewModel">
+            <summary>
+            The attribute that helps us to communicate with the behavior of the view <c>LoginView</c>
+            </summary>
+        </member>
+        <member name="F:Ore.ViewModels.Commands.LoadRegisterViewCommand.registerView">
+            <summary>
+            The attribute that helps us to communicate with the behavior of the view <c>RegisterView</c>
+            </summary>
+        </member>
+        <member name="E:Ore.ViewModels.Commands.LoadRegisterViewCommand.CanExecuteChanged">
+            <summary>
+            The event of the <c>ICommand</c> interface which fires the command event
+            </summary>
+        </member>
+        <member name="M:Ore.ViewModels.Commands.LoadRegisterViewCommand.#ctor(Ore.ViewModels.LoginViewModel)">
+            <summary>
+            Initialises our <c>LoginViewModel</c> attribute so we can communicate with him and the <c>LoginView</c>
+            </summary>
+            <param name="shellViewModel">The actual used view-model</param>
+        </member>
+        <member name="M:Ore.ViewModels.Commands.LoadRegisterViewCommand.CanExecute(System.Object)">
+            <summary>
+            Determines whether the command will be executed or not
+            </summary>
+            <param name="parameter">Data used by the command</param>
+            <returns>true if this command can be executed, false otherwise</returns>
+        </member>
+        <member name="M:Ore.ViewModels.Commands.LoadRegisterViewCommand.Execute(System.Object)">
+            <summary>
+            The actions needed to be executed when the command occurs
+            </summary>
+            <param name="parameter">The parameter sent by the view to help the command to process if needed</param>
+            <remarks>
+            Here, we are loading the register view
+            </remarks>
+        </member>
+        <member name="T:Ore.ViewModels.Commands.LoginAccessCommand">
+            <summary>
+            The command that logs the user in the application
+            </summary>
+        </member>
+        <member name="F:Ore.ViewModels.Commands.LoginAccessCommand.shellView">
+            <summary>
+            The attribute that helps us to communicate with the behavior of the view <c>ShellView</c>
+            </summary>
+        </member>
+        <member name="F:Ore.ViewModels.Commands.LoginAccessCommand.loginViewModel">
+            <summary>
+            The attribute that helps us to communicate with the behavior of the view <c>LoginView</c>
+            </summary>
+        </member>
+        <member name="E:Ore.ViewModels.Commands.LoginAccessCommand.CanExecuteChanged">
+            <summary>
+            The event of the <c>ICommand</c> interface which fires the command event
+            </summary>
+        </member>
+        <member name="M:Ore.ViewModels.Commands.LoginAccessCommand.#ctor(Ore.ViewModels.LoginViewModel)">
+            <summary>
+            Initialises our <c>LoginViewModel</c> attribute so we can communicate with him and the <c>LoginView</c>
+            </summary>
+            <param name="shellViewModel">The actual used view-model</param>
+        </member>
+        <member name="M:Ore.ViewModels.Commands.LoginAccessCommand.CanExecute(System.Object)">
+            <summary>
+            Determines whether the command will be executed or not
+            </summary>
+            <param name="parameter">Data used by the command</param>
+            <returns>true if this command can be executed, false otherwise</returns>
+        </member>
+        <member name="M:Ore.ViewModels.Commands.LoginAccessCommand.Execute(System.Object)">
+            <summary>
+            The actions needed to be executed when the command occurs
+            </summary>
+            <param name="parameter">The parameter sent by the view to help the command to process if needed</param>
+            <remarks>
+            Here, we are logging in the user
+            </remarks>
+        </member>
+        <member name="T:Ore.ViewModels.Commands.RegisterCommand">
+            <summary>
+            The command that registers a new user
+            </summary>
+        </member>
+        <member name="F:Ore.ViewModels.Commands.RegisterCommand.registerViewModel">
+            <summary>
+            The attribute that helps us to communicate with the behavior of the view <c>RegisterView</c>
+            </summary>
+        </member>
+        <member name="E:Ore.ViewModels.Commands.RegisterCommand.CanExecuteChanged">
+            <summary>
+            The event of the <c>ICommand</c> interface which fires the command event
+            </summary>
+        </member>
+        <member name="M:Ore.ViewModels.Commands.RegisterCommand.#ctor(Ore.ViewModels.RegisterViewModel)">
+            <summary>
+            Initialises our <c>RegisterViewModel</c> attribute so we can communicate with him and the <c>RegisterView</c>
+            </summary>
+            <param name="shellViewModel">The actual used view-model</param>
+        </member>
+        <member name="M:Ore.ViewModels.Commands.RegisterCommand.CanExecute(System.Object)">
+            <summary>
+            Determines whether the command will be executed or not
+            </summary>
+            <param name="parameter">Data used by the command</param>
+            <returns>true if this command can be executed, false otherwise</returns>
+        </member>
+        <member name="M:Ore.ViewModels.Commands.RegisterCommand.Execute(System.Object)">
+            <summary>
+            The actions needed to be executed when the command occurs
+            </summary>
+            <param name="parameter">The parameter sent by the view to help the command to process if needed</param>
+            <remarks>
+            Here, we are registering a new user
+            </remarks>
+        </member>
+        <member name="T:Ore.ViewModels.Commands.TaskDoneCommand">
+            <summary>
+            The command that set the task to done
+            </summary>
+        </member>
+        <member name="F:Ore.ViewModels.Commands.TaskDoneCommand.shellViewModel">
+            <summary>
+            The attribute that helps us to communicate with the behavior of the view <c>ShellView</c>
+            </summary>
+        </member>
+        <member name="E:Ore.ViewModels.Commands.TaskDoneCommand.CanExecuteChanged">
+            <summary>
+            The event of the <c>ICommand</c> interface which fires the command event
+            </summary>
+        </member>
+        <member name="M:Ore.ViewModels.Commands.TaskDoneCommand.#ctor(Ore.ViewModels.ShellViewModel)">
+            <summary>
+            Initialises our <c>ShellViewModel</c> attribute so we can communicate with him and the <c>ShellView</c>
+            </summary>
+            <param name="shellViewModel">The actual used view-model</param>
+        </member>
+        <member name="M:Ore.ViewModels.Commands.TaskDoneCommand.CanExecute(System.Object)">
+            <summary>
+            Determines whether the command will be executed or not
+            </summary>
+            <param name="parameter">Data used by the command</param>
+            <returns>true if this command can be executed, false otherwise</returns>
+        </member>
+        <member name="M:Ore.ViewModels.Commands.TaskDoneCommand.Execute(System.Object)">
+            <summary>
+            The actions needed to be executed when the command occurs
+            </summary>
+            <param name="parameter">The parameter sent by the view to help the command to process if needed</param>
+            <remarks>
+            Here, we are setting a task to done
+            </remarks>
+        </member>
+        <member name="T:Ore.ViewModels.Converters.ActualDayColorConverter">
+            <summary>
+            The converter that colors the actual day
+            </summary>
+        </member>
+        <member name="M:Ore.ViewModels.Converters.ActualDayColorConverter.Convert(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)">
+            <summary>
+            The method used to convert the value
+            </summary>
+            <param name="value">The value converted</param>
+            <param name="targetType">The type of the binding target property</param>
+            <param name="parameter">The converter parameter to use</param>
+            <param name="culture">The culture to use in the converter</param>
+            <returns>A converted value. If the method returns null, the valid null value is used</returns>
+            <remarks>
+            Here, we return a color
+            </remarks>
+        </member>
+        <member name="M:Ore.ViewModels.Converters.ActualDayColorConverter.ConvertBack(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)">
+            <summary>
+            The method used to convert the value back to normal
+            </summary>
+            <param name="value">The value converted</param>
+            <param name="targetType">The type of the binding target property</param>
+            <param name="parameter">The converter parameter to use</param>
+            <param name="culture">The culture to use in the converter</param>
+            <returns>A converted back value. If the method returns null, the valid null value is used</returns>
+        </member>
+        <member name="T:Ore.ViewModels.Converters.ChosenDayValuesConverter">
+            <summary>
+            The converter that returns an array of values for the chosen day
+            </summary>
+        </member>
+        <member name="M:Ore.ViewModels.Converters.ChosenDayValuesConverter.Convert(System.Object[],System.Type,System.Object,System.Globalization.CultureInfo)">
+            <summary>
+            The method used to convert the value
+            </summary>
+            <param name="value">The value converted</param>
+            <param name="targetType">The type of the binding target property</param>
+            <param name="parameter">The converter parameter to use</param>
+            <param name="culture">The culture to use in the converter</param>
+            <returns>A converted value. If the method returns null, the valid null value is used</returns>
+            <remarks>
+            Here, we return an array of cloned values
+            </remarks>
+        </member>
+        <member name="M:Ore.ViewModels.Converters.ChosenDayValuesConverter.ConvertBack(System.Object,System.Type[],System.Object,System.Globalization.CultureInfo)">
+            <summary>
+            The method used to convert the value back to normal
+            </summary>
+            <param name="value">The value converted</param>
+            <param name="targetType">The type of the binding target property</param>
+            <param name="parameter">The converter parameter to use</param>
+            <param name="culture">The culture to use in the converter</param>
+            <returns>A converted back value. If the method returns null, the valid null value is used</returns>
+        </member>
+        <member name="T:Ore.ViewModels.Converters.LoadListViewConverter">
+            <summary>
+            The converter that returns an array of values for the list view
+            </summary>
+        </member>
+        <member name="M:Ore.ViewModels.Converters.LoadListViewConverter.Convert(System.Object[],System.Type,System.Object,System.Globalization.CultureInfo)">
+            <summary>
+            The method used to convert the value
+            </summary>
+            <param name="value">The value converted</param>
+            <param name="targetType">The type of the binding target property</param>
+            <param name="parameter">The converter parameter to use</param>
+            <param name="culture">The culture to use in the converter</param>
+            <returns>A converted value. If the method returns null, the valid null value is used</returns>
+            <remarks>
+            Here, we return an array of cloned values
+            </remarks>
+        </member>
+        <member name="M:Ore.ViewModels.Converters.LoadListViewConverter.ConvertBack(System.Object,System.Type[],System.Object,System.Globalization.CultureInfo)">
+            <summary>
+            The method used to convert the value back to normal
+            </summary>
+            <param name="value">The value converted</param>
+            <param name="targetType">The type of the binding target property</param>
+            <param name="parameter">The converter parameter to use</param>
+            <param name="culture">The culture to use in the converter</param>
+            <returns>A converted back value. If the method returns null, the valid null value is used</returns>
+        </member>
+        <member name="T:Ore.ViewModels.Converters.LoadViewConverter">
+            <summary>
+            The converter that return an array of values for the actual view
+            </summary>
+        </member>
+        <member name="M:Ore.ViewModels.Converters.LoadViewConverter.Convert(System.Object[],System.Type,System.Object,System.Globalization.CultureInfo)">
+            <summary>
+            The method used to convert the value
+            </summary>
+            <param name="value">The value converted</param>
+            <param name="targetType">The type of the binding target property</param>
+            <param name="parameter">The converter parameter to use</param>
+            <param name="culture">The culture to use in the converter</param>
+            <returns>A converted value. If the method returns null, the valid null value is used</returns>
+            <remarks>
+            Here, we return an array of cloned values
+            </remarks>
+        </member>
+        <member name="M:Ore.ViewModels.Converters.LoadViewConverter.ConvertBack(System.Object,System.Type[],System.Object,System.Globalization.CultureInfo)">
+            <summary>
+            The method used to convert the value back to normal
+            </summary>
+            <param name="value">The value converted</param>
+            <param name="targetType">The type of the binding target property</param>
+            <param name="parameter">The converter parameter to use</param>
+            <param name="culture">The culture to use in the converter</param>
+            <returns>A converted back value. If the method returns null, the valid null value is used</returns>
+        </member>
+        <member name="T:Ore.ViewModels.Converters.OpacityTaskDoneConverter">
+            <summary>
+            The converter that convertes a value in an opacity value
+            </summary>
+        </member>
+        <member name="M:Ore.ViewModels.Converters.OpacityTaskDoneConverter.Convert(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)">
+            <summary>
+            The method used to convert the value
+            </summary>
+            <param name="value">The value converted</param>
+            <param name="targetType">The type of the binding target property</param>
+            <param name="parameter">The converter parameter to use</param>
+            <param name="culture">The culture to use in the converter</param>
+            <returns>A converted value. If the method returns null, the valid null value is used</returns>
+            <remarks>
+            Here, we return an opacity value
+            </remarks>
+        </member>
+        <member name="M:Ore.ViewModels.Converters.OpacityTaskDoneConverter.ConvertBack(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)">
+            <summary>
+            The method used to convert the value back to normal
+            </summary>
+            <param name="value">The value converted</param>
+            <param name="targetType">The type of the binding target property</param>
+            <param name="parameter">The converter parameter to use</param>
+            <param name="culture">The culture to use in the converter</param>
+            <returns>A converted back value. If the method returns null, the valid null value is used</returns>
+        </member>
+        <member name="T:Ore.ViewModels.Converters.SuccessfulAccountCreationConverter">
+            <summary>
+            The converter that converts a string in a color
+            </summary>
+        </member>
+        <member name="M:Ore.ViewModels.Converters.SuccessfulAccountCreationConverter.Convert(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)">
+            <summary>
+            The method used to convert the value
+            </summary>
+            <param name="value">The value converted</param>
+            <param name="targetType">The type of the binding target property</param>
+            <param name="parameter">The converter parameter to use</param>
+            <param name="culture">The culture to use in the converter</param>
+            <returns>A converted value. If the method returns null, the valid null value is used</returns>
+            <remarks>
+            Here, we return a color
+            </remarks>
+        </member>
+        <member name="M:Ore.ViewModels.Converters.SuccessfulAccountCreationConverter.ConvertBack(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)">
+            <summary>
+            The method used to convert the value back to normal
+            </summary>
+            <param name="value">The value converted</param>
+            <param name="targetType">The type of the binding target property</param>
+            <param name="parameter">The converter parameter to use</param>
+            <param name="culture">The culture to use in the converter</param>
+            <returns>A converted back value. If the method returns null, the valid null value is used</returns>
+        </member>
+        <member name="T:Ore.ViewModels.DayViewModel">
+            <summary>
+            The view-model class of a day that decides how a view day must behave
+            </summary>
+        </member>
+        <member name="F:Ore.ViewModels.DayViewModel.name">
+            <summary>
+            The name of the day
+            </summary>
+        </member>
+        <member name="F:Ore.ViewModels.DayViewModel.isToday">
+            <summary>
+            The flag that says whether this today is today or not
+            </summary>
+        </member>
+        <member name="M:Ore.ViewModels.DayViewModel.#ctor(System.String,System.Boolean)">
+            <summary>
+            The constructor of a full day
+            </summary>
+            <param name="name">The name of the day</param>
+            <param name="isToday">The flag that says whether this today is today or not</param>
+        </member>
+        <member name="T:Ore.ViewModels.ListViewModel">
+            <summary>
+            The view-model class of a list that decides how a view list must behave
+            </summary>
+        </member>
+        <member name="F:Ore.ViewModels.ListViewModel.idList">
+            <summary>
+            The id of the list
+            </summary>
+        </member>
+        <member name="F:Ore.ViewModels.ListViewModel.focusedName">
+            <summary>
+            The name of the list currently used by the <c>ShellView</c> view
+            </summary>
+        </member>
+        <member name="F:Ore.ViewModels.ListViewModel.name">
+            <summary>
+            The name of the list
+            </summary>
+        </member>
+        <member name="F:Ore.ViewModels.ListViewModel.userId">
+            <summary>
+            The id of the connected user
+            </summary>
+        </member>
+        <member name="F:Ore.ViewModels.ListViewModel.taskList">
+            <summary>
+            The tasks of the list
+            </summary>
+        </member>
+        <member name="T:Ore.ViewModels.LoginViewModel">
+            <summary>
+            The view-model class of the login view that decides how a login view must behave
+            </summary>
+        </member>
+        <member name="F:Ore.ViewModels.LoginViewModel.user">
+            <summary>
+            The user that wants to be connected
+            </summary>
+        </member>
+        <member name="F:Ore.ViewModels.LoginViewModel.wrongInformations">
+            <summary>
+            Helps the user if he has entered wrong informations
+            </summary>
+        </member>
+        <member name="P:Ore.ViewModels.LoginViewModel.CloseAction">
+            <summary>
+            The attribute used to shut-down the view when the user is connecting to his session
+            </summary>
+        </member>
+        <member name="E:Ore.ViewModels.LoginViewModel.PropertyChanged">
+            <summary>
+            The events that prevents a new change in the properties values
+            </summary>
+        </member>
+        <member name="P:Ore.ViewModels.LoginViewModel.LoginAccessCommand">
+            <summary>
+            The command to log the user in
+            </summary>
+        </member>
+        <member name="P:Ore.ViewModels.LoginViewModel.LoadRegisterViewCommand">
+            <summary>
+            The command that loads the register view
+            </summary>
+        </member>
+        <member name="M:Ore.ViewModels.LoginViewModel.NotifyPropertyChanged(System.String)">
+            <summary>
+            The methods that prevents a change in the properties values
+            </summary>
+            <param name="name">The name of the property</param>
+        </member>
+        <member name="T:Ore.ViewModels.RegisterViewModel">
+            <summary>
+            The view-model class of the register view that decides how a register view must behave
+            </summary>
+        </member>
+        <member name="F:Ore.ViewModels.RegisterViewModel.user">
+            <summary>
+            The user that wants to create an account
+            </summary>
+        </member>
+        <member name="F:Ore.ViewModels.RegisterViewModel.wrongInformations">
+            <summary>
+            The attributes that decides whether the user has entered valid informations
+            </summary>
+        </member>
+        <member name="F:Ore.ViewModels.RegisterViewModel.textInformations">
+            <summary>
+            The informations displayed when the user submit the form
+            </summary>
+        </member>
+        <member name="F:Ore.ViewModels.RegisterViewModel.lastUserId">
+            <summary>
+            The last od used in the database to create an account
+            </summary>
+        </member>
+        <member name="E:Ore.ViewModels.RegisterViewModel.PropertyChanged">
+            <summary>
+            The attributes that prevents a change in the properties values
+            </summary>
+        </member>
+        <member name="P:Ore.ViewModels.RegisterViewModel.RegisterCommand">
+            <summary>
+            The command that register a new user
+            </summary>
+        </member>
+        <member name="P:Ore.ViewModels.RegisterViewModel.GoBackToConnectionCommand">
+            <summary>
+            The command that leads the user back to the log in view
+            </summary>
+        </member>
+        <member name="M:Ore.ViewModels.RegisterViewModel.NotifyPropertyChanged(System.String)">
+            <summary>
+            The methods that notifies a change in the properties values
+            </summary>
+            <param name="name">The name of the property</param>
+        </member>
+        <member name="T:Ore.ViewModels.ShellViewModel">
+            <summary>
+            The main view-model class that decides how the whole main interface must behave
+            </summary>
+        </member>
+        <member name="F:Ore.ViewModels.ShellViewModel.tasks">
+            <summary>
+            The lists of all the tasks that the connected user created
+            </summary>
+        </member>
+        <member name="F:Ore.ViewModels.ShellViewModel.toDoNowTasks">
+            <summary>
+            The list of the most urgent tasks the connected user created
+            </summary>
+        </member>
+        <member name="F:Ore.ViewModels.ShellViewModel.lists">
+            <summary>
+            The list of all the lists the connected user created
+            </summary>
+        </member>
+        <member name="F:Ore.ViewModels.ShellViewModel.daysInMonth">
+            <summary>
+            The list of all the days in the ficused month
+            </summary>
+        </member>
+        <member name="F:Ore.ViewModels.ShellViewModel.focusedList">
+            <summary>
+            The list that the user chose in the view
+            </summary>
+        </member>
+        <member name="F:Ore.ViewModels.ShellViewModel.monthsTab">
+            <summary>
+            The list of months displayed in the shell view so the user can pick one
+            </summary>
+        </member>
+        <member name="F:Ore.ViewModels.ShellViewModel.yearsTab">
+            <summary>
+            The list of years displayed in the shell view so the user can pick one
+            </summary>
+        </member>
+        <member name="F:Ore.ViewModels.ShellViewModel.actualMonthYear">
+            <summary>
+            The actual month-year values when the program starts
+            </summary>
+        </member>
+        <member name="F:Ore.ViewModels.ShellViewModel.chosenDate">
+            <summary>
+            The focused date chosen by the user
+            </summary>
+        </member>
+        <member name="F:Ore.ViewModels.ShellViewModel.chosenMonth">
+            <summary>
+            The focused month chosen by the user
+            </summary>
+        </member>
+        <member name="F:Ore.ViewModels.ShellViewModel.chosenYear">
+            <summary>
+            The focused yer chosen by the user
+            </summary>
+        </member>
+        <member name="F:Ore.ViewModels.ShellViewModel.taskId">
+            <summary>
+            The id of the task the user is creating
+            </summary>
+        </member>
+        <member name="F:Ore.ViewModels.ShellViewModel.taskName">
+            <summary>
+            The name of the task the user is creating
+            </summary>
+        </member>
+        <member name="F:Ore.ViewModels.ShellViewModel.taskDescription">
+            <summary>
+            The description of the task the user is creating
+            </summary>
+        </member>
+        <member name="F:Ore.ViewModels.ShellViewModel.taskColor">
+            <summary>
+            The color of the task the user is creating
+            </summary>
+        </member>
+        <member name="F:Ore.ViewModels.ShellViewModel.taskStartDay">
+            <summary>
+            The start day of the task the user is creating
+            </summary>
+        </member>
+        <member name="F:Ore.ViewModels.ShellViewModel.taskFinishDay">
+            <summary>
+            The finish day of the task the user is creating
+            </summary>
+        </member>
+        <member name="F:Ore.ViewModels.ShellViewModel.taskStartTime">
+            <summary>
+            The start time of the task the user is creating
+            </summary>
+        </member>
+        <member name="F:Ore.ViewModels.ShellViewModel.taskFinishTime">
+            <summary>
+            The finish time of the task the user is creating
+            </summary>
+        </member>
+        <member name="F:Ore.ViewModels.ShellViewModel.taskStartMonth">
+            <summary>
+            The start month of the task the user is creating
+            </summary>
+        </member>
+        <member name="F:Ore.ViewModels.ShellViewModel.taskFinishMonth">
+            <summary>
+            The finish month of the task the user is creating
+            </summary>
+        </member>
+        <member name="F:Ore.ViewModels.ShellViewModel.taskStartYear">
+            <summary>
+            The start year of the task the user is creating
+            </summary>
+        </member>
+        <member name="F:Ore.ViewModels.ShellViewModel.taskFinishYear">
+            <summary>
+            The finish year of the task the user is creating
+            </summary>
+        </member>
+        <member name="F:Ore.ViewModels.ShellViewModel.taskChecked">
+            <summary>
+            The task-done flag of the task the user is creating
+            </summary>
+        </member>
+        <member name="F:Ore.ViewModels.ShellViewModel.taskIdUser">
+            <summary>
+            The id of the user that is creating the task
+            </summary>
+        </member>
+        <member name="F:Ore.ViewModels.ShellViewModel.wrongInformations">
+            <summary>
+            The boolean value that tells whether the user has entered wrong informations or not
+            </summary>
+        </member>
+        <member name="F:Ore.ViewModels.ShellViewModel.textInformations">
+            <summary>
+            The warning text informations the user gets when he has entered wrong informations
+            </summary>
+        </member>
+        <member name="F:Ore.ViewModels.ShellViewModel.focusedListName">
+            <summary>
+            The name of the actual focused list in the main view
+            </summary>
+        </member>
+        <member name="F:Ore.ViewModels.ShellViewModel.focusedListId">
+            <summary>
+            The id of the focused list in the main view 
+            </summary>
+        </member>
+        <member name="F:Ore.ViewModels.ShellViewModel.randomColor">
+            <summary>
+            The color randomly chosen for the task or list view
+            </summary>
+        </member>
+        <member name="E:Ore.ViewModels.ShellViewModel.PropertyChanged">
+            <summary>
+            The attributes that prevents a new change in the properties values
+            </summary>
+        </member>
+        <member name="P:Ore.ViewModels.ShellViewModel.AddATaskCommand">
+            <summary>
+            The command that adds a new task created by the user
+            </summary>
+        </member>
+        <member name="P:Ore.ViewModels.ShellViewModel.DeleteATaskCommand">
+            <summary>
+            The command that deletes a task
+            </summary>
+        </member>
+        <member name="P:Ore.ViewModels.ShellViewModel.LoadDayViewCommand">
+            <summary>
+            The command that load the day view of the one chosen by the user
+            </summary>
+        </member>
+        <member name="P:Ore.ViewModels.ShellViewModel.LoadHomeViewCommand">
+            <summary>
+            The command that loads the home view
+            </summary>
+        </member>
+        <member name="P:Ore.ViewModels.ShellViewModel.TaskDoneCommand">
+            <summary>
+            The command that checks a task when it is done
+            </summary>
+        </member>
+        <member name="P:Ore.ViewModels.ShellViewModel.DisconnectUserCommand">
+            <summary>
+            The command that disconnects the user from the main view and leads him back to the log in view
+            </summary>
+        </member>
+        <member name="P:Ore.ViewModels.ShellViewModel.AddAListCommand">
+            <summary>
+            The command that adds a new list created by the user
+            </summary>
+        </member>
+        <member name="P:Ore.ViewModels.ShellViewModel.LoadListViewCommand">
+            <summary>
+            The command that loads the list view
+            </summary>
+        </member>
+        <member name="P:Ore.ViewModels.ShellViewModel.AddTaskToListCommand">
+            <summary>
+            The command that adds a new task to a list
+            </summary>
+        </member>
+        <member name="P:Ore.ViewModels.ShellViewModel.DeleteListCommand">
+            <summary>
+            The command that deletes a list
+            </summary>
+        </member>
+        <member name="P:Ore.ViewModels.ShellViewModel.ListCommand">
+            <summary>
+            The command that displays the form to create a new list
+            </summary>
+        </member>
+        <member name="M:Ore.ViewModels.ShellViewModel.FindActualMonthYear(System.DateTime,System.Int32)">
+            <summary>
+            Finds the actual year-month values when the program starts
+            </summary>
+            <param name="date">The actual date when the program starts</param>
+            <param name="yearFlag">The format mode flag</param>
+            <returns>The actual month and year in a string</returns>
+        </member>
+        <member name="M:Ore.ViewModels.ShellViewModel.setYears">
+            <summary>
+            Sets the list of available years to create a task
+            </summary>
+            <returns>An arrays of the available years</returns>
+        </member>
+        <member name="M:Ore.ViewModels.ShellViewModel.setDaysInMonth(System.String,System.String)">
+            <summary>
+            Sets all the days in a list with the focused month-year values
+            </summary>
+            <param name="chosenYear">The focused year</param>
+            <param name="chosenMonth">The focused month</param>
+            <returns>The list of all the days in the month-year</returns>
+        </member>
+        <member name="M:Ore.ViewModels.ShellViewModel.isToday(System.DateTime)">
+            <summary>
+            Checks if the day sent is the actual real day the program is started
+            </summary>
+            <param name="day">The day</param>
+            <returns>A boolean value that indicates whether the day is the actual one or not</returns>
+        </member>
+        <member name="M:Ore.ViewModels.ShellViewModel.monthNameToNumber(System.String)">
+            <summary>
+            Converts a month name to his number in the year
+            </summary>
+            <param name="monthName">The name of the month</param>
+            <returns>The number of the month in the year</returns>
+        </member>
+        <member name="M:Ore.ViewModels.ShellViewModel.monthNumberToName(System.String)">
+            <summary>
+            Converts a month number in the year to his real name
+            </summary>
+            <param name="monthNumber">The number of the month in the year</param>
+            <returns>The real name of the month</returns>
+        </member>
+        <member name="M:Ore.ViewModels.ShellViewModel.SortTasks(System.Collections.ObjectModel.ObservableCollection{Ore.ViewModels.TaskViewModel})">
+            <summary>
+            Sorts the most urgent tasks in the basic tasks list
+            </summary>
+            <param name="tasksList">The list of tasks retrieved from the database</param>
+        </member>
+        <member name="M:Ore.ViewModels.ShellViewModel.addTask">
+            <summary>
+            Adds a new task to our basic tasks list of a day
+            </summary>
+        </member>
+        <member name="M:Ore.ViewModels.ShellViewModel.addTaskToList">
+            <summary>
+            Adds a new task to a list created by the user
+            </summary>
+        </member>
+        <member name="M:Ore.ViewModels.ShellViewModel.NotifyPropertyChanged(System.String)">
+            <summary>
+            Prevents the code that a value property changed
+            </summary>
+            <param name="name">The name of the property</param>
+        </member>
+        <member name="T:Ore.ViewModels.TaskViewModel">
+            <summary>
+            The view-model class of the task view that decides how a task view must behave
+            </summary>
+        </member>
+        <member name="F:Ore.ViewModels.TaskViewModel.id">
+            <summary>
+            The id of the task
+            </summary>
+        </member>
+        <member name="F:Ore.ViewModels.TaskViewModel.name">
+            <summary>
+            The name of the task
+            </summary>
+        </member>
+        <member name="F:Ore.ViewModels.TaskViewModel.description">
+            <summary>
+            The description of the task
+            </summary>
+        </member>
+        <member name="F:Ore.ViewModels.TaskViewModel.color">
+            <summary>
+            The color of the task
+            </summary>
+        </member>
+        <member name="F:Ore.ViewModels.TaskViewModel.startDay">
+            <summary>
+            The start day of the task
+            </summary>
+        </member>
+        <member name="F:Ore.ViewModels.TaskViewModel.finishDay">
+            <summary>
+            The finish day of the day
+            </summary>
+        </member>
+        <member name="F:Ore.ViewModels.TaskViewModel.startTime">
+            <summary>
+            The start time of the task
+            </summary>
+        </member>
+        <member name="F:Ore.ViewModels.TaskViewModel.finishTime">
+            <summary>
+            The finish time of the task
+            </summary>
+        </member>
+        <member name="F:Ore.ViewModels.TaskViewModel.startMonth">
+            <summary>
+            The start month of the task
+            </summary>
+        </member>
+        <member name="F:Ore.ViewModels.TaskViewModel.finishMonth">
+            <summary>
+            The finish month of the task
+            </summary>
+        </member>
+        <member name="F:Ore.ViewModels.TaskViewModel.startYear">
+            <summary>
+            The start year of the task
+            </summary>
+        </member>
+        <member name="F:Ore.ViewModels.TaskViewModel.finishYear">
+            <summary>
+            The finish year of the task
+            </summary>
+        </member>
+        <member name="F:Ore.ViewModels.TaskViewModel.isComplete">
+            <summary>
+            The task-done flag of the task
+            </summary>
+        </member>
+        <member name="F:Ore.ViewModels.TaskViewModel.useId">
+            <summary>
+            The id of the user that created the task
+            </summary>
+        </member>
+        <member name="F:Ore.ViewModels.TaskViewModel.listId">
+            <summary>
+            The id of the list where belongs the task
+            </summary>
+            <remarks>
+            Equals 0 if the task belongs to a day
+            </remarks>
+        </member>
+        <member name="M:Ore.ViewModels.TaskViewModel.formatTime(System.String)">
+            <summary>
+            The method that formats the time so we can put it in the database 
+            </summary>
+            <param name="time">The time we want to convert</param>
+            <returns>The formatted time</returns>
+        </member>
+        <member name="M:Ore.ViewModels.TaskViewModel.setDaysInMonth(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Finds the day of week for a special day
+            </summary>
+            <param name="chosenYear">The year of the day</param>
+            <param name="chosenMonth">The month of the day</param>
+            <param name="chosenDay">The number of the day</param>
+            <returns>The day of week and the number of the day in a string</returns>
+        </member>
+        <member name="M:Ore.ViewModels.TaskViewModel.setDate(System.String)">
+            <summary>
+            The method that formats the day so we can put it in the database and in our code as well
+            </summary>
+            <param name="dateNotFormatted">The day we want to convert</param>
+            <returns>The formatted day</returns>
+        </member>
+        <member name="M:Ore.ViewModels.TaskViewModel.EnglishDayOfWeekToFrench(System.String)">
+            <summary>
+            The method we use to convert an english day of week to a french one
+            </summary>
+            <param name="day">The day of week we want to convert</param>
+            <returns>The converted day</returns>
+        </member>
+        <member name="T:Ore.ViewModels.UserViewModel">
+            <summary>
+            The view-model class of the views that decides how a register user must behave
+            </summary>
+        </member>
+        <member name="F:Ore.ViewModels.UserViewModel.username">
+            <summary>
+            The user name
+            </summary>
+        </member>
+        <member name="F:Ore.ViewModels.UserViewModel.password">
+            <summary>
+            The password of the user account
+            </summary>
+        </member>
+        <member name="F:Ore.ViewModels.UserViewModel.id">
+            <summary>
+            The id of the user in the database and the code
+            </summary>
+        </member>
+        <member name="M:Ore.ViewModels.UserViewModel.#ctor">
+            <summary>
+            The default constructor to create an user
+            </summary>
+        </member>
+        <member name="T:Ore.MainWindow">
+            <summary>
+            Logique d'interaction pour MainWindow.xaml
+            </summary>
+            <summary>
+            MainWindow
+            </summary>
+        </member>
+        <member name="M:Ore.MainWindow.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:Ore.Views.DayView">
+            <summary>
+            Logique d'interaction pour la vue <c>DayView</c>
+            </summary>
+            <summary>
+            DayView
+            </summary>
+        </member>
+        <member name="M:Ore.Views.DayView.#ctor">
+            <summary>
+            Initialises the view
+            </summary>
+        </member>
+        <member name="M:Ore.Views.DayView.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:Ore.Views.ListView">
+            <summary>
+            Logique d'interaction pour la vue <c>ListView</c>
+            </summary>
+            <summary>
+            ListView
+            </summary>
+        </member>
+        <member name="M:Ore.Views.ListView.#ctor">
+            <summary>
+            Initialises the view
+            </summary>
+        </member>
+        <member name="M:Ore.Views.ListView.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:Ore.Views.LoginView">
+            <summary>
+            Logique d'interaction pour la vue <c>LoginView</c>
+            </summary>
+            <summary>
+            LoginView
+            </summary>
+        </member>
+        <member name="M:Ore.Views.LoginView.#ctor">
+            <summary>
+            Initialises the view, the data context and the <c>CloseAction</c> feature
+            </summary>
+        </member>
+        <member name="M:Ore.Views.LoginView.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:Ore.Views.RegisterView">
+            <summary>
+            Logique d'interaction pour la vue <c>RegisterView</c>
+            </summary>
+            <summary>
+            RegisterView
+            </summary>
+        </member>
+        <member name="M:Ore.Views.RegisterView.#ctor">
+            <summary>
+            Initialises the view
+            </summary>
+        </member>
+        <member name="M:Ore.Views.RegisterView.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:Ore.Views.ShellView">
+            <summary>
+            Logique d'interaction de la vue <c>ShellView</c>
+            </summary>
+            <summary>
+            ShellView
+            </summary>
+        </member>
+        <member name="M:Ore.Views.ShellView.#ctor">
+            <summary>
+            Initialises the view and his data context
+            </summary>
+        </member>
+        <member name="M:Ore.Views.ShellView.Button_MouseEnter(System.Object,System.Windows.Input.MouseEventArgs)">
+            <summary>
+            The enter hover effect on day buttons
+            </summary>
+            <param name="sender">The enter-hovered button</param>
+            <param name="e">The event object</param>
+        </member>
+        <member name="M:Ore.Views.ShellView.Button_MouseLeave(System.Object,System.Windows.Input.MouseEventArgs)">
+            <summary>
+            The exit hover effect on day buttons
+            </summary>
+            <param name="sender">The exit-hovered button</param>
+            <param name="e">The event object</param>
+        </member>
+        <member name="M:Ore.Views.ShellView.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:Ore.App">
+            <summary>
+            Logique d'interaction pour App.xaml
+            </summary>
+            <summary>
+            App
+            </summary>
+        </member>
+        <member name="M:Ore.App.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="M:Ore.App.Main">
+            <summary>
+            Application Entry Point.
+            </summary>
+        </member>
+        <member name="T:Ore.Properties.Resources">
+            <summary>
+              Une classe de ressource fortement typée destinée, entre autres, à la consultation des chaînes localisées.
+            </summary>
+        </member>
+        <member name="P:Ore.Properties.Resources.ResourceManager">
+            <summary>
+              Retourne l'instance ResourceManager mise en cache utilisée par cette classe.
+            </summary>
+        </member>
+        <member name="P:Ore.Properties.Resources.Culture">
+            <summary>
+              Remplace la propriété CurrentUICulture du thread actuel pour toutes
+              les recherches de ressources à l'aide de cette classe de ressource fortement typée.
+            </summary>
+        </member>
+        <member name="T:XamlGeneratedNamespace.GeneratedInternalTypeHelper">
+            <summary>
+            GeneratedInternalTypeHelper
+            </summary>
+        </member>
+        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.CreateInstance(System.Type,System.Globalization.CultureInfo)">
+            <summary>
+            CreateInstance
+            </summary>
+        </member>
+        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.GetPropertyValue(System.Reflection.PropertyInfo,System.Object,System.Globalization.CultureInfo)">
+            <summary>
+            GetPropertyValue
+            </summary>
+        </member>
+        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.SetPropertyValue(System.Reflection.PropertyInfo,System.Object,System.Object,System.Globalization.CultureInfo)">
+            <summary>
+            SetPropertyValue
+            </summary>
+        </member>
+        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.CreateDelegate(System.Type,System.Object,System.String)">
+            <summary>
+            CreateDelegate
+            </summary>
+        </member>
+        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.AddEventHandler(System.Reflection.EventInfo,System.Object,System.Delegate)">
+            <summary>
+            AddEventHandler
+            </summary>
+        </member>
+    </members>
+</doc>

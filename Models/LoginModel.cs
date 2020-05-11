@@ -10,32 +10,43 @@ using System.Threading.Tasks;
 
 namespace Ore.Models
 {
+	/// <summary>
+	/// The model that contains elements to communicate with the database to retrieve some login data
+	/// </summary>
     public class LoginModel
     {
-		public static int findUserId(string username, string password)
+        #region Properties
+
+        #endregion
+
+        #region Methods
+
+		/// <summary>
+		/// The method used to find the user in the database or not for the login feature
+		/// </summary>
+		/// <param name="username">The user name</param>
+		/// <param name="password">The password of the user account</param>
+		/// <returns></returns>
+        public static int findUserId(string username, string password)
 		{
-			SqlConnection connection = DBUtils.GetDBConnection();
+			SqlConnection connection = DBConnection.openConnection();
 
-			try
-			{
-				connection.Open();
-			}
-			catch (Exception e)
-			{
-				Console.WriteLine("Error: " + e.Message);
-			}
+			string encryptedPassword = EncryptingUtils.EncryptString(password, "cryptingString");
 
-			string encryptedPassword = EncryptingUtils.EncryptString(password, "test");
-
+			// The command creation
 			SqlCommand command = connection.CreateCommand();
 			command.CommandText = "SELECT * FROM [dbo].[T_USERS] WHERE USE_name = '" + username + "' AND USE_password = '" + encryptedPassword + "'";
 
+			// We execute the command
 			SqlDataReader dataReader = command.ExecuteReader();
 
+			// We read the data per columns
 			while (dataReader.Read())
 				return int.Parse(dataReader["USE_id"].ToString());
 
 			return 0;
 		}
-    }
+
+		#endregion
+	}
 }

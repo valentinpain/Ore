@@ -17,36 +17,31 @@ using System.Windows.Shapes;
 namespace Ore.Views
 {
     /// <summary>
-    /// Logique d'interaction pour ShellView.xaml
+    /// Logique d'interaction de la vue <c>ShellView</c>
     /// </summary>
     public partial class ShellView : Window
     {
+        #region Properties
+
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Initialises the view and his data context
+        /// </summary>
         public ShellView()
         {
             InitializeComponent();
-           var shellView = new ShellViewModel();
-           this.DataContext = shellView;
+            var shellView = new ShellViewModel();
+            this.DataContext = shellView;
         }
 
-        private void ButtonDay_Click(object sender, RoutedEventArgs e)
-        {
-            if (stackDay.Children.Count == 1)
-                stackDay.Children.RemoveAt(0);
-
-            string[] clickedButtonSplitted = sender.ToString().Split(' ');
-
-            ShellViewModel.ChosenDate = clickedButtonSplitted[1] + " " + clickedButtonSplitted[2];
-
-            DayView dayView = new DayView();
-            dayView.Height = 520;
-            dayView.Width = 910;
-
-            stackDay.Visibility = Visibility.Visible;
-            MainGrid.Visibility = Visibility.Collapsed;
-
-            stackDay.Children.Add(dayView);
-        }
-
+        /// <summary>
+        /// The enter hover effect on day buttons
+        /// </summary>
+        /// <param name="sender">The enter-hovered button</param>
+        /// <param name="e">The event object</param>
         private void Button_MouseEnter(object sender, MouseEventArgs e)
         {
             Border border = sender as Border;
@@ -55,6 +50,11 @@ namespace Ore.Views
                 border.Background = Brushes.AliceBlue;
         }
 
+        /// <summary>
+        /// The exit hover effect on day buttons
+        /// </summary>
+        /// <param name="sender">The exit-hovered button</param>
+        /// <param name="e">The event object</param>
         private void Button_MouseLeave(object sender, MouseEventArgs e)
         {
             Border border = sender as Border;
@@ -62,5 +62,7 @@ namespace Ore.Views
             if (border.Background != Brushes.Orange)
                 border.Background = Brushes.White;
         }
+
+        #endregion
     }
 }

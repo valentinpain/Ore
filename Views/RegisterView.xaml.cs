@@ -16,13 +16,24 @@ using System.Windows.Shapes;
 namespace Ore.Views
 {
     /// <summary>
-    /// Logique d'interaction pour RegisterView.xaml
+    /// Logique d'interaction pour la vue <c>RegisterView</c>
     /// </summary>
     public partial class RegisterView : Window
     {
+        #region Properties
+
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Initialises the view
+        /// </summary>
         public RegisterView()
         {
             InitializeComponent();
         }
+
+        #endregion
     }
 }

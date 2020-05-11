@@ -12,283 +12,17 @@ using System.Windows.Input;
 
 namespace Ore.ViewModels
 {
-	public class ShellViewModel : INotifyPropertyChanged // Année de fin
+	/// <summary>
+	/// The main view-model class that decides how the whole main interface must behave
+	/// </summary>
+	public class ShellViewModel : INotifyPropertyChanged
 	{
         #region Attributes
 
+		 /// <summary>
+		 /// The lists of all the tasks that the connected user created
+		 /// </summary>
         private static ObservableCollection<TaskViewModel> tasks = new ObservableCollection<TaskViewModel>();
-		private ObservableCollection<DayViewModel> daysInMonth = new ObservableCollection<DayViewModel>();
-		private ObservableCollection<TaskViewModel> toDoNowTasks = new ObservableCollection<TaskViewModel>();
-		private static ObservableCollection<ListViewModel> lists = new ObservableCollection<ListViewModel>();
-
-		public static ObservableCollection<ListViewModel> Lists
-		{
-			get { return lists; }
-			set { lists = value; }
-		}
-
-		private string listName;
-
-		public string ListName
-		{
-			get { return listName; }
-			set 
-			{ 
-				listName = value;
-				NotifyPropertyChanged(nameof(ListName));
-			}
-		}
-
-		private static ObservableCollection<TaskViewModel> focusedList = new ObservableCollection<TaskViewModel>();
-
-		public static ObservableCollection<TaskViewModel> FocusedList
-		{
-			get { return focusedList; }
-			set { focusedList = value; }
-		}
-
-		public event PropertyChangedEventHandler PropertyChanged;
-
-		private int taskId = 0;
-		private string taskName;
-		private string taskDescription;
-		private string taskColor;
-		private string taskStartDay;
-		private string taskFinishDay;
-		private string taskStartTime;
-		private string taskFinishTime;
-		private string taskStartMonth = monthNumberToName(DateTime.Now.Month.ToString());
-		private string taskFinishMonth;
-		private string taskStartYear = DateTime.Now.Year.ToString();
-		private string taskFinishYear;
-		private bool taskChecked;
-		private static int taskIdUser = LoginViewModel.User.Id;
-
-		private string[] monthsTab = {"Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre" };
-
-		private static string randomColor;
-		private string[] yearsTab;
-
-		private bool wrongInformations = false;
-
-		public bool WrongInformations
-		{
-			get { return wrongInformations; }
-			set 
-			{ 
-				wrongInformations = value;
-				NotifyPropertyChanged(nameof(WrongInformations));
-				NotifyPropertyChanged(nameof(TextInformations));
-			}
-		}
-
-		private string textInformations;
-
-		public string TextInformations
-		{
-			get { return textInformations; }
-			set 
-			{ 
-				textInformations = value;
-				NotifyPropertyChanged(nameof(TextInformations));
-				NotifyPropertyChanged(nameof(WrongInformations));
-			}
-		}
-
-
-
-		public static string RandomColor
-		{
-			get { return randomColor; }
-			set 
-			{ 
-				randomColor = value;
-			}
-		}
-
-		public string[] MonthsTab
-		{
-			get { return monthsTab; }
-			set { monthsTab = value; }
-		}
-
-		public string TaskColor
-		{
-			get { return taskColor; }
-			set 
-			{ 
-				taskColor = value;
-				NotifyPropertyChanged(TaskColor);
-			}
-		}
-
-		public ObservableCollection<TaskViewModel> ToDoNowTasks
-		{
-			get { return SortTasks(ShellModel.retrieveAllTasks(LoginViewModel.User.Id)); }
-			set { toDoNowTasks = value; }
-		}
-
-		public string TaskFinishMonth
-		{
-			get { return taskFinishMonth; }
-			set 
-			{ 
-				taskFinishMonth = value;
-				NotifyPropertyChanged(nameof(TaskFinishMonth));
-			}
-		}
-
-
-		public string[] YearsTab
-		{
-			get { return setYears(); }
-			set { yearsTab = value; }
-		}
-
-		public string TaskStartDay
-		{
-			get { return taskStartDay; }
-			set 
-			{ 
-				taskStartDay = value;
-				NotifyPropertyChanged(TaskStartDay);
-			}
-		}
-
-		public string TaskFinishDay
-		{
-			get { return taskFinishDay; }
-			set 
-			{ 
-				taskFinishDay = value;
-				NotifyPropertyChanged(TaskFinishDay);
-			}
-		}
-
-		public string TaskStartTime
-		{
-			get { return taskStartTime; }
-			set 
-			{ 
-				taskStartTime = value;
-				NotifyPropertyChanged(taskStartTime);
-			}
-		}
-
-		public string TaskFinishTime
-		{
-			get { return taskFinishTime; }
-			set 
-			{ 
-				taskFinishTime = value;
-				NotifyPropertyChanged(TaskFinishTime);
-			}
-		}
-
-		public ObservableCollection<DayViewModel> DaysInMonth
-		{
-			get { return setDaysInMonth(taskStartYear, taskStartMonth); }
-			set 
-			{ 
-				daysInMonth = value;
-				NotifyPropertyChanged(nameof(DaysInMonth));
-			}
-		}
-
-		private static string chosenDate;
-
-		public static string ChosenDate
-		{
-			get { return chosenDate; }
-			set { chosenDate = value; }
-		}
-
-		private static string chosenMonth;
-
-		public static string ChosenMonth
-		{
-			get { return chosenMonth; }
-			set { chosenMonth = value; }
-		}
-
-		private static string chosenYear;
-
-		public static string ChosenYear
-		{
-			get { return chosenYear; }
-			set { chosenYear = value; }
-		}
-
-		public string TaskDescription
-		{
-			get { return taskDescription; }
-			set 
-			{ 
-				taskDescription = value;
-				NotifyPropertyChanged(TaskDescription);
-			}
-		}
-
-
-		private DateTime actualDate;
-
-		public DateTime ActualDate
-		{
-			get { return DateTime.Now ; }
-			set { actualDate = value; }
-		}
-
-		public static int TaskIdUser
-		{
-			get { return taskIdUser; }
-			set { taskIdUser = value; }
-		}
-
-
-		public string TaskStartMonth
-		{
-			get { return taskStartMonth; }
-			set 
-			{
-				this.taskStartMonth = value;
-				NotifyPropertyChanged(nameof(TaskStartMonth));
-				NotifyPropertyChanged(nameof(DaysInMonth));
-			}
-		}
-
-		public string TaskFinishYear
-		{
-			get { return taskFinishYear; }
-			set 
-			{ 
-				taskFinishYear = value;
-				NotifyPropertyChanged(nameof(TaskFinishYear));
-			}
-		}
-
-
-
-		public string TaskStartYear
-		{
-			get { return taskStartYear; }
-			set 
-			{
-				taskStartYear = value;
-				NotifyPropertyChanged(nameof(TaskStartYear));
-				NotifyPropertyChanged(nameof(DaysInMonth));
-			}
-		}
-
-
-		private static char bitMonthActualisation;
-
-		public static char BitMonthActualisation
-		{
-			get { return bitMonthActualisation; }
-			set { bitMonthActualisation = value; }
-		}
-
-
 		public ObservableCollection<TaskViewModel> Tasks
 		{
 			get { return tasks; }
@@ -300,69 +34,440 @@ namespace Ore.ViewModels
 			}
 		}
 
+		/// <summary>
+		/// The list of the most urgent tasks the connected user created
+		/// </summary>
+		private static ObservableCollection<TaskViewModel> toDoNowTasks = new ObservableCollection<TaskViewModel>();
+		public static ObservableCollection<TaskViewModel> ToDoNowTasks
+		{
+			get { return toDoNowTasks; }
+			set { toDoNowTasks = value; }
+		}
+
+		/// <summary>
+		/// The list of all the lists the connected user created
+		/// </summary>
+		private static ObservableCollection<ListViewModel> lists = new ObservableCollection<ListViewModel>();
+		public static ObservableCollection<ListViewModel> Lists
+		{
+			get { return lists; }
+			set { lists = value; }
+		}
+
+		/// <summary>
+		/// The list of all the days in the ficused month
+		/// </summary>
+		private ObservableCollection<DayViewModel> daysInMonth = new ObservableCollection<DayViewModel>();
+		public ObservableCollection<DayViewModel> DaysInMonth
+		{
+			get { return setDaysInMonth(taskStartYear, taskStartMonth); }
+			set
+			{
+				daysInMonth = value;
+				NotifyPropertyChanged(nameof(DaysInMonth));
+			}
+		}
+
+		/// <summary>
+		/// The list that the user chose in the view
+		/// </summary>
+		private static ObservableCollection<TaskViewModel> focusedList = new ObservableCollection<TaskViewModel>();
+		public static ObservableCollection<TaskViewModel> FocusedList
+		{
+			get { return focusedList; }
+			set { focusedList = value; }
+		}
+
+		/// <summary>
+		/// The list of months displayed in the shell view so the user can pick one
+		/// </summary>
+		private string[] monthsTab = { "Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre" };
+		public string[] MonthsTab
+		{
+			get { return monthsTab; }
+			set { monthsTab = value; }
+		}
+
+		/// <summary>
+		/// The list of years displayed in the shell view so the user can pick one
+		/// </summary>
+		private string[] yearsTab;
+		public string[] YearsTab
+		{
+			get { return setYears(); }
+			set { yearsTab = value; }
+		}
+
+		/// <summary>
+		/// The actual month-year values when the program starts
+		/// </summary>
+		private string actualMonthYear = FindActualMonthYear(DateTime.Now, 1);
+		public string ActualMonthYear
+		{
+			get { return actualMonthYear; }
+			set
+			{
+				actualMonthYear = value;
+				NotifyPropertyChanged(nameof(ActualMonthYear));
+			}
+		}
+
+		/// <summary>
+		/// The focused date chosen by the user
+		/// </summary>
+		private static string chosenDate;
+		public static string ChosenDate
+		{
+			get { return chosenDate; }
+			set { chosenDate = value; }
+		}
+
+		/// <summary>
+		/// The focused month chosen by the user
+		/// </summary>
+		private static string chosenMonth;
+		public static string ChosenMonth
+		{
+			get { return chosenMonth; }
+			set { chosenMonth = value; }
+		}
+
+		/// <summary>
+		/// The focused yer chosen by the user
+		/// </summary>
+		private static string chosenYear;
+		public static string ChosenYear
+		{
+			get { return chosenYear; }
+			set { chosenYear = value; }
+		}
+
+		/// <summary>
+		/// The id of the task the user is creating
+		/// </summary>
+		private int taskId = 0;
 		public int TaskId
 		{
 			get { return taskId; }
 			set { taskId = value; }
 		}
 
-		public bool TaskChecked
-		{
-			get { return taskChecked; }
-			set 
-			{ 
-				taskChecked = value;
-			}
-		}
-
-		private string actualMonthYear = FindActualMonthYear(DateTime.Now, 1);
-
-		public string ActualMonthYear
-		{
-			get { return actualMonthYear; }
-			set 
-			{ 
-				actualMonthYear = value;
-				NotifyPropertyChanged(nameof(ActualMonthYear));
-			}
-		}
-
+		/// <summary>
+		/// The name of the task the user is creating
+		/// </summary>
+		private string taskName;
 		public string TaskName
 		{
 			get { return taskName; }
-			set 
-			{ 
+			set
+			{
 				taskName = value;
 				NotifyPropertyChanged(TaskName);
 			}
 		}
 
-		public int TaskDay { get { return 1; } set { TaskDay = value; } }
+		/// <summary>
+		/// The description of the task the user is creating
+		/// </summary>
+		private string taskDescription;
+		public string TaskDescription
+		{
+			get { return taskDescription; }
+			set
+			{
+				taskDescription = value;
+				NotifyPropertyChanged(TaskDescription);
+			}
+		}
 
-		public ICommand TaskCommand { get { return new TaskCommand(this); } }
-		public ICommand DeleteCommand { get { return new DeleteCommand(this); } }
-		public ICommand RightArrowMonthCommand { get { return new RightArrowMonthCommand(this); } }
-		public ICommand LeftArrowMonthCommand { get { return new LeftArrowMonthCommand(this); } }
-		public ICommand LoadDayViewCommand { get { return new LoadDayViewCommand(this); } }
-		public ICommand LoadHomeViewCommand { get { return new LoadHomeViewCommand(this); } }
-		public ICommand TaskDoneCommand { get { return new TaskDoneCommand(this); } }
-		public ICommand DisconnectUserCommand { get { return new DisconnectUserCommand(this); } }
-		public ICommand ListCommand { get { return new ListCommand(this); } }
-		public ICommand AddAListCommand { get { return new AddAListCommand(this); } }
-		public ICommand LoadListViewCommand { get { return new LoadListViewCommand(this); } }
-		public ICommand AddTaskToListCommand { get { return new AddTaskToListCommand(this); } }
+		/// <summary>
+		/// The color of the task the user is creating
+		/// </summary>
+		private string taskColor;
+		public string TaskColor
+		{
+			get { return taskColor; }
+			set
+			{
+				taskColor = value;
+				NotifyPropertyChanged(TaskColor);
+			}
+		}
+
+		/// <summary>
+		/// The start day of the task the user is creating
+		/// </summary>
+		private string taskStartDay;
+		public string TaskStartDay
+		{
+			get { return taskStartDay; }
+			set
+			{
+				taskStartDay = value;
+				NotifyPropertyChanged(TaskStartDay);
+			}
+		}
+
+		/// <summary>
+		/// The finish day of the task the user is creating
+		/// </summary>
+		private string taskFinishDay;
+		public string TaskFinishDay
+		{
+			get { return taskFinishDay; }
+			set
+			{
+				taskFinishDay = value;
+				NotifyPropertyChanged(TaskFinishDay);
+			}
+		}
+
+		/// <summary>
+		/// The start time of the task the user is creating
+		/// </summary>
+		private string taskStartTime;
+		public string TaskStartTime
+		{
+			get { return taskStartTime; }
+			set
+			{
+				taskStartTime = value;
+				NotifyPropertyChanged(taskStartTime);
+			}
+		}
+
+		/// <summary>
+		/// The finish time of the task the user is creating
+		/// </summary>
+		private string taskFinishTime;
+		public string TaskFinishTime
+		{
+			get { return taskFinishTime; }
+			set
+			{
+				taskFinishTime = value;
+				NotifyPropertyChanged(TaskFinishTime);
+			}
+		}
+
+		/// <summary>
+		/// The start month of the task the user is creating
+		/// </summary>
+		private string taskStartMonth = monthNumberToName(DateTime.Now.Month.ToString());
+		public string TaskStartMonth
+		{
+			get { return taskStartMonth; }
+			set
+			{
+				this.taskStartMonth = value;
+				NotifyPropertyChanged(nameof(TaskStartMonth));
+				NotifyPropertyChanged(nameof(DaysInMonth));
+			}
+		}
+
+		/// <summary>
+		/// The finish month of the task the user is creating
+		/// </summary>
+		private string taskFinishMonth;
+		public string TaskFinishMonth
+		{
+			get { return taskFinishMonth; }
+			set
+			{
+				taskFinishMonth = value;
+				NotifyPropertyChanged(nameof(TaskFinishMonth));
+			}
+		}
+
+		/// <summary>
+		/// The start year of the task the user is creating
+		/// </summary>
+		private string taskStartYear = DateTime.Now.Year.ToString();
+		public string TaskStartYear
+		{
+			get { return taskStartYear; }
+			set
+			{
+				taskStartYear = value;
+				NotifyPropertyChanged(nameof(TaskStartYear));
+				NotifyPropertyChanged(nameof(DaysInMonth));
+			}
+		}
+
+		/// <summary>
+		/// The finish year of the task the user is creating
+		/// </summary>
+		private string taskFinishYear;
+		public string TaskFinishYear
+		{
+			get { return taskFinishYear; }
+			set
+			{
+				taskFinishYear = value;
+				NotifyPropertyChanged(nameof(TaskFinishYear));
+			}
+		}
+
+		/// <summary>
+		/// The task-done flag of the task the user is creating
+		/// </summary>
+		private bool taskChecked;
+		public bool TaskChecked
+		{
+			get { return taskChecked; }
+			set
+			{
+				taskChecked = value;
+			}
+		}
+
+		/// <summary>
+		/// The id of the user that is creating the task
+		/// </summary>
+		private static int taskIdUser = LoginViewModel.User.Id;
+		public static int TaskIdUser
+		{
+			get { return taskIdUser; }
+			set { taskIdUser = value; }
+		}
+
+		/// <summary>
+		/// The boolean value that tells whether the user has entered wrong informations or not
+		/// </summary>
+		private bool wrongInformations = false;
+		public bool WrongInformations
+		{
+			get { return wrongInformations; }
+			set
+			{
+				wrongInformations = value;
+				NotifyPropertyChanged(nameof(WrongInformations));
+				NotifyPropertyChanged(nameof(TextInformations));
+			}
+		}
+
+		/// <summary>
+		/// The warning text informations the user gets when he has entered wrong informations
+		/// </summary>
+		private string textInformations;
+		public string TextInformations
+		{
+			get { return textInformations; }
+			set
+			{
+				textInformations = value;
+				NotifyPropertyChanged(nameof(TextInformations));
+				NotifyPropertyChanged(nameof(WrongInformations));
+			}
+		}
+
+		/// <summary>
+		/// The name of the actual focused list in the main view
+		/// </summary>
+		private static string focusedListName;
+		public static string FocusedListName
+		{
+			get { return focusedListName; }
+			set { focusedListName = value; }
+		}
+
+		/// <summary>
+		/// The id of the focused list in the main view 
+		/// </summary>
+		private static int focusedListId = ShellModel.lastListRowNumber();
+		public static int FocusedListId
+		{
+			get { return focusedListId; }
+			set { focusedListId = value; }
+		}
+
+		/// <summary>
+		/// The color randomly chosen for the task or list view
+		/// </summary>
+		private static string randomColor;
+		public static string RandomColor
+		{
+			get { return randomColor; }
+			set
+			{
+				randomColor = value;
+			}
+		}
+
+		/// <summary>
+		/// The attributes that prevents a new change in the properties values
+		/// </summary>
+		public event PropertyChangedEventHandler PropertyChanged;
 
 		#endregion
 
+		#region The command properties
+
+		/// <summary>
+		/// The command that adds a new task created by the user
+		/// </summary>
+		public ICommand AddATaskCommand { get { return new AddATaskCommand(this); } }
+
+		/// <summary>
+		/// The command that deletes a task
+		/// </summary>
+		public ICommand DeleteATaskCommand { get { return new DeleteATaskCommand(this); } }
+
+		/// <summary>
+		/// The command that load the day view of the one chosen by the user
+		/// </summary>
+		public ICommand LoadDayViewCommand { get { return new LoadDayViewCommand(this); } }
+
+		/// <summary>
+		/// The command that loads the home view
+		/// </summary>
+		public ICommand LoadHomeViewCommand { get { return new LoadHomeViewCommand(this); } }
+
+		/// <summary>
+		/// The command that checks a task when it is done
+		/// </summary>
+		public ICommand TaskDoneCommand { get { return new TaskDoneCommand(this); } }
+
+		/// <summary>
+		/// The command that disconnects the user from the main view and leads him back to the log in view
+		/// </summary>
+		public ICommand DisconnectUserCommand { get { return new DisconnectUserCommand(this); } }
+
+		/// <summary>
+		/// The command that adds a new list created by the user
+		/// </summary>
+		public ICommand AddAListCommand { get { return new AddAListCommand(this); } }
+
+		/// <summary>
+		/// The command that loads the list view
+		/// </summary>
+		public ICommand LoadListViewCommand { get { return new LoadListViewCommand(this); } }
+
+		/// <summary>
+		/// The command that adds a new task to a list
+		/// </summary>
+		public ICommand AddTaskToListCommand { get { return new AddTaskToListCommand(this); } }
+
+		/// <summary>
+		/// The command that deletes a list
+		/// </summary>
+		public ICommand DeleteListCommand { get { return new DeleteListCommand(this); } }
+
+		/// <summary>
+		/// The command that displays the form to create a new list
+		/// </summary>
+		public ICommand ListCommand { get { return new ListCommand(this); } }
+
+		#endregion
 
 		#region Methods
 
-		public static string DateTimeToString(DateTime date)
-		{
-			int index = (date.ToString()).IndexOf('/');
-			return date.ToString().Substring(0, index);
-		}
-
+		/// <summary>
+		/// Finds the actual year-month values when the program starts
+		/// </summary>
+		/// <param name="date">The actual date when the program starts</param>
+		/// <param name="yearFlag">The format mode flag</param>
+		/// <returns>The actual month and year in a string</returns>
 		public static string FindActualMonthYear(DateTime date, int yearFlag)
 		{
 			int index = (date.ToString()).IndexOf('/');
@@ -422,139 +527,30 @@ namespace Ore.ViewModels
 
 		}
 
-		public string EnglishDayOfWeekToFrench(string day)
-		{
-			switch (day)
-			{
-				case "Monday":
-					return "Lundi";
-				case "Tuesday":
-					return "Mardi";
-				case "Wednesday":
-					return "Mercredi";
-				case "Thursday":
-					return "Jeudi";
-				case "Friday":
-					return "Vendredi";
-				case "Saturday":
-					return "Samedi";
-				case "Sunday":
-					return "Dimanche";
-				default:
-					return "error";
-			}
-		}
-
-		public string FullDateToTime(string fulldate)
-		{
-			if (fulldate == null)
-				return "";
-
-			string[] dateSplitted = fulldate.Split(' ');
-			string[] timeSplitted = dateSplitted[1].Split(':');
-
-			if(dateSplitted[2] == "PM")
-			{
-				switch (timeSplitted[0])
-				{
-					case "12":
-						timeSplitted[0] = "00";
-						break;
-					case "1":
-						timeSplitted[0] = "13";
-						break;
-					case "2":
-						timeSplitted[0] = "14";
-						break;
-					case "3":
-						timeSplitted[0] = "15";
-						break;
-					case "4":
-						timeSplitted[0] = "16";
-						break;
-					case "5":
-						timeSplitted[0] = "17";
-						break;
-					case "6":
-						timeSplitted[0] = "18";
-						break;
-					case "7":
-						timeSplitted[0] = "19";
-						break;
-					case "8":
-						timeSplitted[0] = "20";
-						break;
-					case "9":
-						timeSplitted[0] = "21";
-						break;
-					case "10":
-						timeSplitted[0] = "22";
-						break;
-					case "11":
-						timeSplitted[0] = "23";
-						break;
-				}
-			}
-
-			return timeSplitted[0] + "h" + timeSplitted[1];
-		}
-
-		private void NotifyPropertyChanged(String name)
-		{
-			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-		}
-
-		public int convertMonthInt(string month)
-		{
-			switch (month)
-			{
-				case "janvier":
-					return 1;
-				case "février":
-					return 2;
-				case "mars":
-					return 3;
-				case "avril":
-					return 4;
-				case "mai":
-					return 5;
-				case "juin":
-					return 6;
-				case "juillet":
-					return 7;
-				case "août":
-					return 8;
-				case "septembre":
-					return 9;
-				case "octobre":
-					return 10;
-				case "novembre":
-					return 11;
-				case "décembre":
-					return 12;
-				default:
-					return 0;
-			}
-		}
-
+		/// <summary>
+		/// Sets the list of available years to create a task
+		/// </summary>
+		/// <returns>An arrays of the available years</returns>
 		public string[] setYears()
 		{
 			string[] years = new string[150];
 
-			for(int i = 0; i < 150; i++) 
-			{
+			for(int i = 0; i < 150; i++)
 				years[i] = (int.Parse(DateTime.Now.Year.ToString()) + i).ToString();
-			}
 
 			return years;
 		}
 
+		/// <summary>
+		/// Sets all the days in a list with the focused month-year values
+		/// </summary>
+		/// <param name="chosenYear">The focused year</param>
+		/// <param name="chosenMonth">The focused month</param>
+		/// <returns>The list of all the days in the month-year</returns>
 		public ObservableCollection<DayViewModel> setDaysInMonth(string chosenYear, string chosenMonth)
 		{
 			if(chosenMonth.Length > 2)
-			{
 				chosenMonth = monthNameToNumber(chosenMonth);
-			}
 
 			ObservableCollection<DayViewModel> daysInMonth = new ObservableCollection<DayViewModel>();
 			int numberOfDays = DateTime.DaysInMonth(int.Parse(chosenYear), int.Parse(chosenMonth));
@@ -593,6 +589,11 @@ namespace Ore.ViewModels
 			return daysInMonth;
 		}
 
+		/// <summary>
+		/// Checks if the day sent is the actual real day the program is started
+		/// </summary>
+		/// <param name="day">The day</param>
+		/// <returns>A boolean value that indicates whether the day is the actual one or not</returns>
 		public bool isToday(DateTime day)
 		{
 			string[] daySplitted = day.ToString().Split(' ');
@@ -604,7 +605,12 @@ namespace Ore.ViewModels
 			return false;
 		}
 
-		public string monthNameToNumber(string monthName)
+		/// <summary>
+		/// Converts a month name to his number in the year
+		/// </summary>
+		/// <param name="monthName">The name of the month</param>
+		/// <returns>The number of the month in the year</returns>
+		public static string monthNameToNumber(string monthName)
 		{
 			switch (monthName)
 			{
@@ -637,6 +643,11 @@ namespace Ore.ViewModels
 			}
 		}
 
+		/// <summary>
+		/// Converts a month number in the year to his real name
+		/// </summary>
+		/// <param name="monthNumber">The number of the month in the year</param>
+		/// <returns>The real name of the month</returns>
 		public static string monthNumberToName(string monthNumber)
 		{
 			switch (monthNumber)
@@ -670,7 +681,11 @@ namespace Ore.ViewModels
 			}
 		}
 
-		public ObservableCollection<TaskViewModel> SortTasks(ObservableCollection<TaskViewModel> tasksList)
+		/// <summary>
+		/// Sorts the most urgent tasks in the basic tasks list
+		/// </summary>
+		/// <param name="tasksList">The list of tasks retrieved from the database</param>
+		public static void SortTasks(ObservableCollection<TaskViewModel> tasksList)
 		{
 			ObservableCollection<TaskViewModel> sortedTasksList = new ObservableCollection<TaskViewModel>();
 			TaskViewModel[] sortedTasks = tasksList.ToArray();
@@ -683,7 +698,7 @@ namespace Ore.ViewModels
 
 				for(int i = 0; i < sortedTasks.Length - 1; i++)
 				{
-					if (int.Parse(sortedTasks[i + 1].finishYear) < int.Parse(sortedTasks[i].finishYear))
+					if (int.Parse(sortedTasks[i + 1].FinishYear) < int.Parse(sortedTasks[i].FinishYear))
 					{
 						memory = sortedTasks[i];
 						sortedTasks[i] = sortedTasks[i + 1];
@@ -691,9 +706,9 @@ namespace Ore.ViewModels
 
 						isSorted = false;
 					}
-					else if (int.Parse(sortedTasks[i + 1].finishYear) == int.Parse(sortedTasks[i].finishYear))
+					else if (int.Parse(sortedTasks[i + 1].FinishYear) == int.Parse(sortedTasks[i].FinishYear))
 					{
-						if (int.Parse(monthNameToNumber(sortedTasks[i + 1].startMonth)) < int.Parse(monthNameToNumber(sortedTasks[i].startMonth)))
+						if (int.Parse(monthNameToNumber(sortedTasks[i + 1].FinishMonth)) < int.Parse(monthNameToNumber(sortedTasks[i].FinishMonth)))
 						{
 							memory = sortedTasks[i];
 							sortedTasks[i] = sortedTasks[i + 1];
@@ -701,12 +716,12 @@ namespace Ore.ViewModels
 
 							isSorted = false;
 						}
-						else if (int.Parse(monthNameToNumber(sortedTasks[i + 1].startMonth)) == int.Parse(monthNameToNumber(sortedTasks[i].startMonth)))
+						else if (int.Parse(monthNameToNumber(sortedTasks[i + 1].FinishMonth)) == int.Parse(monthNameToNumber(sortedTasks[i].FinishMonth)))
 						{
-							string[] startDaySplitted1 = sortedTasks[i].startDay.Split(' ');
-							string[] startDaySplitted2 = sortedTasks[i + 1].startDay.Split(' ');
+							string[] finishDaySplitted1 = sortedTasks[i].FinishDay.Split(' ');
+							string[] finishDaySplitted2 = sortedTasks[i + 1].FinishDay.Split(' ');
 
-							if (int.Parse(startDaySplitted2[1].ToString()) < int.Parse(startDaySplitted1[1].ToString()))
+							if (int.Parse(finishDaySplitted2[1].ToString()) < int.Parse(finishDaySplitted1[1].ToString()))
 							{
 								memory = sortedTasks[i];
 								sortedTasks[i] = sortedTasks[i + 1];
@@ -719,33 +734,74 @@ namespace Ore.ViewModels
 				}
 			}
 
+			ToDoNowTasks.Clear();
+
 			for (int i = 0; i < sortedTasks.Length; i++)
 			{
-				sortedTasksList.Add(sortedTasks[i]);
+				ToDoNowTasks.Add(sortedTasks[i]);
 			}
-
-			return sortedTasksList;
 		}
 
+		/// <summary>
+		/// Adds a new task to our basic tasks list of a day
+		/// </summary>
 		public void addTask()
 		{
+
+			//Adding a task inside our program for a day
 			Tasks.Add(new TaskViewModel()
 			{
-				id = TaskId,
-				name = TaskName,
-				description = TaskDescription,
-				color = TaskColor,
-				startDay = ChosenDate,
-				finishDay = TaskFinishDay,
-				startTime = TaskViewModel.formatTime(TaskStartTime),
-				finishTime = TaskViewModel.formatTime(TaskFinishTime),
-				startMonth = ChosenMonth,
-				finishMonth = TaskFinishMonth,
-				startYear = ChosenYear,
-				finishYear = TaskFinishYear,
-				isComplete = false,
-				useId = LoginViewModel.User.Id
+				Id = TaskId,
+				Name = TaskName,
+				Description = TaskDescription,
+				Color = TaskColor,
+				StartDay = ChosenDate,
+				FinishDay = TaskFinishDay,
+				StartTime = TaskViewModel.formatTime(TaskStartTime),
+				FinishTime = TaskViewModel.formatTime(TaskFinishTime),
+				StartMonth = ChosenMonth,
+				FinishMonth = TaskFinishMonth,
+				StartYear = ChosenYear,
+				FinishYear = TaskFinishYear,
+				IsComplete = false,
+				UseId = LoginViewModel.User.Id,
+				ListId = 0
 			});
+		}
+
+		/// <summary>
+		/// Adds a new task to a list created by the user
+		/// </summary>
+		public void addTaskToList()
+		{
+			//Adding a task inside our program in a list
+			FocusedList.Add(new TaskViewModel()
+			{
+				Id = TaskId,
+				Name = TaskName,
+				Description = TaskDescription,
+				Color = TaskColor,
+				StartDay = TaskStartDay,
+				FinishDay = TaskFinishDay,
+				StartTime = TaskViewModel.formatTime(TaskStartTime),
+				FinishTime = TaskViewModel.formatTime(TaskFinishTime),
+				StartMonth = TaskStartMonth,
+				FinishMonth = TaskFinishMonth,
+				StartYear = TaskStartYear,
+				FinishYear = TaskFinishYear,
+				IsComplete = false,
+				UseId = LoginViewModel.User.Id,
+				ListId = ShellViewModel.FocusedListId
+			});
+		}
+
+		/// <summary>
+		/// Prevents the code that a value property changed
+		/// </summary>
+		/// <param name="name">The name of the property</param>
+		private void NotifyPropertyChanged(String name)
+		{
+			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
 		}
 
 		#endregion
